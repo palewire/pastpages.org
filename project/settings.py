@@ -140,6 +140,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'bakery': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     }
 }
 
