@@ -148,10 +148,10 @@ def get_screenshot(site_id, update_id):
     logger.debug("Crop saved for %s" % site.url)
     
     # Building HTML pages
-    logger.debug("Building screenshot detail page for %s" % site.url)
-    ssht.build()
-    logger.debug("Building site detail page for %s" % site.url)
-    site.build()
+    #logger.debug("Building screenshot detail page for %s" % site.url)
+    #ssht.build()
+    #logger.debug("Building site detail page for %s" % site.url)
+    #site.build()
     
     # Done
     logger.debug("Finished %s" % site.url)

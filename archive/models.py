@@ -14,7 +14,7 @@ class Site(BuildableModel):
     A news website included in the archive.
     """
     detail_views = [
-        'archive.views.SiteDetail',
+        #'archive.views.SiteDetail',
     ]
     
     name = models.CharField(max_length=150)
@@ -49,7 +49,7 @@ class Update(BuildableModel):
     A periodic update to the archive.
     """
     detail_views = [
-        'archive.views.UpdateDetail',
+        #'archive.views.UpdateDetail',
     ]
     
     start = models.DateTimeField()
@@ -85,7 +85,7 @@ class Screenshot(BuildableModel):
     A snapshot of web page.
     """
     detail_views = [
-        'archive.views.ScreenshotDetail',
+        #'archive.views.ScreenshotDetail',
     ]
     
     site = models.ForeignKey(Site)
