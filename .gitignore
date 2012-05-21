@@ -1,0 +1,14 @@
+chef/node.json
+fabfile.py
+build/*
+project/static/*
+project/media/archive/*
+project/django.log
+development.db
+media/archive/*
+project/settings_prod.py
+project/settings_dev.py
+chef/cookbooks/palewire/files/default/id_rsa
+chef/cookbooks/palewire/files/default/id_rsa.pub
+chef/cookbooks/palewire/files/default/authorized_keys
+*.pyc

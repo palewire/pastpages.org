@@ -1,0 +1,114 @@
+/* ============================== */
+/* ! Layout for desktop version   */
+/* ============================== */
+
+    body {
+        font-family: "Arvo", Arial, sans-serif;
+    }
+    div#ribbon {
+        height:36px;
+        line-height:36px;
+        background-color: violet;
+        color: white;
+        font-size: 16px;
+        text-align:center;
+    }
+    div#ribbon a {
+        color: white;
+    }
+    div#headline {
+        margin:10px 0 0 0;
+    }
+    div#headline h1 {
+        font-size:35px;
+        line-height:35px;
+    }
+    div#headline a {
+        text-decoration:none;
+        color:black;
+    }
+    div.screenshots {
+        margin: 0 auto 30px auto;
+    }
+    div.nestedthumbs {
+        margin: 0 auto 20px auto;
+    }
+    div#sitetitle {
+        margin: 0 auto 0 auto;
+    }
+    h1 {
+        line-height:32px;
+        margin-bottom:3px;
+    }
+    h3, h4, h5 {font-weight:normal;}
+    h5 {
+        margin: 5px 0;
+    }
+    hr {
+        margin:10px 0; 
+        color: #CCC;
+        background-color: #ccc;
+    }
+    div#sitetitle h3 {
+        margin: 0 0 10px 0;
+    }
+    div.datestamp {
+        font-size: 12px;
+        text-align: right;
+        margin-bottom: 20px;
+        padding-right:10px;
+    }
+    div.detail {
+        margin: 10px 0 0 0;
+    }
+    div.detail h2 {
+        font-size:18px;
+        margin: 0 0 10px 0;
+    }
+    div.upperright {
+        margin-top: 10px;
+        text-align:right;
+    }
+    div.upperright #datepicker {
+        width:100px;
+    }
+    div.upperright img {
+        vertical-align:bottom;
+    }
+    div.timestamp {
+        margin: 5px auto;
+        font-size: 18px;
+    }
+    div#footer {
+        margin: 10px 0;
+        font-size: 14px;
+        text-align:center;
+    }
+    div#footer .row {
+        padding: 15px 0 30px 0;
+        border-top: 1px solid #ccc;
+    }
+
+/* ============================= */
+/* ! Layout for mobile version   */
+/* ============================= */
+
+@media handheld, only screen and (max-width: 767px) {
+
+    span.thefool {display:none;}
+
+}
+
+
+/* ========================================== */
+/* ! Provide higher res assets for iPhone 4   */
+/* ========================================== */
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2) { 
+
+/*    .logo {
+        background: url(logo2x.jpg) no-repeat;
+        background-size: 212px 303px;
+    }*/
+
+}

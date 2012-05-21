@@ -1,0 +1,69 @@
+= DESCRIPTION:
+
+Installs and configures the PostgreSQL client or server.
+
+= REQUIREMENTS:
+
+== Platform:
+
+Tested on CentOS 5.5, Ubuntu 10.04 and Debian Lenny but should also support Red Hat, Fedora and SUSE.
+
+== Cookbooks:
+
+= ATTRIBUTES: 
+
+* postgresql[:listen] - IP address to listen on.
+* postgrseql[:port] - Port number to use.
+* postgresql[:dir] - Configuration files location.
+* postgresql[:contrib_dir] - "contrib" scripts location. Read-only, determined by platform.
+* postgresql[:version] - Version of PostgreSQL to use. Read-only, determined by platform.
+* postgresql[:ssl] - Enable SSL support? The Debian post installation script automatically builds the certificates.
+
+= USAGE:
+
+For clients:
+
+  include_recipe "postgresql::client"
+  
+For servers:
+
+  include_recipe "postgresql::server"
+  
+The server recipe includes the client recipe and either the Red Hat family (postgresql::server_redhat) or Debian family (postgresql::server_debian) recipe. These platform styles differ quite a bit.
+
+The templates provided by this cookbook will probably need to be tweaked for the local environment as no tuning parameters are specified in them. The templates are separated by family designation in the template directory, since Chef doesn't do "platform family" style file specificity.
+
+A postgresql_user definition is provided for creating users. Supported actions are :create and :drop. The openssl cookbook can be used to randomly generate a secure password.
+
+  postgresql_user "fred" do
+    password "foobar"
+    privileges :superuser => false, :createdb => false, :inherit => true, :login => true
+  end
+
+A postgresql_database definition is provided for creating databases. Supported actions are :create and :drop. Additional modules from the "contrib" directory can be given in an array. Include "postgis" in this array to enable PostGIS, which is handled as a special case.
+
+  postgresql_database "foobar" do
+    owner "fred"
+    template "barbaz"
+    flags :datconnlimit => 5
+    languages [ "plpgsql" ]
+    modules [ "citext", "postgis" ]
+  end
+
+= LICENSE and AUTHOR:
+      
+Author:: Joshua Timberman (<joshua@opscode.com>), James Le Cuirot (<developers@findsyou.com>)
+
+Copyright:: 2009-2010, Opscode, Inc; 2010, FindsYou Limited
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

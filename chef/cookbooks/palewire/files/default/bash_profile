@@ -1,0 +1,12 @@
+. .bashrc
+
+alias ls='ls -al'
+alias c='clear'
+
+export PIP_DOWNLOAD_CACHE=/tmp/pip
+export DJANGO_SETTINGS_MODULE=project.settings
+export EDITOR=vim
+
+. /apps/pastpages.org/bin/activate
+
+cd /apps/pastpages.org/repo/

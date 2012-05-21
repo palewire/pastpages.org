@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load greeking_tags %}
+
+{% block title %}{{ object.start|date:"N j, Y, P" }} - {{ block.super }}{% endblock %}
+
+{% block facebook-meta %}
+    {{ block.super }}
+    <meta property="og:description"
+          content="An archive of news homepages." />
+    <meta property="og:title" content="{{ object.start|date:"N j, Y, P" }}"/>
+    <meta property="og:url" content="http://{{ site }}{{ object.get_absolute_url }}"/>
+    <meta property="og:image" content="{{ screenshot_groups.0.0.crop.url_300x251 }}"/>
+{% endblock %}
+
+{% block body %}
+    <div class="container detail" style="margin-bottom:10px;">
+        <div class="row">
+            <div class="twelvecol">
+                <h2>{{ object.start|date:"l N j, Y, P e" }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        {% for row in screenshot_groups %}
+        <div class="row screenshots">
+            {% for obj in row %}
+            <div class="threecol {% if forloop.last %}last{% endif %}">
+                <a href="{{ obj.get_absolute_url }}">
+                    <img src="{{ obj.crop.url_300x251 }}">
+                </a>
+                <a style="display:block;" href="{{ obj.site.get_absolute_url }}">{{ obj.site }}</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}

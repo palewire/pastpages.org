@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load greeking_tags %}
+
+{% block title %}{{ object.site }} at  {{ object.update.start|date:"N j, Y, P" }} - {{ block.super }}{% endblock %}
+
+{% block facebook-meta %}
+    {{ block.super }}
+    <meta property="og:description"
+          content="A screenshot of {{ object.site.url }}" />
+    <meta property="og:title" content="{{ object.site }} at {{ object.update.start|date:"N j, Y, P" }}"/>
+    <meta property="og:url" content="http://{{ site }}{{ object.get_absolute_url }}"/>
+    <meta property="og:image" content="{{ object.crop.url_300x251 }}"/>
+{% endblock %}
+
+
+{% block body %}
+    <div class="container detail">
+        <div class="row">
+            <div class="twelvecol last">
+                <h2>
+                    <a href="{{ object.site.get_absolute_url }}">{{ object.site }}</a>
+                    / 
+                    <a href="{{ object.update.get_absolute_url }}">{{ object.update.start|date:"l N j, Y, P e" }}</a>
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelvecol last">
+                <img src="{{ object.image.url }}">
+            </div>
+        </div>
+    </div>
+{% endblock %}

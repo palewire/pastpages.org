@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Cry for help - {{ block.super }}{% endblock %}
+
+{% block facebook-meta %}
+    {{ block.super }}
+    <meta property="og:description"
+          content="An archive of homepages from {{ object.url }}" />
+    <meta property="og:title" content="Cry for help"/>
+    <meta property="og:url" content="http://{{ site }}/cry-for-help/"/>
+    <meta property="og:image" content="http://c329700.r0.cf1.rackcdn.com/archive/29/cnn/images/cnn-29-706-crop.png"/>
+{% endblock %}
+
+{% block extra-css %}
+<style type="text/css">
+    h2 {
+        margin: 15px 0 10px 0;
+    }
+    p {
+        margin: 0 0 8px 0;
+        font-size:16px;
+        line-height:22px;
+        text-align:justify;
+    }
+    ul {
+        margin: 0 0 50px 0;
+    }
+    ul li {
+        margin: 5px 0 0 20px;
+    }
+</style>
+{% endblock %}
+
+{% block ribbon %}{% endblock %}
+{% block headline %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="threecol"></div>
+        <div class="sixcol last">
+            <h2>This is my cry for help.</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="threecol"></div>
+        <div class="sixcol">
+             <p>Hello world. <a href="/">Pas&shy;t&shy;Pages</a> needs your support.</p>
+            <p>I cre&shy;ated this site be&shy;cause I think it ought to ex&shy;ist. The shift&shy;ing homepages of ma&shy;jor me&shy;dia sites should be saved so they can be stud&shy;ied. Done right, I be&shy;lieve Pas&shy;t&shy;Pages could serve as a re&shy;source for schol&shy;ars seek&shy;ing to study cov&shy;er&shy;age of news events, like the up&shy;com&shy;ing U.S. pres&shy;id&shy;en&shy;tial elec&shy;tion.</p>
+            <p>Reg&shy;u&shy;larly col&shy;lect&shy;ing this data costs money. Right now I'm pay&shy;ing for it out of pock&shy;et. <a href="https://docs.google.com/spreadsheet/pub?key=0Ar5ibcv4GXUqdElNSXNqX0hWQ29ab0l0Z2taZ0xmQ3c&output=html">My back of the en&shy;vel&shy;ope math</a> suggests it will cost at least $60 each month to keep alive, even at low traffic levels. I will not be able to af&shy;ford that for long, especially if traffic levels increase and drive up costs.</p>
+            <p>This is my cry for help. I think this site be&shy;longs in a lib&shy;rary where it can be avail&shy;able to scho&shy;l&shy;ars and me&shy;dia crit&shy;ics. If you can help, please contact me at <a href="mailto:ben.welsh@gmail.com">ben.welsh@gmail.com</a>.</p>
+
+            <p>In the meantime, I am accept&shy;ing do&shy;na&shy;tions via <a href="http://www.kickstarter.com/projects/651552740/keep-pastpages-alive">Kickstarter</a>. If you would like to give, click the box below. If you kick in there are some re&shy;wards, and I'll even add your site to the index, assuming it's le&shy;git&shy;imate news. If I don't meet my goal all the mo&shy;ney is lost, so please help make this hap&shy;pen.</p>
+            <p>Thank you.</p>
+            <p style="text-align:right;">&mdash; <a href="http://palewi.re/who-is-ben-welsh/">Ben Welsh</a></p>
+
+<iframe frameborder="0" height="380px" src="http://www.kickstarter.com/projects/651552740/keep-pastpages-alive/widget/card.html" width="220px"></iframe>
+
+            <a name="champions"></a>
+            <h2>Champions</h2>
+            <p>The list of he&shy;roes who have pled&shy;ged at least $20.</p>
+            <ul>
+            {% for champ in champion_list %}
+                <li>
+                    {% if champ.link %}<a href="{{ champ.link }}">{% endif %}
+                        {{ champ.name }}
+                    {% if champ.link %}</a>{% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+
+
+            {% comment %}
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+            <input type="hidden" name="cmd" value="_s-xclick">
+            <input type="hidden" name="hosted_button_id" value="SP3XQ5W6UYPRW">
+            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </form>
+            {% endcomment %}
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

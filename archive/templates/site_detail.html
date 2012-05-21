@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load greeking_tags %}
+
+{% block title %}{{ object }} - {{ block.super }}{% endblock %}
+
+{% block facebook-meta %}
+    {{ block.super }}
+    <meta property="og:description"
+          content="An archive of homepages from {{ object.url }}" />
+    <meta property="og:title" content="{{ object }}"/>
+    <meta property="og:url" content="http://{{ site }}{{ object.get_absolute_url }}"/>
+    <meta property="og:image" content="{{ latest_screenshot.crop.url_300x251 }}"/>
+{% endblock %}
+
+{% block body %}
+    <div class="container detail">
+        <div class="row">
+            <div class="fivecol">
+                <a href="{{ latest_screenshot.get_absolute_url }}">
+                    <img alt="{{ latest_screenshot.update.start|date:"l N j, Y, P e" }}"
+                         title="{{ latest_screenshot.update.start|date:"l N j, Y, P e" }}"
+                         src="{{ latest_screenshot.image.url_449x3000 }}">
+                </a>
+            </div>
+            <div class="sevencol last">
+                <div class="row" id="sitetitle">
+                    <div class="twelvecol">
+                        <h1>{{ object }}</h1>
+                        <h3>
+                            <a href="{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}">{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}</a>
+                        </h3>
+                        {% if object.tags.all %}
+                        <h4 style="margin-bottom:5px;">
+                        Tags: {% for tag in object.tags.all %}
+                            <a href="{% url archive-tag-detail tag %}">
+                                {{ tag }}
+                            </a>{% if not forloop.last %},&nbsp;{% endif %}
+                            {% endfor %}
+                        </h4>
+                        {% endif %}
+                        <h4>Updated {{ latest_screenshot.update.start|date:"l N j, Y, P e" }}</h4>
+                        <hr>
+                    </div>
+                </div>
+                {% for date, row_list in screenshot_list %}
+                    <div class="row">
+                        <div class="twelvecol">
+                            <h5>{{ date|date:"l N j, Y" }}</h5>
+                        </div>
+                    </div>
+                    {% for row in row_list %}
+                    <div class="row nestedthumbs">
+                    {% for obj in row %}
+                        <div class="twocol {% if forloop.last %}last{% endif %}">
+                            <a href="{{ obj.get_absolute_url }}">
+                                <img alt="{{ obj.update.start|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.update.start|date:"l N j, Y, P e" }}"
+                                     src="{{ obj.crop.url_300x251 }}">
+                            </a>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

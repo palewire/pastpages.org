@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load greeking_tags %}
+
+{% block facebook-meta %}
+    {{ block.super }}
+    <meta property="og:description"
+          content="The news homepage archive"/>
+    <meta property="og:title" content="Latest homepages"/>
+    <meta property="og:url" content="http://{{ site }}"/>
+    <meta property="og:image" content=""/>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row datestamp">
+            <div class="twelvecol last">
+                <p>Updated {{ update.start|date:"l N j, Y, P e" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        {% for row in object_list %}
+        <div class="row screenshots">
+            {% for obj in row %}
+            <div class="threecol {% if forloop.last %}last{% endif %}">
+                <a href="{{ obj.site.get_absolute_url }}">
+                    <img src="{{ obj.crop.url_300x251 }}">
+                </a>
+                <a style="display:block;" href="{{ obj.site.get_absolute_url }}">{{ obj.site }}</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

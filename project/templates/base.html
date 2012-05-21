@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block title %}PastPages{% endblock %}</title>
+        <meta name="Author" content="pastpages.org" />
+        <meta name="description" content="{% block description %}The news homepage archive{% endblock %}" />
+        <meta name="keywords" content="{% block keywords %}pastpages, news, homepages, screenshots, snapshots, archive{% endblock %}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        {% block facebook-meta %}
+        <meta property="fb:admins" content="1257725335"/>
+        <meta property="fb:app_id" content="352154041499664"/>
+        <meta property="og:site_name" content="PastPages"/>
+        <meta property="og:type" content="article"/>
+        {% endblock %}
+
+        {% block extra-meta %}{% endblock %}
+        
+        <!--[if lte IE 9]><link rel="stylesheet" href="{{ STATIC_URL }}css/ie.css" type="text/css" media="screen" /><![endif]-->
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/1140.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css" type="text/css" media="screen" />
+        <link href='http://fonts.googleapis.com/css?family=Arvo&v1' rel='stylesheet' type='text/css'>
+        <link type="text/css" href="{{ STATIC_URL }}css/jquery-ui/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
+        {% block extra-css %}{% endblock %}
+        
+        <script type="text/javascript" src="{{ STATIC_URL }}js/css3-mediaqueries.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.5.1.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.14.custom.min.js"></script>
+
+        {% block extra-js %}{% endblock %}
+
+        {% block extra-head %}{% endblock %}
+        
+        <script type="text/javascript">
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-30952190-1']);
+          _gaq.push(['_trackPageview']);
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+        </script>
+    </head>
+    <body {%block extra-body %}{% endblock %}>
+
+        {% block ribbon %}
+        <div id="ribbon" class="container">
+            <div class="row">
+                <div class="twelvecol">
+                    <span class="thefool">This site is run at a loss by a fool who thinks it ought to exist.</span>
+                    <a href="http://www.kickstarter.com/projects/651552740/keep-pastpages-alive">
+                        Help keep PastPages alive.
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+
+        {% block headline %}
+        <div id="headline" class="container">
+            <div class="row">
+                <div class="fourcol">
+                    <a href="/">
+                        <h1>PastPages</h1>
+                        <p>The news homepage archive</p>
+                    </a>
+                </div>
+                <div class="fourcol"></div>
+                <div class="fourcol last upperright">
+                    {% block upperright %}
+                        {% load archive_tags %}
+                        {% load misc_tags %}
+                        {% get_daterange %}
+                        {% get_sitelist %}
+                        <form id="sitepicker" name="sitepicker" style="display:inline;">
+                            <select name="sitelist">
+                                <option value="default" SELECTED>Select a site</option>
+                                {% for site in site_list%}
+                                <option value="{{ site.slug }}">{{ site }}</option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                        <script type="text/javascript">
+                        $(function() {
+                            $( "#sitepicker select" ).change(function() {
+                                    var slug = $(this).val();
+                                    if (slug != 'default') {
+                                        window.location.href = '/site/' + slug + '/';
+                                    }
+                                }
+                            );
+                        });
+                        </script>
+                        <script type="text/javascript">
+                        $(function() {
+                            $("#calendar").click(function() {
+                                console.log("click");
+                                $( "#datepicker" ).click();
+                            })
+                            $("#datepicker").datepicker({
+                                minDate: new {{ min_date.date|datejs }},
+                                maxDate: new {{ max_date.date|datejs }},
+                                buttonImage: '{{ STATIC_URL }}calendar.jpg',
+                                buttonImageOnly: true,
+                                showOn: 'both',
+                                buttonText: 'Select a date',
+                                onSelect: function(dateText, inst) {
+                                    var parts = dateText.split("/");
+                                    var url = '/date/' + parts[2] + "/" + parts[0] + "/" + parts[1] + "/";
+                                    window.location.href = url;
+                                }
+                            });
+                        });
+                        </script>
+                        <form name="input" action="/jump-to-date/" method="get" style="display:inline;">
+                            <input id="datepicker" name="date" type="hidden">
+                        </form>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+        {% block body %}
+        {% endblock %}
+        {% block footer %}
+        <div id="footer" class="container">
+            <div class="row">
+                <div class="twelvecol">
+                    Updated hourly. Created by <a rel="author" href="http://palewi.re/who-is-ben-welsh/">palewire</a>.
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    </body>
+</html>

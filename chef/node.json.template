@@ -1,0 +1,71 @@
+{
+    "run_list": [ 
+        "palewire::default",
+        "palewire::python",
+        "palewire::postgresql",
+        "palewire::app",
+        "palewire::memcached",
+        "palewire::apache",
+        "palewire::cron",
+        "palewire::selenium"
+    ],
+    "base_packages": ["git-core", "bash-completion"],
+    
+    "users": {
+        "palewire": {
+          "id": 1001,
+          "full_name": "palewire"
+        }
+    },
+    
+    "groups": {
+        "palewire": {
+          "gid": 201,
+          "members": ["palewire"]
+        }
+    },
+    
+    "ubuntu_python_packages": [
+        "python-setuptools", "python-pip", "python-dev", "libpq-dev",
+        "python-virtualenv", "xvfb", "python-imaging", "firefox",
+        "flashplugin-installer", "s3cmd", "xfonts-intl-chinese", 
+        "xfonts-100dpi", "xfonts-75dpi", "xfonts-scalable", "xfonts-cyrillic",
+        "xfonts-intl-asian", "xfonts-intl-chinese-big", "xfonts-intl-european",
+        "xfonts-intl-japanese", "xfonts-intl-japanese-big", "xfonts-intl-phonetic",
+        "gsfonts-x11", "ttf-arphic-newsung", "ttf-arphic-ukai", "ttf-arphic-uming",
+        "ttf-arphic-gbsn00lp", "ttf-arphic-bkai00mp", "ttf-arphic-bsmi00lp", 
+        "ttf-arphic-gkai00mp", "xfonts-intl-chinese", "xfonts-base", "unifont",
+        "ttf-umefont", "fonts-horai-umefont", "xfonts-efont-unicode",
+        "xfonts-efont-unicode-ib", "xfonts-intl-european", "ttf-nanum"
+    ],
+    "pip_python_packages": {},
+
+    "db_user": "palewire",
+    "db_name": "pastpages",
+    "db_password": "",
+
+    "app_name": "pastpages.org",
+    "app_user": "palewire",
+    "app_group": "palewire",
+    "app_password": "",
+    "app_repo": "git@github.com:pastpages/pastpages.org.git",
+
+    "rabbitmq_password": "",
+
+    "crons": {
+        "updatearchive": {
+            "minute": "0",
+            "command": "/apps/pastpages.org/bin/python /apps/pastpages.org/repo/manage.py updatearchive > /dev/null 2>&1"
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
