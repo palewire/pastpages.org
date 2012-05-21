@@ -43,6 +43,16 @@ def deploy():
     restart_apache()
 
 
+def push_settings():
+    """
+    Push the latest settings out.
+    """
+    put(
+        'project/settings_prod.py',
+        os.path.join(env.project_dir, 'project/settings_prod.py')
+    )
+
+
 def restart_apache():
     """
     Restarts apache on both app servers.
