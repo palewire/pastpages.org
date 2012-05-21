@@ -6,4 +6,4 @@
 |   |    |   _   | _____| |  |   |  |   |    |   _   ||   |_| ||   |___  _____| |
 |___|    |__| |__||_______|  |___|  |___|    |__| |__||_______||_______||_______|</code></pre>
 
-The news homepage archive. At [pastpages.org](http://www.pastpages.org).
+The news homepage archive. At (pastpages.org)[http://www.pastpages.org].
