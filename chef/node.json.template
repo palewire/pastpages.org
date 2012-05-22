@@ -56,6 +56,11 @@
         "updatearchive": {
             "minute": "0",
             "command": "/apps/pastpages.org/bin/python /apps/pastpages.org/repo/manage.py updatearchive > /dev/null 2>&1"
+        },
+        "backuppostgres" {
+            "minute": "30",
+            "hour": "1",
+            "command": "/apps/pastpages.org/bin/python /apps/pastpages.org/repo/toolbox/backups/postgres.py"
         }
     }
 
