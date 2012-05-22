@@ -106,6 +106,13 @@ def collectstatic():
     _venv("python manage.py collectstatic --noinput")
 
 
+def backup_postgres():
+    """
+    Backup the postgres database
+    """
+    _venv('python toolbox/backups/postgres.py')
+
+
 def _venv(cmd):
     """
     A wrapper for running commands in our prod virturalenv
