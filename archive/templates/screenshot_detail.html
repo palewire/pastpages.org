@@ -7,7 +7,7 @@
     {{ block.super }}
     <meta property="og:description"
           content="A screenshot of {{ object.site.url }}" />
-    <meta property="og:title" content="{{ object.site }} at {{ object.update.start|date:"N j, Y, P" }}"/>
+    <meta property="og:title" content="{{ object.site }} at {{ object.timestamp|date:"N j, Y, P" }}"/>
     <meta property="og:url" content="http://{{ site }}{{ object.get_absolute_url }}"/>
     <meta property="og:image" content="{{ object.crop.url_300x251 }}"/>
 {% endblock %}
@@ -20,7 +20,7 @@
                 <h2>
                     <a href="{{ object.site.get_absolute_url }}">{{ object.site }}</a>
                     / 
-                    <a href="{{ object.update.get_absolute_url }}">{{ object.update.start|date:"l N j, Y, P e" }}</a>
+                    <a href="{{ object.update.get_absolute_url }}">{{ object.timestamp|date:"l N j, Y, P e" }}</a>
                 </h2>
             </div>
         </div>
