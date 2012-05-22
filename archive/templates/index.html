@@ -25,7 +25,16 @@
             {% for obj in row %}
             <div class="threecol {% if forloop.last %}last{% endif %}">
                 <a href="{{ obj.site.get_absolute_url }}">
-                    <img src="{{ obj.crop.url_300x251 }}">
+                    <img {% if forloop.parentloop.counter > 4 %}
+                         class="lazy" src="{{ STATIC_URL }}blank_300x251.jpg"
+                         data-original="{{ obj.crop.url_300x251 }}"
+                         {% else %}
+                         src="{{ obj.crop.url_300x251 }}"
+                         {% endif %}
+                         alt="{{ obj.site }}">
+                    {% if forloop.parentloop.counter > 12 %}
+                    <noscript><img src="{{ obj.crop.url_300x251 }}" alt="{{ obj.site }}"></noscript>
+                    {% endif %}
                 </a>
                 <a style="display:block;" href="{{ obj.site.get_absolute_url }}">{{ obj.site }}</a>
             </div>

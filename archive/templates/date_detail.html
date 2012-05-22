@@ -32,7 +32,17 @@
                         {% for obj in row %}
                             {% if obj.has_crop %}
                                 <a href="{{ obj.get_absolute_url }}">
-                                    <img src="{{ obj.crop.url_101x84 }}">
+                                    <img {% if forloop.parentloop.parentloop.counter > 2 %}
+                                         class="lazy" src="{{ STATIC_URL }}blank_101x84.jpg"
+                                         data-original="{{ obj.crop.url_101x84 }}"
+                                         {% else %}
+                                         src="{{ obj.crop.url_101x84 }}"
+                                         {% endif %}
+                                         alt="{{ obj.site }}">
+                                    {% if forloop.parentloop.parentloop.counter > 2 %}
+                                    <noscript><img src="{{ obj.crop.url_3101x84 }}"
+                                                   alt="{{ obj.site }}"></noscript>
+                                    {% endif %}
                                 </a>
                             {% endif %}
                         {% endfor %}
