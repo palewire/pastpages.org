@@ -144,7 +144,7 @@ class SiteDetail(BuildableDetailView):
             site=self.object,
             has_image=True,
             has_crop=True,
-        ).select_related("site", "update")[:40]
+        ).select_related("site", "update")[:100]
         try:
             latest_screenshot = screenshot_list[0]
             screenshot_groups = []
