@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
-from archive import views
+from archive import views, sitemaps
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -28,6 +28,8 @@ urlpatterns = patterns('',
         'url': '%sfavicon.ico' % settings.STATIC_URL
     }),
     (r'^robots\.txt$', include('robots.urls')),
+    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps.SITEMAPS})
 )
 if settings.DEBUG:
     urlpatterns += patterns('',
