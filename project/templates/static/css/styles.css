@@ -5,6 +5,12 @@
     body {
         font-family: "Arvo", Arial, sans-serif;
     }
+    a:hover {
+        text-decoration:none;
+    }
+    a:active {
+        color: red;
+    }
     div#ribbon {
         height:36px;
         line-height:36px;
@@ -26,6 +32,9 @@
     div#headline a {
         text-decoration:none;
         color:black;
+    }
+    div#headline a:hover {
+        color: gray;
     }
     div.screenshots {
         margin: 0 auto 30px auto;
