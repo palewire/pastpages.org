@@ -5,6 +5,7 @@ from django.http import Http404
 from django.utils import timezone
 from taggit.models import Tag, TaggedItem
 from django.utils.timezone import localtime
+from django.core.urlresolvers import reverse
 from archive.models import Update, Site, Screenshot, Champion
 from django.template.defaultfilters import date as dateformat
 from bakery.views import BuildableDetailView, BuildableTemplateView
@@ -206,9 +207,7 @@ class TagDetail(BuildableDetailView):
         }
     
     def get_url(self, obj):
-        return '/tag/%s/' % (
-            obj.name
-        )
+        return reverse('archive-tag-detail', args=[obj.name])
 
 
 

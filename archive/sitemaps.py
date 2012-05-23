@@ -1,5 +1,18 @@
+from taggit.models import Tag
 from django.contrib.sitemaps import Sitemap
 from models import Site, Update, Screenshot
+from django.core.urlresolvers import reverse
+
+
+class ScreenshotSitemap(Sitemap):
+    changefreq = "never"
+    limit = 1000
+    
+    def items(self):
+        return Screenshot.objects.filter(has_image=True)
+    
+    def lastmod(self, obj):
+        return obj.timestamp
 
 
 class SiteSitemap(Sitemap):
@@ -27,19 +40,19 @@ class UpdateSitemap(Sitemap):
         return obj.start
 
 
-class ScreenshotSitemap(Sitemap):
-    changefreq = "never"
-    limit = 1000
+class TagSitemap(Sitemap):
+    changefreq = "hourly"
     
     def items(self):
-        return Screenshot.objects.filter(has_image=True)
+        return Tag.objects.all()
     
-    def lastmod(self, obj):
-        return obj.timestamp
+    def location(self, obj):
+        return reverse('archive-tag-detail', args=[obj.name])
 
 
 SITEMAPS = {
-    'sites': SiteSitemap,
-    'updates': UpdateSitemap,
     'screenshots': ScreenshotSitemap,
+    'sites': SiteSitemap,
+    'tags': TagSitemap,
+    'updates': UpdateSitemap,
 }
