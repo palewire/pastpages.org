@@ -14,6 +14,7 @@ INSTALLED_APPS = (
     'archive',
     'cumulus',
     'greeking',
+    'robots',
     'south',
     'taggit',
     'toolbox',

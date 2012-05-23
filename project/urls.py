@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     ('^favicon.ico$', 'django.views.generic.simple.redirect_to', {
         'url': '%sfavicon.ico' % settings.STATIC_URL
     }),
+    (r'^robots\.txt$', include('robots.urls')),
 )
 if settings.DEBUG:
     urlpatterns += patterns('',

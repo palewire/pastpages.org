@@ -12,12 +12,12 @@ boto==2.3.0
 celery==2.2.7
 cssutils==0.9.8a3
 decorator==3.3.2
-distribute==0.6.19
 django-bakery==0.1
 django-celery==2.2.4
 django-cumulus==1.0.5
 django-debug-toolbar==0.9.4
 django-picklefield==0.1.9
+django-robots==0.8.1
 django-storages==1.1.4
 django-taggit==0.9.3
 entrypoint2==0.0.5
