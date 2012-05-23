@@ -1,5 +1,5 @@
 from django.contrib.sitemaps import Sitemap
-from models import Site
+from models import Site, Update, Screenshot
 
 
 class SiteSitemap(Sitemap):
@@ -16,6 +16,30 @@ class SiteSitemap(Sitemap):
             return None
 
 
+class UpdateSitemap(Sitemap):
+    changefreq = "never"
+    limit = 1000
+    
+    def items(self):
+        return Update.objects.all()
+    
+    def lastmod(self, obj):
+        return obj.start
+
+
+class ScreenshotSitemap(Sitemap):
+    changefreq = "never"
+    limit = 1000
+    
+    def items(self):
+        return Screenshot.objects.filter(has_image=True)
+    
+    def lastmod(self, obj):
+        return obj.timestamp
+
+
 SITEMAPS = {
     'sites': SiteSitemap,
+    'updates': UpdateSitemap,
+    'screenshots': ScreenshotSitemap,
 }

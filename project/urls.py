@@ -28,8 +28,10 @@ urlpatterns = patterns('',
         'url': '%sfavicon.ico' % settings.STATIC_URL
     }),
     (r'^robots\.txt$', include('robots.urls')),
-    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap',
-        {'sitemaps': sitemaps.SITEMAPS})
+    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index',
+        {'sitemaps': sitemaps.SITEMAPS}),
+    (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps.SITEMAPS}),
 )
 if settings.DEBUG:
     urlpatterns += patterns('',
