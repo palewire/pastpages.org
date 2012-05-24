@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load greeking_tags %}
 
-{% block title %}{{ object.site }} at  {{ object.update.start|date:"N j, Y, P" }} - {{ block.super }}{% endblock %}
+{% block title %}{{ object.site }} at  {{ object.update.start|date:"N j, Y, P" }} screenshot by {{ block.super }}{% endblock %}
 
 {% block facebook-meta %}
     {{ block.super }}
