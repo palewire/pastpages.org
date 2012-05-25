@@ -26,6 +26,16 @@
         </div>
         <div class="row">
             <div class="twelvecol last">
+                <div class="twocol" style="float:right;">
+                    {% if next %}<a href="{{ next.get_absolute_url }}">Next &raquo;</a>{% endif %}
+                </div>
+                <div class="twocol">
+                    {% if prev %}<a href="{{ prev.get_absolute_url }}">&laquo; Previous</a>{% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelvecol last">
                 <img src="{{ object.image.url }}">
             </div>
         </div>

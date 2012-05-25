@@ -51,6 +51,30 @@ class ScreenshotDetail(BuildableDetailView):
     """
     template_name = 'screenshot_detail.html'
     queryset = Screenshot.objects.filter(site__status='active').select_related("update")
+    
+    def get_context_data(self, **kwargs):
+        context = super(ScreenshotDetail, self).get_context_data(**kwargs)
+        try:
+            next = Screenshot.objects.exclude(id=context['object'].id).filter(
+                site=context['object'].site,
+                has_image=True,
+                timestamp__gte=context['object'].timestamp
+            ).order_by("timestamp")[0]
+        except IndexError:
+            next = None
+        try:
+            prev = Screenshot.objects.exclude(id=context['object'].id).filter(
+                site=context['object'].site,
+                has_image=True,
+                timestamp__lte=context['object'].timestamp
+            )[0]
+        except IndexError:
+            prev = None
+        context.update({
+            'next': next,
+            'prev': prev,
+        })
+        return context
 
 
 class DateDetail(BuildableDetailView):
