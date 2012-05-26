@@ -30,7 +30,7 @@ class Site(BuildableModel):
         default='active')
     y_offset = models.IntegerField(default=0, blank=True)
     on_the_homepage = models.BooleanField(default=True)
-    objects = models.Manager()
+    objects = managers.SiteManager()
     tags = TaggableManager(blank=True)
     
     class Meta:

@@ -55,7 +55,10 @@ class Index(BuildableTemplateView):
         if not update:
             raise Http404
         object_list = update.screenshot_set.filter(
-            has_crop=True, site__on_the_homepage=True).select_related("site")
+            has_crop=True, site__on_the_homepage=True)
+        object_list = object_list.select_related("site")
+        # A case-insensitive resorting of the list
+        object_list = sorted(object_list, key=lambda x: x.site.name.lower())
         object_list = group_objects_by_number(object_list, 4)
         return {
             'update': update,

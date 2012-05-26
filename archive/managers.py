@@ -1,6 +1,10 @@
 from django.db import models
 
 
+class SiteManager(models.Manager):
+    pass
+
+
 class UpdateManager(models.Manager):
     
     def live(self):
