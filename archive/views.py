@@ -8,6 +8,7 @@ from django.utils.timezone import localtime
 from django.core.urlresolvers import reverse
 from archive.models import Update, Site, Screenshot, Champion
 from django.template.defaultfilters import date as dateformat
+from bakery.views import BuildableListView
 from bakery.views import BuildableDetailView, BuildableTemplateView
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,15 @@ class CryForHelp(BuildableTemplateView):
         context = super(BuildableTemplateView, self).get_context_data(**kwargs)
         context['champion_list'] = Champion.objects.all()
         return context
+
+
+class ChampionsList(BuildableListView):
+    """
+    A list of the people who have given money to support the site.
+    """
+    queryset = Champion.objects.all()
+    build_path = 'champions/index.html'
+    template_name = 'champion_list.html'
 
 
 class Index(BuildableTemplateView):
