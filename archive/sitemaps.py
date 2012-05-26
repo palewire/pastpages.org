@@ -4,6 +4,13 @@ from models import Site, Update, Screenshot
 from django.core.urlresolvers import reverse
 
 
+class AbstractSitemapClass():
+    url = None
+    
+    def get_absolute_url(self):
+        return self.url
+
+
 class ScreenshotSitemap(Sitemap):
     changefreq = "never"
     limit = 1000
@@ -27,6 +34,22 @@ class SiteSitemap(Sitemap):
             return s.timestamp
         except IndexError:
             return None
+
+
+class StaticSitemap(Sitemap):
+    pages = {
+        'index':'/',
+        'about':'/about/',
+        'champions': '/champions/',
+    }
+    main_sitemaps = []
+    for page in pages.keys():
+        sitemap_class = AbstractSitemapClass()
+        sitemap_class.url = pages[page]
+        main_sitemaps.append(sitemap_class)
+    
+    def items(self):
+        return self.main_sitemaps
 
 
 class UpdateSitemap(Sitemap):
@@ -53,6 +76,7 @@ class TagSitemap(Sitemap):
 SITEMAPS = {
     'screenshots': ScreenshotSitemap,
     'sites': SiteSitemap,
+    'static': StaticSitemap,
     'tags': TagSitemap,
     'updates': UpdateSitemap,
 }
