@@ -32,7 +32,7 @@ def do_daterange(parser, token):
 
 class SitelistNode(template.Node):
     def render(self, context):
-        obj_list = Site.objects.filter(status='active')
+        obj_list = Site.objects.active()
         obj_list = sorted(obj_list, key=lambda x: x.name.lower())
         context['site_list'] = obj_list
         return ''

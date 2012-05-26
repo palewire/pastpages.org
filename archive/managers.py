@@ -2,7 +2,9 @@ from django.db import models
 
 
 class SiteManager(models.Manager):
-    pass
+    
+    def active(self):
+        return self.filter(status='active')
 
 
 class UpdateManager(models.Manager):
@@ -11,7 +13,7 @@ class UpdateManager(models.Manager):
         from django.db import connection
         from archive.models import Site
         cursor = connection.cursor()
-        sites = Site.objects.filter(status='active').count()
+        sites = Site.objects.active().count()
         cutoff = int(sites * 0.7)
         sql = """
             SELECT u.id, u.start, count(s.id)

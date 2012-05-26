@@ -183,7 +183,7 @@ class SiteDetail(BuildableDetailView):
     All about a particular site.
     """
     template_name = 'site_detail.html'
-    queryset = Site.objects.filter(status='active')
+    queryset = Site.objects.active()
 
     def get_context_data(self, **kwargs):
         screenshot_list = Screenshot.objects.filter(

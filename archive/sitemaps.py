@@ -19,7 +19,7 @@ class SiteSitemap(Sitemap):
     changefreq = "hourly"
     
     def items(self):
-        return Site.objects.filter(status='active')
+        return Site.objects.active()
     
     def lastmod(self, obj):
         try:

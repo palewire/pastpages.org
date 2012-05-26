@@ -29,7 +29,7 @@ class Command(BaseCommand):
         update = Update.objects.create(
             start=timezone.now(),
         )
-        for site in Site.objects.filter(status='active'):
+        for site in Site.objects.active():
             try:
                 images.get_screenshot(site.id, update.id)
             except Exception, e:
