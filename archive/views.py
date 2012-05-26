@@ -13,6 +13,14 @@ from bakery.views import BuildableDetailView, BuildableTemplateView
 logger = logging.getLogger(__name__)
 
 
+class AboutDetail(BuildableTemplateView):
+    """
+    Some background on this site.
+    """
+    template_name = 'about.html'
+    build_path = 'about/index.html'
+
+
 class CryForHelp(BuildableTemplateView):
     """
     A cry for help.
