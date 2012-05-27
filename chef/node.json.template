@@ -7,7 +7,8 @@
         "palewire::memcached",
         "palewire::apache",
         "palewire::cron",
-        "palewire::selenium"
+        "palewire::selenium",
+        "palewire::munin"
     ],
     "base_packages": ["git-core", "bash-completion"],
     
@@ -57,7 +58,7 @@
             "minute": "0",
             "command": "/apps/pastpages.org/bin/python /apps/pastpages.org/repo/manage.py updatearchive > /dev/null 2>&1"
         },
-        "backuppostgres" {
+        "backuppostgres": {
             "minute": "30",
             "hour": "1",
             "command": "/apps/pastpages.org/bin/python /apps/pastpages.org/repo/toolbox/backups/postgres.py"

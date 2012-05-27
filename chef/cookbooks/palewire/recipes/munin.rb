@@ -15,5 +15,13 @@ cookbook_file "/etc/munin/munin.conf" do
   mode "777"
   owner "root"
   group "root"
-  notifies :restart, resources(:service => "munin-node")
+end
+
+script "Start Munin" do
+  interpreter "bash"
+  user "root"
+  group "root"
+  code <<-EOH
+    /etc/init.d/munin-node restart
+  EOH
 end
