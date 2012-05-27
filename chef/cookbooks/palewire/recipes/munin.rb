@@ -17,11 +17,13 @@ cookbook_file "/etc/munin/munin.conf" do
   group "root"
 end
 
-script "Start Munin" do
+script "Restart Munin" do
   interpreter "bash"
   user "root"
   group "root"
   code <<-EOH
-    /etc/init.d/munin-node restart
+    echo "#nothing to see here" > /etc/munin/apache.conf
+    service munin-node restart
+    service apache2 restart
   EOH
 end
