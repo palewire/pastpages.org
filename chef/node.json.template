@@ -10,7 +10,17 @@
         "palewire::selenium",
         "palewire::munin"
     ],
-    "base_packages": ["git-core", "bash-completion"],
+    "base_packages": ["git-core", "bash-completion", "firefox", "xvfb",
+        "flashplugin-installer", "s3cmd", "xfonts-intl-chinese", 
+        "xfonts-100dpi", "xfonts-75dpi", "xfonts-scalable", "xfonts-cyrillic",
+        "xfonts-intl-asian", "xfonts-intl-chinese-big", "xfonts-intl-european",
+        "xfonts-intl-japanese", "xfonts-intl-japanese-big", "xfonts-intl-phonetic",
+        "gsfonts-x11", "ttf-arphic-newsung", "ttf-arphic-ukai", "ttf-arphic-uming",
+        "ttf-arphic-gbsn00lp", "ttf-arphic-bkai00mp", "ttf-arphic-bsmi00lp", 
+        "ttf-arphic-gkai00mp", "xfonts-intl-chinese", "xfonts-base", "unifont",
+        "ttf-umefont", "fonts-horai-umefont", "xfonts-efont-unicode",
+        "xfonts-efont-unicode-ib", "xfonts-intl-european", "ttf-nanum"
+    ],
     
     "users": {
         "palewire": {
@@ -28,16 +38,7 @@
     
     "ubuntu_python_packages": [
         "python-setuptools", "python-pip", "python-dev", "libpq-dev",
-        "python-virtualenv", "xvfb", "python-imaging", "firefox",
-        "flashplugin-installer", "s3cmd", "xfonts-intl-chinese", 
-        "xfonts-100dpi", "xfonts-75dpi", "xfonts-scalable", "xfonts-cyrillic",
-        "xfonts-intl-asian", "xfonts-intl-chinese-big", "xfonts-intl-european",
-        "xfonts-intl-japanese", "xfonts-intl-japanese-big", "xfonts-intl-phonetic",
-        "gsfonts-x11", "ttf-arphic-newsung", "ttf-arphic-ukai", "ttf-arphic-uming",
-        "ttf-arphic-gbsn00lp", "ttf-arphic-bkai00mp", "ttf-arphic-bsmi00lp", 
-        "ttf-arphic-gkai00mp", "xfonts-intl-chinese", "xfonts-base", "unifont",
-        "ttf-umefont", "fonts-horai-umefont", "xfonts-efont-unicode",
-        "xfonts-efont-unicode-ib", "xfonts-intl-european", "ttf-nanum"
+        "python-virtualenv", "python-imaging"
     ],
     "pip_python_packages": {},
 
