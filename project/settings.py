@@ -18,6 +18,7 @@ INSTALLED_APPS = (
     'robots',
     'south',
     'taggit',
+    'tastypie',
     'toolbox',
 )
 

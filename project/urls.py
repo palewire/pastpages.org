@@ -7,6 +7,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    
+    # Pages for humans
     url(r'^$', views.Index.as_view(),
         name='archive-index'),
     url(r'^about/$', views.AboutDetail.as_view(),
@@ -24,26 +26,30 @@ urlpatterns = patterns('',
         name='archive-date-detail'),
     url(r'^screenshot/(?P<pk>\d+)/$', views.ScreenshotDetail.as_view(),
         name='archive-screenshot-detail'),
-    url(r'^cache/$', 'toolbox.views.cache_status'),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-        'document_root': settings.MEDIA_ROOT,
-    }),
+    
+    # Pages for machines
+    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index',
+        {'sitemaps': sitemaps.SITEMAPS}),
+    url(r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps.SITEMAPS}),
     ('^favicon.ico$', 'django.views.generic.simple.redirect_to', {
         'url': '%sfavicon.ico' % settings.STATIC_URL
     }),
-    (r'^robots\.txt$', include('robots.urls')),
-    (r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index',
-        {'sitemaps': sitemaps.SITEMAPS}),
-    (r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
-        {'sitemaps': sitemaps.SITEMAPS}),
+    url(r'^robots\.txt$', include('robots.urls')),
+    url(r'^api/', include('api.urls')),
+    
+    # Monitoring and administration
+    url(r'^cache/$', 'toolbox.views.cache_status'),
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^munin/(?P<path>.*)$', staff_member_required(static_serve), {
         'document_root': settings.MUNIN_ROOT,
     })
 )
+
+# Pages for developers
 if settings.DEBUG:
     urlpatterns += patterns('',
-        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+        url(r'^static/(?P<path>.*)$', static_serve, {
             'document_root': settings.STATIC_ROOT,
         }),
    )
