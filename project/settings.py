@@ -61,6 +61,7 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     os.path.join(SETTINGS_DIR, 'templates'),
 )
+MUNIN_ROOT = '/var/cache/munin/www/'
 
 # Request handling
 MIDDLEWARE_CLASSES = (
