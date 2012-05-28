@@ -1,15 +1,26 @@
-from taggit.models import Tag, TaggedItem
+"""
+RSS feed syndication
+"""
+# Models
 from django.db.models import Count
+from taggit.models import Tag, TaggedItem
 from archive.models import Update, Site, Screenshot
-from django.utils import timezone
-from django.shortcuts import get_object_or_404
+
+# Feeds
 from toolbox.mrss import MediaRSSFeed
-from django.core.urlresolvers import reverse
-from django.template.defaultfilters import date as dateformat
 from django.contrib.syndication.views import Feed, FeedDoesNotExist
+
+# Misc
+from django.utils import timezone
+from django.core.urlresolvers import reverse
+from django.shortcuts import get_object_or_404
+from django.template.defaultfilters import date as dateformat
 
 
 class RecentUpdates(Feed):
+    """
+    The latest updates published by PastPages.
+    """
     title = "Latest updates from PastPages"
     link = "http://www.pastpages.org/"
     
