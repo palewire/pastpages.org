@@ -1,9 +1,10 @@
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 from django.db.models import Count
-from archive.models import Update, Site
+from archive.models import Update, Site, Screenshot
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from toolbox.mrss import MediaRSSFeed
+from django.core.urlresolvers import reverse
 from django.template.defaultfilters import date as dateformat
 from django.contrib.syndication.views import Feed, FeedDoesNotExist
 
@@ -71,3 +72,49 @@ class SiteFeed(Feed):
             d['content_url'] = item.crop.url
         return d
 
+
+class TagFeed(Feed):
+    """
+    The most recent pages from a tag.
+    """
+    feed_type = MediaRSSFeed
+    
+    def get_object(self, request, slug):
+        return get_object_or_404(Tag, slug=slug)
+        
+    def title(self, obj):
+        return "Screenshots of sites tagged as %s by PastPages" % obj.name
+    
+    def link(self, obj):
+        return reverse('archive-tag-detail', args=[obj.name])
+        
+    def items(self, obj):
+        site_list = [i.content_object for i in
+            TaggedItem.objects.filter(tag=obj)
+        ]
+        update = Update.objects.live()
+        return Screenshot.objects.filter(
+            update=update,
+            site__in=site_list,
+            has_crop=True,
+            has_image=True,
+        )
+    
+    def item_title(self, item):
+        return 'Screenshots of %s taken at %s' % (
+            item.site,
+            dateformat(
+                timezone.localtime(item.timestamp),
+                'l N j, Y, P e',
+            )
+        )
+    
+    def item_description(self, item):
+        return None
+    
+    def item_extra_kwargs(self, item):
+        d = {}
+        if item.has_crop:
+            d['thumbnail_url'] = item.crop.url_300x251
+            d['content_url'] = item.crop.url
+        return d
