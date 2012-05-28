@@ -1,5 +1,5 @@
 from tastypie import fields
-from archive.models import Site
+from archive.models import Site, Update
 from django.conf import settings
 from tastypie.serializers import Serializer
 from django.core.urlresolvers import reverse
@@ -28,3 +28,34 @@ class SiteResource(ModelResource):
         filtering = {
             "slug": ('exact',),
         }
+
+
+class UpdateResource(ModelResource):
+    
+    class Meta:
+        resource_name = 'updates'
+        queryset = Update.objects.all()
+        allowed_methods = ['get',]
+        throttle = Throttle(throttle_at=50)
+        serializer = Serializer(formats=['json', 'jsonp'],
+            content_types = {
+                'json': 'text/javascript',
+                'jsonp': 'text/javascript'
+        })
+        include_absolute_url = True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
