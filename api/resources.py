@@ -1,5 +1,6 @@
 from tastypie import fields
 from django.conf import settings
+from taggit.models import Tag
 from tastypie.serializers import Serializer
 from django.core.urlresolvers import reverse
 from tastypie.resources import ModelResource
@@ -31,6 +32,7 @@ class ScreenshotResource(ModelResource):
 
 
 class SiteResource(ModelResource):
+    tags = fields.ToManyField('api.resources.TagResource', 'tags')
     
     class Meta:
         resource_name = 'sites'
@@ -46,6 +48,20 @@ class SiteResource(ModelResource):
         filtering = {
             "slug": ('exact',),
         }
+
+
+class TagResource(ModelResource):
+    
+    class Meta:
+        resource_name = 'tags'
+        queryset = Tag.objects.all()
+        allowed_methods = ['get',]
+        throttle = Throttle(throttle_at=50)
+        serializer = Serializer(formats=['json', 'jsonp'],
+            content_types = {
+                'json': 'text/javascript',
+                'jsonp': 'text/javascript'
+        })
 
 
 class UpdateResource(ModelResource):
