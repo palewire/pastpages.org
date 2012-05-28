@@ -1,7 +1,9 @@
+from taggit.models import Tag
 from django.db.models import Count
 from archive.models import Update, Site
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from toolbox.mrss import MediaRSSFeed
 from django.template.defaultfilters import date as dateformat
 from django.contrib.syndication.views import Feed, FeedDoesNotExist
 
@@ -36,28 +38,18 @@ class SiteFeed(Feed):
     """
     The most recent pages from a site.
     """
+    feed_type = MediaRSSFeed
+    
     def get_object(self, request, pk):
-        """
-        Fetch the Site object.
-        """
         return get_object_or_404(Site, pk=pk)
         
     def title(self, obj):
-        """
-        Set the feed title.
-        """
         return "%s screenshots by PastPages" % obj.name
     
     def link(self, obj):
-        """
-        Set the feed link.
-        """
         return obj.get_absolute_url()
         
     def items(self, obj):
-        """
-        Fetch the latest 10 screenshots
-        """
         return obj.screenshot_set.all()[:10]
     
     def item_title(self, item):
@@ -71,3 +63,11 @@ class SiteFeed(Feed):
     
     def item_description(self, item):
         return None
+    
+    def item_extra_kwargs(self, item):
+        d = {}
+        if item.has_crop:
+            d['thumbnail_url'] = item.crop.url_300x251
+            d['content_url'] = item.crop.url
+        return d
+
