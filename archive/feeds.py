@@ -46,7 +46,7 @@ class SiteFeed(Feed):
         """
         Set the feed title.
         """
-        return "%s screenshots by PastPages" % obj.name.lower()
+        return "%s screenshots by PastPages" % obj.name
     
     def link(self, obj):
         """
@@ -59,3 +59,15 @@ class SiteFeed(Feed):
         Fetch the latest 10 screenshots
         """
         return obj.screenshot_set.all()[:10]
+    
+    def item_title(self, item):
+        return 'Screenshots of %s taken at %s' % (
+            item.site,
+            dateformat(
+                timezone.localtime(item.timestamp),
+                'l N j, Y, P e',
+            )
+        )
+    
+    def item_description(self, item):
+        return None
