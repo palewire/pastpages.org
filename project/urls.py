@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
-from archive import views, sitemaps
+from archive import views, sitemaps, feeds
 from django.views.static import serve as static_serve
 from django.contrib.admin.views.decorators import staff_member_required
 admin.autodiscover()
@@ -37,6 +37,7 @@ urlpatterns = patterns('',
     }),
     url(r'^robots\.txt$', include('robots.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'feeds/updates/$', feeds.RecentUpdates(), name="feeds-updates"),
     
     # Monitoring and administration
     url(r'^cache/$', 'toolbox.views.cache_status'),
