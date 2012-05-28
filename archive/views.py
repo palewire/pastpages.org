@@ -154,25 +154,8 @@ class DateDetail(BuildableDetailView):
             day=obj.day
         )
     
-    def uniqify(self, seq, idfun=None): 
-       # order preserving
-       if idfun is None:
-           def idfun(x): return x
-       seen = {}
-       result = []
-       for item in seq:
-           marker = idfun(item)
-           # in old Python versions:
-           # if seen.has_key(marker)
-           # but in new ones:
-           if marker in seen: continue
-           seen[marker] = 1
-           result.append(item)
-       return result
-
     def get_queryset(self):
-        return self.uniqify([timezone.localtime(i.start).date()
-            for i in Update.objects.all()])
+        return Update.objects.dates()
     
     def build_queryset(self):
         [self.build_object(o) for o in self.get_queryset()]
