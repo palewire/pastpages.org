@@ -78,19 +78,3 @@ class UpdateResource(ModelResource):
                 'jsonp': 'text/javascript'
         })
         include_absolute_url = True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
