@@ -46,7 +46,7 @@
                         </h4>
                         {% endif %}
                         <h4 style="margin-bottom:5px;">Updated {{ latest_screenshot.update.start|date:"l N j, Y, P e" }}</h4>
-                        <h4><a href="{% url feeds-sites object.id %}">RSS</a></h4>
+                        <h4><a href="{% url feeds-sites object.slug %}">RSS</a></h4>
                         <hr>
                     </div>
                 </div>
