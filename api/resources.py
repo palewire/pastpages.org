@@ -1,17 +1,25 @@
-from tastypie import fields
+"""
+Configuration of a public API that user django-tastypie
+"""
+# Misc.
 from django.conf import settings
-from taggit.models import Tag
-from tastypie.serializers import Serializer
 from django.core.urlresolvers import reverse
-from tastypie.resources import ModelResource
 from django.conf.urls.defaults import url
+
+# Models
+from taggit.models import Tag
 from archive.models import Site, Update, Screenshot
+
+# Tastypie
+from tastypie import fields
+from tastypie.serializers import Serializer
+from tastypie.resources import ModelResource
+
 # Diff throttle depending on env
 if settings.PRODUCTION:
     from tastypie.throttle import CacheThrottle as Throttle
 else:
     from tastypie.throttle import BaseThrottle as Throttle
-
 
 # Configure out serializer for the site
 PastPagesSerializer = Serializer(
@@ -24,7 +32,14 @@ PastPagesSerializer = Serializer(
         'yaml': 'text/yaml',
 })
 
+#
+# API resources
+#
+
 class ScreenshotResource(ModelResource):
+    """
+    Instructions for how to serialize the Screenshot model.
+    """
     update = fields.ToOneField('api.resources.UpdateResource', 'update')
     site = fields.ToOneField('api.resources.SiteResource', 'site')
     
@@ -39,6 +54,9 @@ class ScreenshotResource(ModelResource):
 
 
 class SiteResource(ModelResource):
+    """
+    Instructions for how to serialize the Site model.
+    """
     tags = fields.ToManyField('api.resources.TagResource', 'tags')
     
     class Meta:
@@ -54,7 +72,9 @@ class SiteResource(ModelResource):
 
 
 class TagResource(ModelResource):
-    
+    """
+    Instructions for how to serialize the Tag model.
+    """
     class Meta:
         resource_name = 'tags'
         queryset = Tag.objects.all()
@@ -64,6 +84,9 @@ class TagResource(ModelResource):
 
 
 class UpdateResource(ModelResource):
+    """
+    Instructions for how to serialize the Update model.
+    """
     screenshots = fields.ToManyField('api.resources.ScreenshotResource', 'screenshot_set')
     
     class Meta:
