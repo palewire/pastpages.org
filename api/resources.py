@@ -15,12 +15,13 @@ else:
 
 # Configure out serializer for the site
 PastPagesSerializer = Serializer(
-    formats=['json', 'jsonp' , 'plist', 'xml'],
+    formats=['json', 'jsonp' , 'plist', 'xml', 'yaml'],
     content_types = {
         'json': 'text/javascript',
         'jsonp': 'text/javascript',
+        'plist': 'application/x-plist',
         'xml': "text/xml",
-        'plist': 'application/x-plist'
+        'yaml': 'text/yaml',
 })
 
 class ScreenshotResource(ModelResource):

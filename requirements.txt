@@ -4,6 +4,7 @@ EasyProcess==0.1.4
 Fabric==1.4.1
 PIL==1.1.7
 PyVirtualDisplay==0.1.0
+PyYAML==3.10
 South==0.7.4
 amqplib==0.6.1
 anyjson==0.3.1
