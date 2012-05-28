@@ -11,6 +11,24 @@ class AbstractSitemapClass():
         return self.url
 
 
+class DateSitemap(Sitemap):
+    changefreq = "daily"
+    limit = 1000
+    
+    def items(self):
+        return Update.objects.dates()
+    
+    def lastmod(self, obj):
+        return obj
+    
+    def location(self, obj):
+        return reverse('archive-date-detail', args=[
+            obj.year,
+            obj.month,
+            obj.day,
+        ])
+
+
 class ScreenshotSitemap(Sitemap):
     changefreq = "never"
     limit = 1000
@@ -74,6 +92,7 @@ class TagSitemap(Sitemap):
 
 
 SITEMAPS = {
+    'dates': DateSitemap,
     'screenshots': ScreenshotSitemap,
     'sites': SiteSitemap,
     'static': StaticSitemap,
