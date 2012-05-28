@@ -38,7 +38,7 @@
     
     "ubuntu_python_packages": [
         "python-setuptools", "python-pip", "python-dev", "libpq-dev",
-        "python-virtualenv", "python-imaging"
+        "python-virtualenv", "python-imaging", "python-lxml"
     ],
     "pip_python_packages": {},
 

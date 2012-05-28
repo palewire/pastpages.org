@@ -23,10 +23,11 @@ class ScreenshotResource(ModelResource):
         excludes = ['has_html', 'html_archived', 'html_raw']
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
-        serializer = Serializer(formats=['json', 'jsonp'],
+        serializer = Serializer(formats=['json', 'jsonp' ,'xml'],
             content_types = {
                 'json': 'text/javascript',
-                'jsonp': 'text/javascript'
+                'jsonp': 'text/javascript',
+                'xml': "text/xml"
         })
         include_absolute_url = True
 
@@ -39,10 +40,11 @@ class SiteResource(ModelResource):
         queryset = Site.objects.active()
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
-        serializer = Serializer(formats=['json', 'jsonp'],
+        serializer = Serializer(formats=['json', 'jsonp' ,'xml'],
             content_types = {
                 'json': 'text/javascript',
-                'jsonp': 'text/javascript'
+                'jsonp': 'text/javascript',
+                'xml': "text/xml"
         })
         include_absolute_url = True
         filtering = {
@@ -57,10 +59,11 @@ class TagResource(ModelResource):
         queryset = Tag.objects.all()
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
-        serializer = Serializer(formats=['json', 'jsonp'],
+        serializer = Serializer(formats=['json', 'jsonp' ,'xml'],
             content_types = {
                 'json': 'text/javascript',
-                'jsonp': 'text/javascript'
+                'jsonp': 'text/javascript',
+                'xml': "text/xml"
         })
 
 
@@ -72,9 +75,10 @@ class UpdateResource(ModelResource):
         queryset = Update.objects.all()
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
-        serializer = Serializer(formats=['json', 'jsonp'],
+        serializer = Serializer(formats=['json', 'jsonp' ,'xml'],
             content_types = {
                 'json': 'text/javascript',
-                'jsonp': 'text/javascript'
+                'jsonp': 'text/javascript',
+                'xml': "text/xml"
         })
         include_absolute_url = True
