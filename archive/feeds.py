@@ -41,8 +41,8 @@ class SiteFeed(Feed):
     """
     feed_type = MediaRSSFeed
     
-    def get_object(self, request, pk):
-        return get_object_or_404(Site, pk=pk)
+    def get_object(self, request, slug):
+        return get_object_or_404(Site, slug=slug)
         
     def title(self, obj):
         return "%s screenshots by PastPages" % obj.name
