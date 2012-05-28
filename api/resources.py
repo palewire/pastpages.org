@@ -13,6 +13,16 @@ else:
     from tastypie.throttle import BaseThrottle as Throttle
 
 
+# Configure out serializer for the site
+PastPagesSerializer = Serializer(
+    formats=['json', 'jsonp' , 'plist', 'xml'],
+    content_types = {
+        'json': 'text/javascript',
+        'jsonp': 'text/javascript',
+        'xml': "text/xml",
+        'plist': 'application/x-plist'
+})
+
 class ScreenshotResource(ModelResource):
     update = fields.ToOneField('api.resources.UpdateResource', 'update')
     site = fields.ToOneField('api.resources.SiteResource', 'site')
@@ -23,12 +33,7 @@ class ScreenshotResource(ModelResource):
         excludes = ['has_html', 'html_archived', 'html_raw']
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
-        serializer = Serializer(formats=['json', 'jsonp' ,'xml'],
-            content_types = {
-                'json': 'text/javascript',
-                'jsonp': 'text/javascript',
-                'xml': "text/xml"
-        })
+        serializer = PastPagesSerializer
         include_absolute_url = True
 
 
@@ -40,12 +45,7 @@ class SiteResource(ModelResource):
         queryset = Site.objects.active()
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
-        serializer = Serializer(formats=['json', 'jsonp' ,'xml'],
-            content_types = {
-                'json': 'text/javascript',
-                'jsonp': 'text/javascript',
-                'xml': "text/xml"
-        })
+        serializer = PastPagesSerializer
         include_absolute_url = True
         filtering = {
             "slug": ('exact',),
@@ -59,12 +59,7 @@ class TagResource(ModelResource):
         queryset = Tag.objects.all()
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
-        serializer = Serializer(formats=['json', 'jsonp' ,'xml'],
-            content_types = {
-                'json': 'text/javascript',
-                'jsonp': 'text/javascript',
-                'xml': "text/xml"
-        })
+        serializer = PastPagesSerializer
 
 
 class UpdateResource(ModelResource):
@@ -75,10 +70,5 @@ class UpdateResource(ModelResource):
         queryset = Update.objects.all()
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
-        serializer = Serializer(formats=['json', 'jsonp' ,'xml'],
-            content_types = {
-                'json': 'text/javascript',
-                'jsonp': 'text/javascript',
-                'xml': "text/xml"
-        })
+        serializer = PastPagesSerializer
         include_absolute_url = True
