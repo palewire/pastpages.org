@@ -38,6 +38,7 @@ urlpatterns = patterns('',
     url(r'^robots\.txt$', include('robots.urls')),
     url(r'^api/', include('api.urls')),
     url(r'feeds/updates/$', feeds.RecentUpdates(), name="feeds-updates"),
+    url(r'feeds/sites/(?P<pk>\d+)/$', feeds.SiteFeed(), name="feeds-site"),
     
     # Monitoring and administration
     url(r'^cache/$', 'toolbox.views.cache_status'),
