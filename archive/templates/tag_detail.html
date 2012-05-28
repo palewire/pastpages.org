@@ -12,6 +12,15 @@
     <meta property="og:image" content="{{ screenshot_groups.0.0.crop.url_300x251 }}"/>
 {% endblock %}
 
+{% block extra-rss %}
+    {{ block.super }}
+    <link rel="alternate"
+          href="{% url feeds-tags object.slug %}"
+          type="application/rss+xml"
+          title="Latest {{ object.name }} screenshots"
+          id="latest-{{ object.slug }}-screenshots" />
+{% endblock %}
+
 {% block body %}
     <div class="container detail" style="margin-bottom:10px;">
         <div class="row">

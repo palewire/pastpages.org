@@ -31,6 +31,14 @@
 
         {% block extra-js %}{% endblock %}
 
+        {% block extra-rss %}
+            <link rel="alternate"
+                  href="{% url feeds-updates %}"
+                  type="application/rss+xml"
+                  title="Latest Updates"
+                  id="latest-updates" />
+        {% endblock %}
+
         {% block extra-head %}{% endblock %}
         
         <script type="text/javascript">
