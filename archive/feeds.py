@@ -37,7 +37,7 @@ class RecentUpdates(Feed):
         return item.start
     
     def item_title(self, item):
-        return 'Screenshots taken at %s' % dateformat(
+        return u'Screenshots taken at %s' % dateformat(
             timezone.localtime(item.start),
             'l N j, Y, P e',
         )
@@ -56,7 +56,7 @@ class SiteFeed(Feed):
         return get_object_or_404(Site, slug=slug)
         
     def title(self, obj):
-        return "%s screenshots by PastPages" % obj.name
+        return u'%s screenshots by PastPages' % obj.name
     
     def link(self, obj):
         return obj.get_absolute_url()
@@ -65,7 +65,7 @@ class SiteFeed(Feed):
         return obj.screenshot_set.all()[:10]
     
     def item_title(self, item):
-        return 'Screenshots of %s taken at %s' % (
+        return u'Screenshots of %s taken at %s' % (
             item.site,
             dateformat(
                 timezone.localtime(item.timestamp),
@@ -94,7 +94,7 @@ class TagFeed(Feed):
         return get_object_or_404(Tag, slug=slug)
         
     def title(self, obj):
-        return "Screenshots of sites tagged as %s by PastPages" % obj.name
+        return u"Screenshots of sites tagged as %s by PastPages" % obj.name
     
     def link(self, obj):
         return reverse('archive-tag-detail', args=[obj.name])
@@ -112,7 +112,7 @@ class TagFeed(Feed):
         )
     
     def item_title(self, item):
-        return 'Screenshots of %s taken at %s' % (
+        return u'Screenshots of %s taken at %s' % (
             item.site,
             dateformat(
                 timezone.localtime(item.timestamp),
