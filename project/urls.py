@@ -26,6 +26,8 @@ urlpatterns = patterns('',
         name='archive-date-detail'),
     url(r'^screenshot/(?P<pk>\d+)/$', views.ScreenshotDetail.as_view(),
         name='archive-screenshot-detail'),
+    url(r'^advanced-search/$', views.AdvancedSearch.as_view(),
+        name='archive-advanced-search'),
     
     # Pages for machines
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index',

@@ -8,25 +8,22 @@ from django.utils.timezone import localtime
 from django.core.urlresolvers import reverse
 from archive.models import Update, Site, Screenshot, Champion
 from django.template.defaultfilters import date as dateformat
-from bakery.views import BuildableListView
-from bakery.views import BuildableDetailView, BuildableTemplateView
+from django.views.generic import TemplateView, ListView, DetailView
 logger = logging.getLogger(__name__)
 
 
-class AboutDetail(BuildableTemplateView):
+class AboutDetail(TemplateView):
     """
     Some background on this site.
     """
     template_name = 'about.html'
-    build_path = 'about/index.html'
 
 
-class CryForHelp(BuildableTemplateView):
+class CryForHelp(TemplateView):
     """
     A cry for help.
     """
     template_name = 'cry_for_help.html'
-    build_path = 'cry-for-help/index.html'
     
     def get_context_data(self, **kwargs):
         context = super(BuildableTemplateView, self).get_context_data(**kwargs)
@@ -34,21 +31,19 @@ class CryForHelp(BuildableTemplateView):
         return context
 
 
-class ChampionsList(BuildableListView):
+class ChampionsList(ListView):
     """
     A list of the people who have given money to support the site.
     """
     queryset = Champion.objects.all()
-    build_path = 'champions/index.html'
     template_name = 'champion_list.html'
 
 
-class Index(BuildableTemplateView):
+class Index(TemplateView):
     """
     The homepage.
     """
     template_name = 'index.html'
-    build_path = 'index.html'
     
     def get_context_data(self, **kwargs):
         update = Update.objects.live()
@@ -66,7 +61,7 @@ class Index(BuildableTemplateView):
         }
 
 
-class ScreenshotDetail(BuildableDetailView):
+class ScreenshotDetail(DetailView):
     """
     All about a particular screenshot. See the whole thing full size.
     """
@@ -98,11 +93,12 @@ class ScreenshotDetail(BuildableDetailView):
         return context
 
 
-class DateDetail(BuildableDetailView):
+class DateDetail(DetailView):
     """
     All the updates on a particular date.
     """
     template_name = 'date_detail.html'
+    queryset = Update.objects.dates()
     
     def get_object(self):
         try:
@@ -114,7 +110,7 @@ class DateDetail(BuildableDetailView):
             date_obj = datetime(*date_parts)
         except:
             raise Http404
-        for i in self.get_queryset():
+        for i in self.queryset:
             if i == date_obj.date():
                 return date_obj
         raise Http404
@@ -139,29 +135,9 @@ class DateDetail(BuildableDetailView):
             'date': self.object,
             'screenshot_groups': screenshot_groups,
         }
-    
-    def get_url(self, obj):
-        return '/date/%s/%s/%s/' % (
-            dateformat(obj, "Y"),
-            dateformat(obj, "m"),
-            dateformat(obj, "d")
-        )
-    
-    def set_kwargs(self, obj):
-        self.kwargs = dict(
-            year=obj.year,
-            month=obj.month,
-            day=obj.day
-        )
-    
-    def get_queryset(self):
-        return Update.objects.dates()
-    
-    def build_queryset(self):
-        [self.build_object(o) for o in self.get_queryset()]
 
 
-class SiteDetail(BuildableDetailView):
+class SiteDetail(DetailView):
     """
     All about a particular site.
     """
@@ -189,7 +165,7 @@ class SiteDetail(BuildableDetailView):
         }
 
 
-class UpdateDetail(BuildableDetailView):
+class UpdateDetail(DetailView):
     """
     All about a particular update.
     """
@@ -208,7 +184,7 @@ class UpdateDetail(BuildableDetailView):
         }
 
 
-class TagDetail(BuildableDetailView):
+class TagDetail(DetailView):
     """
     All about a particular update.
     """
@@ -233,10 +209,66 @@ class TagDetail(BuildableDetailView):
             'update': update,
             'screenshot_groups': screenshot_groups,
         }
-    
-    def get_url(self, obj):
-        return reverse('archive-tag-detail', args=[obj.name])
 
+
+class AdvancedSearch(TemplateView):
+    template_name = 'advanced_search.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(AdvancedSearch, self).get_context_data(**kwargs)
+        # Pull the data for the form fields
+        site_list = Site.objects.active()
+        site_list = sorted(site_list, key=lambda x: x.name.lower())
+        context['site_list'] = site_list
+        tag_list = Tag.objects.all()
+        context['tag_list'] = tag_list
+        # Check if any qs variables have been provided
+        print self.request.GET.keys()
+        is_search = len(self.request.GET.keys()) > 0
+        print is_search
+        context['is_search'] = is_search
+        if not is_search:
+            print "IS NOT SEARCH"
+            return context
+        else:
+            print "IS SEARCH"
+            # Examine the valid keys and see what's been submitted
+            site = self.request.GET.get('site', None)
+            tag = self.request.GET.get('tag', None)
+            date = self.request.GET.get('date', None)
+            # Build a filter depending on what has been submitted
+            filters = {}
+            if site:
+                try:
+                    site = Site.objects.get(slug=site)
+                except Site.DoesNotExist:
+                    raise
+                filters['site'] = site
+            if tag:
+                try:
+                    tag = Tag.objects.get(slug=tag)
+                except Tag.DoesNotExist:
+                    raise
+                tagged_list = [i.content_object for i in
+                    TaggedItem.objects.filter(tag=tag)
+                ]
+                filters['site__in'] = tagged_list
+            if date:
+                try:
+                    date = datetime.strptime(date, "%Y/%m/%d")
+                except ValueError:
+                    raise
+                filters.update({
+                    'timestamp__year': date.year,
+                    'timestamp__month': date.month,
+                    'timestamp__day': date.day,
+                })
+            if len(filters.keys()) < 2:
+                print "LESS THAN TWO FILTERS SHOULD RETURN AN ERROR"
+            print filters
+            # Execute the filters and pass out the result
+            context['object_list'] = Screenshot.objects.filter(**filters)
+            return context
 
 
 def group_objects_by_number(object_list, number_in_each_group=3):

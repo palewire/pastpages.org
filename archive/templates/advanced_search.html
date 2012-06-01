@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load greeking_tags %}
+
+{% block title %}Advanced search of {{ block.super }}{% endblock %}
+
+{% block facebook-meta %}
+    {{ block.super }}
+    <meta property="og:title" content="Advanced search"/>
+    <meta property="og:url" content="http://{{ site }}{% url archive-advanced-search %}"/>
+{% endblock %}
+
+{% block body %}
+    <div class="container detail">
+        <div class="row">
+            <div class="twelvecol last">
+                <h2>
+                    Advanced search
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="twelvecol last">
+                <form id="advancedsearch" name="advancedsearch" method="get">
+                    <fieldset>
+                        <label for="site">Site</label>
+                        <select name="site" id="site">
+                            <option value="" SELECTED></option>
+                            {% for site in site_list %}
+                            <option value="{{ site.slug }}">{{ site }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="tag">Tag</label>
+                        <select name="tag" id="tag">
+                            <option value="" SELECTED></option>
+                            {% for tag in tag_list %}
+                            <option value="{{ tag.slug }}">{{ tag }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="date">Date (YYYY/MM/DD)</label>
+                        <input type="text" name="date" id="date" value="" />
+                        <input type="submit" value="Submit" />
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        {% if is_search %}
+        <div class="row">
+            <div class="twelvecol last">
+                {{ object_list|length }} result{{ object_list|length|pluralize }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
