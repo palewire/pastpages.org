@@ -212,63 +212,96 @@ class TagDetail(DetailView):
 
 
 class AdvancedSearch(TemplateView):
+    """
+    An opportunity for users to craft more complex searches of the database.
+    """
     template_name = 'advanced_search.html'
     
     def get_context_data(self, **kwargs):
         context = super(AdvancedSearch, self).get_context_data(**kwargs)
+        
         # Pull the data for the form fields
         site_list = Site.objects.active()
         site_list = sorted(site_list, key=lambda x: x.name.lower())
         context['site_list'] = site_list
         tag_list = Tag.objects.all()
         context['tag_list'] = tag_list
+        
         # Check if any qs variables have been provided
-        print self.request.GET.keys()
         is_search = len(self.request.GET.keys()) > 0
-        print is_search
         context['is_search'] = is_search
+        
+        # If not just drop out now
         if not is_search:
-            print "IS NOT SEARCH"
             return context
-        else:
-            print "IS SEARCH"
-            # Examine the valid keys and see what's been submitted
-            site = self.request.GET.get('site', None)
-            tag = self.request.GET.get('tag', None)
-            date = self.request.GET.get('date', None)
-            # Build a filter depending on what has been submitted
-            filters = {}
-            if site:
-                try:
-                    site = Site.objects.get(slug=site)
-                except Site.DoesNotExist:
-                    raise
-                filters['site'] = site
-            if tag:
-                try:
-                    tag = Tag.objects.get(slug=tag)
-                except Tag.DoesNotExist:
-                    raise
-                tagged_list = [i.content_object for i in
-                    TaggedItem.objects.filter(tag=tag)
-                ]
-                filters['site__in'] = tagged_list
-            if date:
-                try:
-                    date = datetime.strptime(date, "%Y/%m/%d")
-                except ValueError:
-                    raise
-                filters.update({
-                    'timestamp__year': date.year,
-                    'timestamp__month': date.month,
-                    'timestamp__day': date.day,
-                })
-            if len(filters.keys()) < 2:
-                print "LESS THAN TWO FILTERS SHOULD RETURN AN ERROR"
-            print filters
-            # Execute the filters and pass out the result
-            context['object_list'] = Screenshot.objects.filter(**filters)
+        
+        # Examine the valid keys and see what's been submitted
+        site = self.request.GET.get('site', None)
+        tag = self.request.GET.get('tag', None)
+        start_date = self.request.GET.get('start_date', None)
+        end_date = self.request.GET.get('end_date', None)
+        
+        # Since you can't search both site and tag, if we have both
+        # we should throw an error
+        if site and tag:
+            context['has_error'] = True
+            context['error_message'] = 'Sorry. You cannot filter by both site and tag at the same time.'
             return context
+        
+        # A dict to store filters depending on what has been submitted
+        filters = {}
+        
+        # First the site or tag
+        if site:
+            try:
+                site = Site.objects.get(slug=site)
+            except Site.DoesNotExist:
+                raise
+            filters['site'] = site
+        elif tag:
+            try:
+                tag = Tag.objects.get(slug=tag)
+            except Tag.DoesNotExist:
+                raise
+            tagged_list = [i.content_object for i in
+                TaggedItem.objects.filter(tag=tag)
+            ]
+            filters['site__in'] = tagged_list
+        
+        # Then the date range
+        if start_date and not end_date:
+            context['has_error'] = True
+            context['error_message'] = 'Sorry. You must submit both a start and end date.'
+            return context
+        elif end_date and not start_date:
+            context['has_error'] = True
+            context['error_message'] = 'Sorry. You must submit both a start and end date.'
+            return context
+        elif start_date and end_date:
+            # Validate the start date
+            try:
+                start_date = datetime.strptime(start_date, "%Y/%m/%d")
+            except ValueError:
+                context['has_error'] = True
+                context['error_message'] = 'Sorry. Your start date is not properly formatted.'
+                return context
+            # Validate the end date
+            try:
+                end_date = datetime.strptime(end_date, "%Y/%m/%d")
+            except ValueError:
+                context['has_error'] = True
+                context['error_message'] = 'Sorry. Your end date is not properly formatted.'
+                return context
+            filters.update({
+                'timestamp__range': [start_date, end_date],
+            })
+        
+        # What if the start and end date or gigantically apart? Do we limit the range?
+        # What if you only get one half of the date range? We need to catch it and throw an error.
+        
+        # Execute the filters and pass out the result
+        context['object_list'] = Screenshot.objects.filter(**filters)
+        return context
 
 
 def group_objects_by_number(object_list, number_in_each_group=3):
