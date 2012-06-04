@@ -24,31 +24,75 @@
                     <fieldset>
                         <label for="site">Site</label>
                         <select name="site" id="site">
-                            <option value="" SELECTED></option>
-                            {% for site in site_list %}
-                            <option value="{{ site.slug }}">{{ site }}</option>
+                            <option></option>
+                            {% for obj in site_list %}
+                            <option {% ifequal obj.slug searched_site.slug %}selected="selected"{% endifequal %}
+                                value="{{ obj.slug }}">{{ obj }}</option>
                             {% endfor %}
                         </select>
                         <label for="tag">Tag</label>
                         <select name="tag" id="tag">
-                            <option value="" SELECTED></option>
-                            {% for tag in tag_list %}
-                            <option value="{{ tag.slug }}">{{ tag }}</option>
+                            <option value=""></option>
+                            {% for obj in tag_list %}
+                            <option {% ifequal obj.slug tag.slug %}selected="selected"{% endifequal %}
+                                value="{{ obj.slug }}">{{ obj }}</option>
                             {% endfor %}
                         </select>
-                        <label for="date">Date (YYYY/MM/DD)</label>
-                        <input type="text" name="date" id="date" value="" />
+                        <label for="start_date">Start date (YYYY/MM/DD)</label>
+                        <input type="text" name="start_date" id="start_date" value="{{ start_date|date:"Y/m/d" }}" />
+                        <label for="end_date">End date (YYYY/MM/DD)</label>
+                        <input type="text" name="end_date" id="end_date" value="{{ end_date|date:"Y/m/d" }}" />
                         <input type="submit" value="Submit" />
                     </fieldset>
                 </form>
             </div>
         </div>
-        {% if is_search %}
-        <div class="row">
-            <div class="twelvecol last">
-                {{ object_list|length }} result{{ object_list|length|pluralize }}
+        {% if has_error %}
+            <div class="row">
+                <div class="twelvecol last">
+                    <span class="error">{{ error_message }}</span>
+                </div>
             </div>
-        </div>
+        {% endif %}
+        {% if is_search and not has_error %}
+            <div class="row">
+                <div class="twelvecol last">
+                    {% ifequal object_count 500 %}First {% endifequal %}{{ object_count }} result{{ object_count|pluralize }}
+                </div>
+            </div>
+                {% for date, row_list in object_groups %}
+                    <div class="row">
+                        <div class="twelvecol">
+                            <h5>{{ date|date:"l N j, Y" }}</h5>
+                        </div>
+                    </div>
+                    {% for row in row_list %}
+                    <div class="row nestedthumbs">
+                    {% for obj in row %}
+                        <div class="twocol {% if forloop.last %}last{% endif %}">
+                            <a href="{{ obj.get_absolute_url }}">
+                                <img {% if forloop.parentloop.parentloop.counter > 2 %}
+                                     class="lazy"
+                                     src="{{ STATIC_URL }}blank_300x251.jpg"
+                                     data-original="{{ obj.crop.url_300x251 }}"
+                                     {% else %}
+                                     src="{{ obj.crop.url_300x251 }}"
+                                     {% endif %}
+                                     alt="{{ obj.update.start|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.update.start|date:"l N j, Y, P e" }}">
+                                {% if forloop.parentloop.parentloop.counter > 2 %}
+                                <noscript>
+                                <img alt="{{ obj.update.start|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.update.start|date:"l N j, Y, P e" }}"
+                                     src="{{ obj.crop.url_300x251 }}">
+                                </noscript>
+                                {% endif %}
+                            </a>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    {% endfor %}
+                {% endfor %}
         {% endif %}
     </div>
 {% endblock %}

@@ -256,20 +256,33 @@ class AdvancedSearch(TemplateView):
             try:
                 site = Site.objects.get(slug=site)
             except Site.DoesNotExist:
-                raise
+                context['has_error'] = True
+                context['error_message'] = 'Sorry. The site you submitted does not exist.'
             filters['site'] = site
+            # Gotta give it a longer name so it isn't overridden by site
+            # context processor
+            context['searched_site'] = site
         elif tag:
             try:
                 tag = Tag.objects.get(slug=tag)
             except Tag.DoesNotExist:
-                raise
+                context['has_error'] = True
+                context['error_message'] = 'Sorry. The tag you submitted does not exist.'
             tagged_list = [i.content_object for i in
                 TaggedItem.objects.filter(tag=tag)
             ]
             filters['site__in'] = tagged_list
+            context['tag'] = tag
+        else:
+            context['has_error'] = True
+            context['error_message'] = 'Sorry. You must submit either a site or a tag with every search.'
         
         # Then the date range
-        if start_date and not end_date:
+        if not start_date and not end_date:
+            context['has_error'] = True
+            context['error_message'] = 'Sorry. You must submit both a start and end date.'
+            return context
+        elif start_date and not end_date:
             context['has_error'] = True
             context['error_message'] = 'Sorry. You must submit both a start and end date.'
             return context
@@ -295,12 +308,18 @@ class AdvancedSearch(TemplateView):
             filters.update({
                 'timestamp__range': [start_date, end_date],
             })
-        
-        # What if the start and end date or gigantically apart? Do we limit the range?
-        # What if you only get one half of the date range? We need to catch it and throw an error.
+            context.update({
+                'start_date': start_date,
+                'end_date': end_date,
+            })
         
         # Execute the filters and pass out the result
-        context['object_list'] = Screenshot.objects.filter(**filters)
+        context['object_list'] = Screenshot.objects.filter(**filters)[:500]
+        context['object_count'] = context['object_list'].count()
+        screenshot_groups = []
+        for key, group in groupby(context['object_list'], lambda x: localtime(x.update.start).date()):
+            screenshot_groups.append((key, group_objects_by_number(list(group), 6)))
+        context['object_groups'] = screenshot_groups
         return context
 
 
