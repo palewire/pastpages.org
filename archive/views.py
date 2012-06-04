@@ -296,14 +296,14 @@ class AdvancedSearch(TemplateView):
                 start_date = datetime.strptime(start_date, "%Y/%m/%d")
             except ValueError:
                 context['has_error'] = True
-                context['error_message'] = 'Sorry. Your start date is not properly formatted.'
+                context['error_message'] = 'Sorry. Your start date was not properly formatted.'
                 return context
             # Validate the end date
             try:
                 end_date = datetime.strptime(end_date, "%Y/%m/%d")
             except ValueError:
                 context['has_error'] = True
-                context['error_message'] = 'Sorry. Your end date is not properly formatted.'
+                context['error_message'] = 'Sorry. Your end date was not properly formatted.'
                 return context
             filters.update({
                 'timestamp__range': [start_date, end_date],

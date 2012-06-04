@@ -97,6 +97,14 @@
         padding: 15px 0 30px 0;
         border-top: 1px solid #ccc;
     }
+    fieldset {
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+    fieldset h4 {
+        font-weight:bold;
+        margin: 10px 0 5px 0;
+    }
 
 /* ============================= */
 /* ! Layout for mobile version   */

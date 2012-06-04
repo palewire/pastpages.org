@@ -22,6 +22,7 @@
             <div class="twelvecol last">
                 <form id="advancedsearch" name="advancedsearch" method="get">
                     <fieldset>
+                        <h4>Pick a site or tag</h4>
                         <label for="site">Site</label>
                         <select name="site" id="site">
                             <option></option>
@@ -30,7 +31,7 @@
                                 value="{{ obj.slug }}">{{ obj }}</option>
                             {% endfor %}
                         </select>
-                        <label for="tag">Tag</label>
+                        <br><label for="tag">Tag</label>
                         <select name="tag" id="tag">
                             <option value=""></option>
                             {% for obj in tag_list %}
@@ -38,10 +39,12 @@
                                 value="{{ obj.slug }}">{{ obj }}</option>
                             {% endfor %}
                         </select>
+                        <h4>Pick a start and end date</h4>
                         <label for="start_date">Start date (YYYY/MM/DD)</label>
                         <input type="text" name="start_date" id="start_date" value="{{ start_date|date:"Y/m/d" }}" />
-                        <label for="end_date">End date (YYYY/MM/DD)</label>
+                        <br><label for="end_date">End date (YYYY/MM/DD)</label>
                         <input type="text" name="end_date" id="end_date" value="{{ end_date|date:"Y/m/d" }}" />
+                        <h4></h4>
                         <input type="submit" value="Submit" />
                     </fieldset>
                 </form>
