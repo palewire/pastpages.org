@@ -123,6 +123,10 @@
         margin:10px 0;
         color:red;
     }
+    div.upperright a#advancedsearch {
+        text-decoration:underline;
+        font-size:12px;
+    }
 
 
 
