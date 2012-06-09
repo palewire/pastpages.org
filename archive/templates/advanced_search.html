@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load greeking_tags %}
+{% load greeking_tags tz %}
 
 {% block title %}Advanced search of {{ block.super }}{% endblock %}
 
@@ -100,8 +100,8 @@
                                      title="{{ obj.update.start|date:"l N j, Y, P e" }}">
                                 {% if forloop.parentloop.parentloop.counter > 2 %}
                                 <noscript>
-                                <img alt="{{ obj.update.start|date:"l N j, Y, P e" }}"
-                                     title="{{ obj.update.start|date:"l N j, Y, P e" }}"
+                                <img alt="{{ obj.update.start|timezone:"UTC"|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.update.start|timezone:"UTC"|date:"l N j, Y, P e" }}"
                                      src="{{ obj.crop.url_300x251 }}">
                                 </noscript>
                                 {% endif %}

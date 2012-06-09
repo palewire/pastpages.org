@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load greeking_tags humanize %}
+{% load greeking_tags humanize tz %}
 
 {% block title %}{{ object }} screenshots by {{ block.super }}{% endblock %}
 
@@ -26,8 +26,8 @@
         <div class="row">
             <div class="fivecol">
                 <a href="{{ latest_screenshot.get_absolute_url }}">
-                    <img alt="{{ latest_screenshot.update.start|date:"l N j, Y, P e" }}"
-                         title="{{ latest_screenshot.update.start|date:"l N j, Y, P e" }}"
+                    <img alt="{{ latest_screenshot.update.start|timezone:"UTC"|date:"l N j, Y, P e" }}"
+                         title="{{ latest_screenshot.update.start|timezone:"UTC"|date:"l N j, Y, P e" }}"
                          src="{{ latest_screenshot.image.url_449x3000 }}">
                 </a>
             </div>
@@ -45,7 +45,13 @@
                             {% endfor %}
                         </h4>
                         {% endif %}
-                        <h4 style="margin-bottom:5px;">Updated {{ latest_screenshot.update.start|naturaltime }}</h4>
+                        <h4 style="margin-bottom:5px;">
+                            Updated {{ latest_screenshot.update.start|naturaltime }}
+                            {% if object.timezone %}
+                                ({{ latest_screenshot.update.start|timezone:object.timezone|date:"P" }} local time,
+                                 {{ latest_screenshot.update.start|timezone:"UTC"|date:"P" }} UTC)
+                            {% endif %}
+                        </h4>
                         <h4><a href="{% url feeds-sites object.slug %}">RSS</a></h4>
                         <hr>
                     </div>
