@@ -3,6 +3,7 @@ import logging
 from archive import managers
 from django.db import models
 from django.conf import settings
+from pytz import common_timezones
 from bakery.models import BuildableModel
 from taggit.managers import TaggableManager
 from toolbox.thumbs import ImageWithThumbsField
@@ -22,6 +23,9 @@ class Site(BuildableModel):
     url = models.URLField()
     display_url = models.URLField(blank=True)
     description = models.TextField(blank=True)
+    timezone = models.CharField(max_length=500,
+        blank=True, choices=[(i, i) for i in common_timezones],
+    )
     STATUS_CHOICES = (
         ('active', 'Active'),
         ('inactive', 'Inactive'),
