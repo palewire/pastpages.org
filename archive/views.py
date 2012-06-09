@@ -224,7 +224,7 @@ class AdvancedSearch(TemplateView):
         site_list = Site.objects.active()
         site_list = sorted(site_list, key=lambda x: x.name.lower())
         context['site_list'] = site_list
-        tag_list = Tag.objects.all()
+        tag_list = Tag.objects.all().order_by("name")
         context['tag_list'] = tag_list
         
         # Check if any qs variables have been provided
