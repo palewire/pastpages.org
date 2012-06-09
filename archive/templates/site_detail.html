@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load greeking_tags %}
+{% load greeking_tags humanize %}
 
 {% block title %}{{ object }} screenshots by {{ block.super }}{% endblock %}
 
@@ -45,7 +45,7 @@
                             {% endfor %}
                         </h4>
                         {% endif %}
-                        <h4 style="margin-bottom:5px;">Updated {{ latest_screenshot.update.start|date:"l N j, Y, P e" }}</h4>
+                        <h4 style="margin-bottom:5px;">Updated {{ latest_screenshot.update.start|naturaltime }}</h4>
                         <h4><a href="{% url feeds-sites object.slug %}">RSS</a></h4>
                         <hr>
                     </div>
