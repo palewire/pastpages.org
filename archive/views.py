@@ -319,9 +319,8 @@ class AdvancedSearch(TemplateView):
             })
             # Add a day so the search is "greedy" and includes screenshots
             # that happened on the end_date
-            end_date = end_date + timedelta(days=1)
             filters.update({
-                'timestamp__range': [start_date, end_date],
+                'timestamp__range': [start_date, end_date + timedelta(days=1)],
             })
         
         # Execute the filters and pass out the result
