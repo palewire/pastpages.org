@@ -84,6 +84,9 @@
     div.upperright img {
         vertical-align:bottom;
     }
+    div.upperright select {
+        width: 180px;
+    }
     div.timestamp {
         margin: 5px auto;
         font-size: 18px;
