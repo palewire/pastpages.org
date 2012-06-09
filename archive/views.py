@@ -305,6 +305,9 @@ class AdvancedSearch(TemplateView):
             # Validate the end date
             try:
                 end_date = datetime.strptime(end_date, "%Y/%m/%d")
+                # Add a day so the search is "greedy" and includes screenshots
+                # that happened on the end_date
+                end_date = end_date + timedelta(days=1)
             except ValueError:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your end date was not properly formatted.'
