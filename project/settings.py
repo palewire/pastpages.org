@@ -27,7 +27,7 @@ ADMINS = (
     ('Ben Welsh', 'ben.welsh@gmail.com'),
 )
 MANAGERS = ADMINS
-TIME_ZONE = 'America/Los_Angeles'
+TIME_ZONE = 'UTC'
 LANGUAGE_CODE = 'en-us'
 USE_I18N = True
 USE_L10N = True
