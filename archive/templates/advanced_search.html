@@ -19,32 +19,47 @@
             </div>
         </div>
         <div class="row">
-            <div class="twelvecol last">
+            <div class="sixcol">
                 <form id="advancedsearch" name="advancedsearch" method="get">
                     <fieldset>
                         <h4>Pick a site or tag</h4>
-                        <label for="site">Site</label>
-                        <select name="site" id="site">
-                            <option></option>
-                            {% for obj in site_list %}
-                            <option {% ifequal obj.slug searched_site.slug %}selected="selected"{% endifequal %}
-                                value="{{ obj.slug }}">{{ obj }}</option>
-                            {% endfor %}
-                        </select>
-                        <br><label for="tag">Tag</label>
-                        <select name="tag" id="tag">
-                            <option value=""></option>
-                            {% for obj in tag_list %}
-                            <option {% ifequal obj.slug tag.slug %}selected="selected"{% endifequal %}
-                                value="{{ obj.slug }}">{{ obj }}</option>
-                            {% endfor %}
-                        </select>
+                        <ul class="select">
+                            <li>
+                                <label for="site">Site:</label>
+                                <select name="site" id="site">
+                                    <option></option>
+                                    {% for obj in site_list %}
+                                    <option {% ifequal obj.slug searched_site.slug %}selected="selected"{% endifequal %}
+                                        value="{{ obj.slug }}">{{ obj }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li>
+                                <label for="tag">Tag:</label>
+                                <select name="tag" id="tag">
+                                    <option value=""></option>
+                                    {% for obj in tag_list %}
+                                    <option {% ifequal obj.slug tag.slug %}selected="selected"{% endifequal %}
+                                        value="{{ obj.slug }}">{{ obj }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                        </ul>
                         <h4>Pick a start and end date</h4>
-                        <label for="start_date">Start date (YYYY/MM/DD)</label>
-                        <input type="text" name="start_date" id="start_date" value="{{ start_date|date:"Y/m/d" }}" />
-                        <br><label for="end_date">End date (YYYY/MM/DD)</label>
-                        <input type="text" name="end_date" id="end_date" value="{{ end_date|date:"Y/m/d" }}" />
-                        <h4></h4>
+                        <ul class="dates">
+                            <li>
+                                <label for="start_date">Start date</label>
+                                <input type="text" name="start_date" id="start_date"
+                                    onFocus="if (this.value === 'YYYY/MM/DD') {this.value = '';}"
+                                    value="{% if start_date %}{{ start_date|date:"Y/m/d" }}{% else %}YYYY/MM/DD{% endif %}" />
+                            </li>
+                            <li>
+                                <label for="end_date">End date</label>
+                                <input type="text" name="end_date" id="end_date"
+                                    onFocus="if (this.value === 'YYYY/MM/DD') {this.value = '';}"
+                                    value="{% if end_date %}{{ end_date|date:"Y/m/d" }}{% else %}YYYY/MM/DD{% endif %}" />
+                            </li>
+                        </ul>
                         <input type="submit" value="Submit" />
                     </fieldset>
                 </form>
@@ -60,7 +75,7 @@
         {% if is_search and not has_error %}
             <div class="row">
                 <div class="twelvecol last">
-                    {% ifequal object_count 500 %}First {% endifequal %}{{ object_count }} result{{ object_count|pluralize }}
+                    <h2>{% ifequal object_count 500 %}First {% endifequal %}{{ object_count }} result{{ object_count|pluralize }}</h2>
                 </div>
             </div>
                 {% for date, row_list in object_groups %}

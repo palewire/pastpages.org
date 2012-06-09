@@ -240,6 +240,10 @@ class AdvancedSearch(TemplateView):
         tag = self.request.GET.get('tag', None)
         start_date = self.request.GET.get('start_date', None)
         end_date = self.request.GET.get('end_date', None)
+        if start_date == 'YYYY/MM/DD':
+            start_date = None
+        if end_date == 'YYYY/MM/DD':
+            end_date = None
         
         # Since you can't search both site and tag, if we have both
         # we should throw an error
@@ -304,6 +308,10 @@ class AdvancedSearch(TemplateView):
             except ValueError:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your end date was not properly formatted.'
+                return context
+            if end_date < start_date:
+                context['has_error'] = True
+                context['error_message'] = 'Sorry. Your end date comes before you start date.'
                 return context
             filters.update({
                 'timestamp__range': [start_date, end_date],

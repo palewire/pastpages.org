@@ -97,14 +97,34 @@
         padding: 15px 0 30px 0;
         border-top: 1px solid #ccc;
     }
-    fieldset {
+    form#advancedsearch {
+        margin: 0 0 20px 0;
+    }
+    form#advancedsearch fieldset{
         padding: 10px;
         border: 1px solid #ccc;
+        font-size:16px;
     }
-    fieldset h4 {
+    form#advancedsearch fieldset h4 {
         font-weight:bold;
-        margin: 10px 0 5px 0;
+        
+        margin: 5px 0 5px 0;
     }
+    form#advancedsearch ul {
+        margin: 10px 0 20px 0;
+    }
+    form#advancedsearch ul li {
+        margin: 0 0 10px 0;
+    }
+    form#advancedsearch ul li label {
+        margin: 0 5px 0 0;
+    }
+    span.error {
+        margin:10px 0;
+        color:red;
+    }
+
+
 
 /* ============================= */
 /* ! Layout for mobile version   */
