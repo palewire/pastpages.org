@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load greeking_tags %}
+{% load greeking_tags humanize %}
 
 {% block facebook-meta %}
     {{ block.super }}
@@ -14,7 +14,7 @@
     <div class="container">
         <div class="row datestamp">
             <div class="twelvecol last">
-                <p>Updated {{ update.start|date:"l N j, Y, P e" }}</p>
+                <p>Updated {{ update.start|naturaltime }}</p>
             </div>
         </div>
     </div>
