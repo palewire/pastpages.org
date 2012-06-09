@@ -305,9 +305,6 @@ class AdvancedSearch(TemplateView):
             # Validate the end date
             try:
                 end_date = datetime.strptime(end_date, "%Y/%m/%d")
-                # Add a day so the search is "greedy" and includes screenshots
-                # that happened on the end_date
-                end_date = end_date + timedelta(days=1)
             except ValueError:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your end date was not properly formatted.'
@@ -316,12 +313,15 @@ class AdvancedSearch(TemplateView):
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your end date comes before you start date.'
                 return context
-            filters.update({
-                'timestamp__range': [start_date, end_date],
-            })
             context.update({
                 'start_date': start_date,
                 'end_date': end_date,
+            })
+            # Add a day so the search is "greedy" and includes screenshots
+            # that happened on the end_date
+            end_date = end_date + timedelta(days=1)
+            filters.update({
+                'timestamp__range': [start_date, end_date],
             })
         
         # Execute the filters and pass out the result
