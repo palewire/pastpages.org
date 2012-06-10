@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load greeking_tags %}
+{% load greeking_tags tz %}
 
 {% block title %}{{ object.site }} at  {{ object.update.start|date:"N j, Y, P" }} screenshot by {{ block.super }}{% endblock %}
 
@@ -21,6 +21,10 @@
                     <a href="{{ object.site.get_absolute_url }}">{{ object.site }}</a>
                     / 
                     <a href="{{ object.update.get_absolute_url }}">{{ object.timestamp|date:"l N j, Y, P e" }}</a>
+                    {% if object.site.timezone %}
+                    / 
+                    {{ object.timestamp|timezone:object.site.timezone|date:"P" }} local time
+                    {% endif %}
                 </h2>
             </div>
         </div>
