@@ -38,13 +38,6 @@
                         <h3>
                             <a href="{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}">{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}</a>
                         </h3>
-                        {% if object.tags.all %}
-                        <h4 style="margin-bottom:5px;">
-                        Tags: {% for tag in object.tags.all %}
-                            <a href="{% url archive-tag-detail tag %}">{{ tag }}</a>{% if not forloop.last %},&nbsp;{% endif %}
-                            {% endfor %}
-                        </h4>
-                        {% endif %}
                         <h4 style="margin-bottom:5px;">
                             Updated {{ latest_screenshot.update.start|naturaltime }}
                             {% if object.timezone %}
@@ -52,7 +45,13 @@
                                  {{ latest_screenshot.timestamp|timezone:"UTC"|date:"P" }} UTC)
                             {% endif %}
                         </h4>
-                        <h4><a href="{% url feeds-sites object.slug %}">RSS</a></h4>
+                        <h4><a href="{% url feeds-sites object.slug %}">RSS</a>
+                        {% if object.tags.all %}&nbsp;&nbsp;&nbsp;
+                        Tags: {% for tag in object.tags.all %}
+                            <a href="{% url archive-tag-detail tag %}">{{ tag }}</a>{% if not forloop.last %},&nbsp;{% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        </h4>
                         <hr>
                     </div>
                 </div>
