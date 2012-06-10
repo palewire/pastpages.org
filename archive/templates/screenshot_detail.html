@@ -36,7 +36,9 @@
         </div>
         <div class="row">
             <div class="twelvecol last">
-                <img src="{{ object.image.url }}">
+                <img title="{{ object.site }} at {{ object.timestamp|date:"l N j, Y, P e" }}"
+                     alt="{{ object.site }} at {{ object.timestamp|date:"l N j, Y, P e" }}"
+                     src="{{ object.image.url }}">
             </div>
         </div>
     </div>

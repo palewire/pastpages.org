@@ -96,12 +96,12 @@
                                      {% else %}
                                      src="{{ obj.crop.url_300x251 }}"
                                      {% endif %}
-                                     alt="{{ obj.update.start|date:"l N j, Y, P e" }}"
-                                     title="{{ obj.update.start|date:"l N j, Y, P e" }}">
+                                     alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.timestamp|date:"l N j, Y, P e" }}">
                                 {% if forloop.parentloop.parentloop.counter > 2 %}
                                 <noscript>
-                                <img alt="{{ obj.update.start|timezone:"UTC"|date:"l N j, Y, P e" }}"
-                                     title="{{ obj.update.start|timezone:"UTC"|date:"l N j, Y, P e" }}"
+                                <img alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.timestamp|date:"l N j, Y, P e" }}"
                                      src="{{ obj.crop.url_300x251 }}">
                                 </noscript>
                                 {% endif %}

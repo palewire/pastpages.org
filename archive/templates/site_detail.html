@@ -26,8 +26,8 @@
         <div class="row">
             <div class="fivecol">
                 <a href="{{ latest_screenshot.get_absolute_url }}">
-                    <img alt="{{ latest_screenshot.update.start|timezone:"UTC"|date:"l N j, Y, P e" }}"
-                         title="{{ latest_screenshot.update.start|timezone:"UTC"|date:"l N j, Y, P e" }}"
+                    <img alt="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
+                         title="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
                          src="{{ latest_screenshot.image.url_449x3000 }}">
                 </a>
             </div>
@@ -48,8 +48,8 @@
                         <h4 style="margin-bottom:5px;">
                             Updated {{ latest_screenshot.update.start|naturaltime }}
                             {% if object.timezone %}
-                                ({{ latest_screenshot.update.start|timezone:object.timezone|date:"P" }} local time,
-                                 {{ latest_screenshot.update.start|timezone:"UTC"|date:"P" }} UTC)
+                                ({{ latest_screenshot.timestamp|timezone:object.timezone|date:"P" }} local time,
+                                 {{ latest_screenshot.timestamp|timezone:"UTC"|date:"P" }} UTC)
                             {% endif %}
                         </h4>
                         <h4><a href="{% url feeds-sites object.slug %}">RSS</a></h4>
@@ -74,12 +74,12 @@
                                      {% else %}
                                      src="{{ obj.crop.url_300x251 }}"
                                      {% endif %}
-                                     alt="{{ obj.update.start|date:"l N j, Y, P e" }}"
-                                     title="{{ obj.update.start|date:"l N j, Y, P e" }}">
+                                     alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.timestamp|date:"l N j, Y, P e" }}">
                                 {% if forloop.parentloop.parentloop.counter > 2 %}
                                 <noscript>
-                                <img alt="{{ obj.update.start|date:"l N j, Y, P e" }}"
-                                     title="{{ obj.update.start|date:"l N j, Y, P e" }}"
+                                <img alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.timestamp|date:"l N j, Y, P e" }}"
                                      src="{{ obj.crop.url_300x251 }}">
                                 </noscript>
                                 {% endif %}
