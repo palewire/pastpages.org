@@ -46,7 +46,7 @@ class Command(BaseCommand):
         os.system("sudo -u %s pg_restore -Fc -d %s ./%s" % (user, target, source))
         # Delete the snapshot
         os.system("rm ./%s" % source)
-
+    
     def download(self, dt):
         """
         Download a database snapshot.

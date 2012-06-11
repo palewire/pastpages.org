@@ -124,6 +124,12 @@ def _venv(cmd):
             user=env.app_user
         )
 
+def loaddb(date=''):
+    """
+    Load the latest db using our management command.
+    """
+    local("python manage.py loaddb %s".strip() % date)
+
 #
 # OpenStack
 #
