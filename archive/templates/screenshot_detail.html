@@ -29,13 +29,21 @@
             </div>
         </div>
         <div class="row">
-            <div class="twelvecol last">
-                <div class="twocol" style="float:right;">
-                    {% if next %}<a href="{{ next.get_absolute_url }}">Next &raquo;</a>{% endif %}
+            <div class="twocol">
+                {% if prev %}<a href="{{ prev.get_absolute_url }}">&laquo; Previous</a>{% endif %}
+            </div>
+            <div class="eightcol" style="text-align:center;">
+                <p><a onclick="$('#citation').dialog({width: 400, title:'Citations', resizable: false })">Citations</a></p>
+                <div id="citation" style="display:none;">
+                    <h5>MLA</h5>
+                    <small>{{ object.mla_citation|safe }}</small>
+                    <br><br>
+                    <h5>Wikipedia</h5>
+                    <small>{{ object.wikipedia_citation|safe }}</small>
                 </div>
-                <div class="twocol">
-                    {% if prev %}<a href="{{ prev.get_absolute_url }}">&laquo; Previous</a>{% endif %}
-                </div>
+            </div>
+            <div class="twocol last">
+                {% if next %}<a href="{{ next.get_absolute_url }}">Next &raquo;</a>{% endif %}
             </div>
         </div>
         <div class="row">

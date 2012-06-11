@@ -2,10 +2,12 @@ import os
 import logging
 from archive import managers
 from django.db import models
+from datetime import datetime
 from django.conf import settings
 from pytz import common_timezones
 from taggit.managers import TaggableManager
 from toolbox.thumbs import ImageWithThumbsField
+from django.template.defaultfilters import date as dateformat
 logger = logging.getLogger(__name__)
 
 
@@ -13,10 +15,6 @@ class Site(models.Model):
     """
     A news website included in the archive.
     """
-    detail_views = [
-        #'archive.views.SiteDetail',
-    ]
-    
     name = models.CharField(max_length=150)
     slug = models.SlugField(unique=True)
     url = models.URLField()
@@ -51,10 +49,6 @@ class Update(models.Model):
     """
     A periodic update to the archive.
     """
-    detail_views = [
-        #'archive.views.UpdateDetail',
-    ]
-    
     start = models.DateTimeField()
     objects = managers.UpdateManager()
     
@@ -87,10 +81,6 @@ class Screenshot(models.Model):
     """
     A snapshot of web page.
     """
-    detail_views = [
-        #'archive.views.ScreenshotDetail',
-    ]
-    
     site = models.ForeignKey(Site)
     update = models.ForeignKey(Update)
     timestamp = models.DateTimeField(blank=True, null=True)
@@ -120,6 +110,43 @@ class Screenshot(models.Model):
     
     def get_crop_name(self):
         return '%s-%s-%s-crop.png' % (self.site.slug, self.update.id, self.id)
+    
+    def get_mla_citation(self):
+        """
+        The proper way to cite a screenshot in MLA style.
+        """
+        style = '"%(title)s." <em>PastPages</em>. %(creation_date)s. Web. %(today)s. &lt;%(url)s&gt;'
+        data = dict(
+            title = "%s homepage" % self.site.name,
+            creation_date = dateformat(self.timestamp, 'j N Y'),
+            today = dateformat(datetime.now().today(), 'j N Y'),
+            url = "http://www.pastpages.org%s" % self.get_absolute_url(),
+        )
+        return style % data
+    mla_citation = property(get_mla_citation)
+    
+    def get_wikipedia_citation(self):
+        """
+        The proper way to cite a screenshot in Wikipedia markup.
+        """
+        style = """{{cite web<br>
+         &nbsp;&nbsp;&nbsp;&nbsp;| url = %(url)s<br>
+         &nbsp;&nbsp;&nbsp;&nbsp;| title = %(title)s<br>
+         &nbsp;&nbsp;&nbsp;&nbsp;| publisher = PastPages<br>
+         &nbsp;&nbsp;&nbsp;&nbsp;| date = %(creation_date)s<br>
+         &nbsp;&nbsp;&nbsp;&nbsp;| accessdate = %(today)s<br>
+         &nbsp;&nbsp;&nbsp;&nbsp;| ref = {{harvid|PastPages-%(id)s|%(year)s}}<br>
+        }}"""
+        data = dict(
+            title = "%s homepage" % self.site.name,
+            creation_date = dateformat(self.timestamp, 'N j, Y'),
+            today = dateformat(datetime.now().today(), 'N j, Y'),
+            url = "http://www.pastpages.org%s" % self.get_absolute_url(),
+            year = dateformat(self.timestamp, 'Y'),
+            id = str(self.id),
+        )
+        return style % data
+    wikipedia_citation = property(get_wikipedia_citation)
 
 
 class Champion(models.Model):

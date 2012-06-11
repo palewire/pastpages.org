@@ -5,8 +5,16 @@
     body {
         font-family: "Arvo", Arial, sans-serif;
     }
+    a {
+        color: #0000FF;
+        text-decoration:underline;
+    }
+    a:visited {
+        color: #800080;
+    }
     a:hover {
         text-decoration:none;
+        cursor: pointer;
     }
     a:active {
         color: red;
