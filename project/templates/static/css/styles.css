@@ -11,6 +11,9 @@
     a:active {
         color: red;
     }
+    small {
+        font-size:11px;
+    }
     div#ribbon {
         height:36px;
         line-height:36px;
