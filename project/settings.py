@@ -11,7 +11,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    'bakery',
     'archive',
     'cumulus',
     'greeking',
@@ -37,17 +36,7 @@ USE_TZ = True
 MEDIA_ROOT = os.path.join(SETTINGS_DIR, 'media')
 MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(SETTINGS_DIR, 'static')
-BUILD_DIR = os.path.join(SETTINGS_DIR, '..', 'build')
-BAKERY_VIEWS = [
-    'archive.views.CryForHelp',
-    'archive.views.Index',
-    'archive.views.SiteDetail',
-    'archive.views.ScreenshotDetail',
-    'archive.views.UpdateDetail',
-    'archive.views.DateDetail',
-    'archive.views.TagDetail',
-    'bakery.views.Buildable404View',
-]
+
 STATICFILES_DIRS = (
     os.path.join(SETTINGS_DIR, 'templates', 'static'),
 )

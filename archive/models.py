@@ -4,13 +4,12 @@ from archive import managers
 from django.db import models
 from django.conf import settings
 from pytz import common_timezones
-from bakery.models import BuildableModel
 from taggit.managers import TaggableManager
 from toolbox.thumbs import ImageWithThumbsField
 logger = logging.getLogger(__name__)
 
 
-class Site(BuildableModel):
+class Site(models.Model):
     """
     A news website included in the archive.
     """
@@ -48,7 +47,7 @@ class Site(BuildableModel):
         return ("archive-site-detail", [self.slug])
 
 
-class Update(BuildableModel):
+class Update(models.Model):
     """
     A periodic update to the archive.
     """
@@ -84,7 +83,7 @@ def get_screenshot_path(instance, type, filename):
         instance.site.slug, type, filename)
 
 
-class Screenshot(BuildableModel):
+class Screenshot(models.Model):
     """
     A snapshot of web page.
     """
