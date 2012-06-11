@@ -129,7 +129,7 @@ class Screenshot(models.Model):
         """
         The proper way to cite a screenshot in APA style.
         """
-        style = '"%(title)s. (%(creation_date)s). <em>PastPages</em>. Retrieved from %(url)s'
+        style = '%(title)s. (%(creation_date)s). <em>PastPages</em>. Retrieved from %(url)s'
         data = dict(
             title = "%s homepage at %s" % (self.site.name, dateformat(self.timestamp, 'N j, Y, P e')),
             creation_date = dateformat(self.timestamp, 'Y, N j'),
@@ -137,6 +137,19 @@ class Screenshot(models.Model):
         )
         return style % data
     apa_citation = property(get_apa_citation)
+    
+    def get_chicago_citation(self):
+        """
+        The proper way to cite a screenshot in Chicago style.
+        """
+        style = '"%(title)s." PastPages. Last modified %(creation_date)s, %(url)s.'
+        data = dict(
+            title = "%s homepage at %s" % (self.site.name, dateformat(self.timestamp, 'N j, Y, P e')),
+            creation_date = dateformat(self.timestamp, 'F j, Y'),
+            url = "http://www.pastpages.org%s" % self.get_absolute_url(),
+        )
+        return style % data
+    chicago_citation = property(get_chicago_citation)
     
     def get_wikipedia_citation(self):
         """

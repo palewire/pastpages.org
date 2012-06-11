@@ -33,13 +33,16 @@
                 {% if prev %}<a href="{{ prev.get_absolute_url }}">&laquo; Previous</a>{% endif %}
             </div>
             <div class="eightcol" style="text-align:center;">
-                <p><a onclick="$('#citation').dialog({width: 400, title:'Citations', resizable: false })">Citations</a></p>
+                <p><a onclick="$('#citation').dialog({width: 500, title:'Citations', resizable: false })">Citations</a></p>
                 <div id="citation" style="display:none;">
                     <h5>MLA</h5>
                     <small>{{ object.mla_citation|safe }}</small>
                     <br><br>
                     <h5>APA</h5>
                     <small>{{ object.apa_citation|safe }}</small>
+                    <br><br>
+                    <h5>Chicago</h5>
+                    <small>{{ object.chicago_citation|safe }}</small>
                     <br><br>
                     <h5>Wikipedia</h5>
                     <small>{{ object.wikipedia_citation|safe }}</small>
