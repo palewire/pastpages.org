@@ -117,13 +117,26 @@ class Screenshot(models.Model):
         """
         style = '"%(title)s." <em>PastPages</em>. %(creation_date)s. Web. %(today)s. &lt;%(url)s&gt;'
         data = dict(
-            title = "%s homepage" % self.site.name,
+            title = "%s homepage at %s" % (self.site.name, dateformat(self.timestamp, 'N j, Y, P e')),
             creation_date = dateformat(self.timestamp, 'j N Y'),
             today = dateformat(datetime.now().today(), 'j N Y'),
             url = "http://www.pastpages.org%s" % self.get_absolute_url(),
         )
         return style % data
     mla_citation = property(get_mla_citation)
+    
+    def get_apa_citation(self):
+        """
+        The proper way to cite a screenshot in APA style.
+        """
+        style = '"%(title)s. (%(creation_date)s). <em>PastPages</em>. Retrieved from %(url)s'
+        data = dict(
+            title = "%s homepage at %s" % (self.site.name, dateformat(self.timestamp, 'N j, Y, P e')),
+            creation_date = dateformat(self.timestamp, 'Y, N j'),
+            url = "http://www.pastpages.org%s" % self.get_absolute_url(),
+        )
+        return style % data
+    apa_citation = property(get_apa_citation)
     
     def get_wikipedia_citation(self):
         """
@@ -138,7 +151,7 @@ class Screenshot(models.Model):
          &nbsp;&nbsp;&nbsp;&nbsp;| ref = {{harvid|PastPages-%(id)s|%(year)s}}<br>
         }}"""
         data = dict(
-            title = "%s homepage" % self.site.name,
+            title = "%s homepage at %s" % (self.site.name, dateformat(self.timestamp, 'N j, Y, P e')),
             creation_date = dateformat(self.timestamp, 'N j, Y'),
             today = dateformat(datetime.now().today(), 'N j, Y'),
             url = "http://www.pastpages.org%s" % self.get_absolute_url(),
