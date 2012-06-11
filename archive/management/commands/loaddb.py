@@ -35,6 +35,11 @@ class Command(BaseCommand):
         os.environ['PGPASSWORD'] = settings.DATABASES['default']['PASSWORD']
         user = settings.DATABASES['default']['USER']
         print "Loading to new database %s" % target
+        # If the db already exists, we need to drop it.
+        try:
+            os.system("sudo -u %s dropdb %s" % (user, target))
+        except:
+            pass
         # Create the database
         os.system("sudo -u %s createdb %s" % (user, target))
         # Load the data
