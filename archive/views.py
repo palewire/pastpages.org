@@ -331,20 +331,26 @@ class AdvancedSearch(TemplateView):
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your end date was not properly formatted.'
                 return context
-            if end_date < start_date:
-                context['has_error'] = True
-                context['error_message'] = 'Sorry. Your end date comes before you start date.'
-                return context
+            # Add dates to the context
             context.update({
                 'start_date': start_date.strftime("%Y/%m/%d"),
                 'end_date': end_date.strftime("%Y/%m/%d"),
             })
+            # Make sure dates are in the right order
+            if end_date < start_date:
+                context['has_error'] = True
+                context['error_message'] = 'Sorry. Your end date comes before you start date.'
+                return context
+            # Limit date range to seven days
+            if (end_date-start_date).days > 7:
+                context['has_error'] = True
+                context['error_message'] = 'Sorry. The maximum date range allowed is seven days. You requested %s.' % ((end_date-start_date).days)
+                return context
             # Add a day so the search is "greedy" and includes screenshots
             # that happened on the end_date
             filters.update({
                 'timestamp__range': [start_date, end_date + timedelta(days=1)],
             })
-            print filters
         
         # Execute the filters and pass out the result
         context['object_list'] = Screenshot.objects.filter(**filters).order_by("timestamp")[:500]
