@@ -1,8 +1,10 @@
+import pytz
 import logging
-from datetime import datetime, timedelta
 from itertools import groupby
 from django.http import Http404
 from django.utils import timezone
+from pytz import common_timezones
+from datetime import datetime, timedelta
 from taggit.models import Tag, TaggedItem
 from django.utils.timezone import localtime
 from django.core.urlresolvers import reverse
@@ -226,6 +228,8 @@ class AdvancedSearch(TemplateView):
         context['site_list'] = site_list
         tag_list = Tag.objects.all().order_by("name")
         context['tag_list'] = tag_list
+        context['timezone_list'] = common_timezones
+        context['timezone'] = 'UTC'
         
         # Check if any qs variables have been provided
         is_search = len(self.request.GET.keys()) > 0
@@ -238,6 +242,7 @@ class AdvancedSearch(TemplateView):
         # Examine the valid keys and see what's been submitted
         site = self.request.GET.get('site', None)
         tag = self.request.GET.get('tag', None)
+        user_timezone = self.request.GET.get('timezone', None)
         start_date = self.request.GET.get('start_date', None)
         end_date = self.request.GET.get('end_date', None)
         if start_date == 'YYYY/MM/DD':
@@ -252,6 +257,15 @@ class AdvancedSearch(TemplateView):
             context['error_message'] = 'Sorry. You cannot filter by both site and tag at the same time.'
             return context
         
+        # Validate the timezone
+        if not user_timezone:
+            user_timezone = 'UTC'
+        if user_timezone not in common_timezones:
+            context['has_error'] = True
+            context['error_message'] = 'Sorry. The timezone you submitted is not supported.'
+            return context
+        context['timezone'] = user_timezone
+        
         # A dict to store filters depending on what has been submitted
         filters = {}
         
@@ -262,6 +276,7 @@ class AdvancedSearch(TemplateView):
             except Site.DoesNotExist:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. The site you submitted does not exist.'
+                return context
             filters['site'] = site
             # Gotta give it a longer name so it isn't overridden by site
             # context processor
@@ -272,6 +287,7 @@ class AdvancedSearch(TemplateView):
             except Tag.DoesNotExist:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. The tag you submitted does not exist.'
+                return context
             tagged_list = [i.content_object for i in
                 TaggedItem.objects.filter(tag=tag)
             ]
@@ -298,6 +314,7 @@ class AdvancedSearch(TemplateView):
             # Validate the start date
             try:
                 start_date = datetime.strptime(start_date, "%Y/%m/%d")
+                start_date = start_date.replace(tzinfo=pytz.timezone(user_timezone))
             except ValueError:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your start date was not properly formatted.'
@@ -305,6 +322,7 @@ class AdvancedSearch(TemplateView):
             # Validate the end date
             try:
                 end_date = datetime.strptime(end_date, "%Y/%m/%d")
+                end_date = end_date.replace(tzinfo=pytz.timezone(user_timezone))
             except ValueError:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your end date was not properly formatted.'
@@ -322,12 +340,14 @@ class AdvancedSearch(TemplateView):
             filters.update({
                 'timestamp__range': [start_date, end_date + timedelta(days=1)],
             })
+            print filters
         
         # Execute the filters and pass out the result
         context['object_list'] = Screenshot.objects.filter(**filters).order_by("timestamp")[:500]
         context['object_count'] = context['object_list'].count()
         screenshot_groups = []
-        for key, group in groupby(context['object_list'], lambda x: localtime(x.update.start).date()):
+        print [i.update.start.replace(tzinfo=pytz.timezone(user_timezone)) for i in context['object_list']]
+        for key, group in groupby(context['object_list'], lambda x: x.update.start.replace(tzinfo=pytz.timezone(user_timezone)).date()):
             screenshot_groups.append((key, group_objects_by_number(list(group), 6)))
         context['object_groups'] = screenshot_groups
         return context

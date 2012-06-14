@@ -59,6 +59,16 @@
                                     onFocus="if (this.value === 'YYYY/MM/DD') {this.value = '';}"
                                     value="{% if end_date %}{{ end_date|date:"Y/m/d" }}{% else %}YYYY/MM/DD{% endif %}" />
                             </li>
+                            <li>
+                                <label for="time_zone">Time zone:</label>
+                                <select name="timezone" id="timezone">
+                                    <option value=""></option>
+                                    {% for obj in timezone_list %}
+                                    <option {% ifequal obj timezone %}selected="selected"{% endifequal %}
+                                        value="{{ obj }}">{{ obj }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
                             <li><small>Dates begin and end according to the <a href="http://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC time zone</a>.</small></li>
                         </ul>
                         <input type="submit" value="Submit" />
