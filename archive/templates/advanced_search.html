@@ -62,7 +62,6 @@
                             <li>
                                 <label for="time_zone">Time zone:</label>
                                 <select name="timezone" id="timezone">
-                                    <option value=""></option>
                                     {% for obj in timezone_list %}
                                     <option {% ifequal obj timezone %}selected="selected"{% endifequal %}
                                         value="{{ obj }}">{{ obj }}</option>
