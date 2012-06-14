@@ -51,13 +51,13 @@
                                 <label for="start_date">Start date:</label>
                                 <input type="text" name="start_date" id="start_date"
                                     onFocus="if (this.value === 'YYYY/MM/DD') {this.value = '';}"
-                                    value="{% if start_date %}{{ start_date|date:"Y/m/d" }}{% else %}YYYY/MM/DD{% endif %}" />
+                                    value="{% if start_date %}{{ start_date }}{% else %}YYYY/MM/DD{% endif %}" />
                             </li>
                             <li>
                                 <label for="end_date">End date:</label>
                                 <input type="text" name="end_date" id="end_date"
                                     onFocus="if (this.value === 'YYYY/MM/DD') {this.value = '';}"
-                                    value="{% if end_date %}{{ end_date|date:"Y/m/d" }}{% else %}YYYY/MM/DD{% endif %}" />
+                                    value="{% if end_date %}{{ end_date }}{% else %}YYYY/MM/DD{% endif %}" />
                             </li>
                             <li>
                                 <label for="time_zone">Time zone:</label>
@@ -69,7 +69,6 @@
                                     {% endfor %}
                                 </select>
                             </li>
-                            <li><small>Dates begin and end according to the <a href="http://en.wikipedia.org/wiki/Coordinated_Universal_Time">UTC time zone</a>.</small></li>
                         </ul>
                         <input type="submit" value="Submit" />
                     </fieldset>
@@ -107,8 +106,8 @@
                                      {% else %}
                                      src="{{ obj.crop.url_300x251 }}"
                                      {% endif %}
-                                     alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
-                                     title="{{ obj.timestamp|date:"l N j, Y, P e" }}">
+                                     alt="{{ obj.timestamp|timezone:timezone|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.timestamp|timezone:timezone|date:"l N j, Y, P e" }}">
                                 {% if forloop.parentloop.parentloop.counter > 2 %}
                                 <noscript>
                                 <img alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"

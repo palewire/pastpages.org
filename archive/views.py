@@ -219,6 +219,9 @@ class AdvancedSearch(TemplateView):
     """
     template_name = 'advanced_search.html'
     
+    def convert_timezone(self, dt, tz):
+        return tz.normalize(dt.astimezone(tz))
+    
     def get_context_data(self, **kwargs):
         context = super(AdvancedSearch, self).get_context_data(**kwargs)
         
@@ -265,6 +268,7 @@ class AdvancedSearch(TemplateView):
             context['error_message'] = 'Sorry. The timezone you submitted is not supported.'
             return context
         context['timezone'] = user_timezone
+        user_timezone = pytz.timezone(user_timezone)
         
         # A dict to store filters depending on what has been submitted
         filters = {}
@@ -314,7 +318,7 @@ class AdvancedSearch(TemplateView):
             # Validate the start date
             try:
                 start_date = datetime.strptime(start_date, "%Y/%m/%d")
-                start_date = start_date.replace(tzinfo=pytz.timezone(user_timezone))
+                start_date = start_date.replace(tzinfo=user_timezone)
             except ValueError:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your start date was not properly formatted.'
@@ -322,7 +326,7 @@ class AdvancedSearch(TemplateView):
             # Validate the end date
             try:
                 end_date = datetime.strptime(end_date, "%Y/%m/%d")
-                end_date = end_date.replace(tzinfo=pytz.timezone(user_timezone))
+                end_date = end_date.replace(tzinfo=user_timezone)
             except ValueError:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your end date was not properly formatted.'
@@ -332,8 +336,8 @@ class AdvancedSearch(TemplateView):
                 context['error_message'] = 'Sorry. Your end date comes before you start date.'
                 return context
             context.update({
-                'start_date': start_date,
-                'end_date': end_date,
+                'start_date': start_date.strftime("%Y/%m/%d"),
+                'end_date': end_date.strftime("%Y/%m/%d"),
             })
             # Add a day so the search is "greedy" and includes screenshots
             # that happened on the end_date
@@ -346,8 +350,7 @@ class AdvancedSearch(TemplateView):
         context['object_list'] = Screenshot.objects.filter(**filters).order_by("timestamp")[:500]
         context['object_count'] = context['object_list'].count()
         screenshot_groups = []
-        print [i.update.start.replace(tzinfo=pytz.timezone(user_timezone)) for i in context['object_list']]
-        for key, group in groupby(context['object_list'], lambda x: x.update.start.replace(tzinfo=pytz.timezone(user_timezone)).date()):
+        for key, group in groupby(context['object_list'], lambda x: self.convert_timezone(x.update.start, user_timezone).date()):
             screenshot_groups.append((key, group_objects_by_number(list(group), 6)))
         context['object_groups'] = screenshot_groups
         return context
