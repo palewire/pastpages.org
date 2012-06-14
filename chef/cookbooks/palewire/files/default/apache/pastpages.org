@@ -4,5 +4,6 @@
     WSGIScriptAlias / /apps/pastpages.org/repo/project/wsgi.py
     WSGIDaemonProcess palewire user=palewire group=palewire threads=25
     WSGIProcessGroup palewire
+    WSGIApplicationGroup %{GLOBAL}
 </VirtualHost>
 
