@@ -26,12 +26,26 @@ script "Zero out munin apache.conf" do
   EOH
 end
 
-script "Install python-munin" do
+script "Install PyMunin" do
   interpreter "bash"
   user "root"
   group "root"
   code <<-EOH
-    pip install git+https://github.com/samuel/python-munin.git
+    pip install PyMunin --use-mirrors
+  EOH
+end
+
+script "Install pgstats for PyMunin" do
+  interpreter "bash"
+  user "root"
+  group "root"
+  code <<-EOH
+    pip install psycopg2 --use-mirrors
+    echo "[pgstats]
+    user #{node[:db_user]}
+    env.database #{node[:db_name]}
+    env.include_db #{node[:db_name]}" > /etc/munin/plugin-conf.d/pgstats
+    ln -s /usr/share/munin/plugins/pgstats /etc/munin/plugins/pgstats
   EOH
 end
 
