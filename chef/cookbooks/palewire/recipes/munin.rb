@@ -49,6 +49,15 @@ script "Install pgstats for PyMunin" do
   EOH
 end
 
+script "Install memcachedstats for PyMunin" do
+  interpreter "bash"
+  user "root"
+  group "root"
+  code <<-EOH
+    ln -s /usr/share/munin/plugins/memcachedstats /etc/munin/plugins/memcachedstats
+  EOH
+end
+
 script "Restart Munin" do
   interpreter "bash"
   user "root"
