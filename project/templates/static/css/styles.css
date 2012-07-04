@@ -4,6 +4,8 @@
 
     body {
         font-family: "Arvo", Arial, sans-serif;
+        font-size:16px;
+        color:black;
     }
     a {
         color: #0000FF;
@@ -22,30 +24,115 @@
     small {
         font-size:11px;
     }
-    div#ribbon {
-        height:36px;
-        line-height:36px;
-        background-color: violet;
-        color: white;
+    .container {
+        clear:both;
+    }
+    .overflow {
+        overflow:visible;
+        clear:both;
+    }
+    div#toolbar {
+        padding: 10px 0;
         font-size: 16px;
-        text-align:center;
+        background-color: #ffffff;
+        position:relative;
+        margin: 0 0 10px 0;
     }
-    div#ribbon a {
-        color: white;
+    h1 {
+        font-size: 32px;
     }
-    div#headline {
-        margin:10px 0 0 0;
-    }
-    div#headline h1 {
-        font-size:35px;
-        line-height:35px;
-    }
-    div#headline a {
+    a.headline {
         text-decoration:none;
         color:black;
     }
-    div#headline a:hover {
+    a.headline:hover {
+        text-decoration:none;
+        cursor: pointer;
         color: gray;
+    }
+    div#toolbar ul#tools {
+        text-align:right;
+        float:right;
+        display:inline;
+        margin:30px 0 0 0;
+    }
+    div#toolbar ul#tools li {
+        display:inline;
+        list-style-type: none;
+        margin:5px;
+    }
+    div#toolbar #datepicker {
+        width:100px;
+    }
+    div#toolbar img {
+        vertical-align:bottom;
+    }
+    div#toolbar select {
+        width: 180px;
+    }
+    div#toolbar a#advancedsearch {
+        text-decoration:underline;
+        font-size:12px;
+    }
+    div#toolbar .dropdown {
+        font-size:14px;
+        position:relative;
+    }
+    .caret {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      vertical-align: top;
+      border-top: 4px solid #0000FF;
+      border-right: 4px solid transparent;
+      border-left: 4px solid transparent;
+      content: "";
+      opacity: 0.4;
+      filter: alpha(opacity=40);
+      margin-top: 12px;
+      margin-left: 2px;
+    }
+    .dropdown:hover .caret,
+    .open .caret {
+      opacity: 1;
+      filter: alpha(opacity=100);
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      z-index: 1000;
+      display: none;
+      float: left;
+      min-width: 100px;
+      padding: 4px 0;
+      margin: 4px 0 0;
+      list-style: none;
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+    }
+    .dropdown-menu li {
+        margin:0 !important;
+    }
+    .open {
+      *z-index: 1000;
+    }
+    .open > .dropdown-menu {
+      display: block;
+    }
+    .dropdown-menu a {
+      display: block;
+      padding: 5px;
+      clear: both;
+      font-weight: normal;
+      line-height: 18px;
+      white-space: nowrap;
+    }
+
+    .dropdown-menu li > a:hover,
+    .dropdown-menu .active > a,
+    .dropdown-menu .active > a:hover {
+      text-decoration: none;
     }
     div.screenshots {
         margin: 0 auto 30px auto;
@@ -84,19 +171,6 @@
     div.detail h2 {
         font-size:18px;
         margin: 0 0 10px 0;
-    }
-    div.upperright {
-        margin-top: 10px;
-        text-align:right;
-    }
-    div.upperright #datepicker {
-        width:100px;
-    }
-    div.upperright img {
-        vertical-align:bottom;
-    }
-    div.upperright select {
-        width: 180px;
     }
     div.timestamp {
         margin: 5px auto;
@@ -137,11 +211,6 @@
         margin:10px 0;
         color:red;
     }
-    div.upperright a#advancedsearch {
-        text-decoration:underline;
-        font-size:12px;
-    }
-
 
 
 /* ============================= */
