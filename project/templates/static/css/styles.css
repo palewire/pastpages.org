@@ -2,9 +2,29 @@
 /* ! Layout for desktop version   */
 /* ============================== */
 
+    @font-face {
+        font-family: 'TheanoDidotRegular';
+        src: url('../fonts/TheanoDidot-Regular-webfont.eot');
+        src: url('../fonts/TheanoDidot-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+             url('../fonts/TheanoDidot-Regular-webfont.woff') format('woff'),
+             url('../fonts/TheanoDidot-Regular-webfont.ttf') format('truetype'),
+             url('../fonts/TheanoDidot-Regular-webfont.svg#TheanoDidotRegular') format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+    h1, h2, h3, h4, h5, b { font-weight:normal; }
+    h1 {
+        text-transform:uppercase;
+        font-size: 32px;
+        line-height:120%;
+    }
+    h2 {
+        line-height:120%;
+    }
     body {
-        font-family: "Arvo", Arial, sans-serif;
-        font-size:16px;
+        font-family: "TheanoDidotRegular", Arial, sans-serif;
+        font-size:18px;
+        line-height:120%;
         color:black;
     }
     a {
@@ -31,21 +51,38 @@
         overflow:visible;
         clear:both;
     }
+    div#topbar {
+        border-bottom:9px solid #e5e5e5;
+        margin:0 0 10px 0;
+    }
+    div.bottombar {
+        clear:both;
+        padding:5px 0;
+        border-bottom:1px solid #e5e5e5;
+        margin: 0 0 10px 0;
+    }
     div#toolbar {
         padding: 10px 0;
         font-size: 16px;
         background-color: #ffffff;
         position:relative;
-        margin: 0 0 10px 0;
     }
-    h1 {
-        font-size: 32px;
+    div#headline {
+        width:275px;
+        text-align:center;
     }
-    a.headline {
+    div#headline h1 {
+        font-size:2.75em;
+        line-height:90%;
+    }
+    div#headline p {
+        font-size:1.35em;
+    }
+    div#headline a {
         text-decoration:none;
         color:black;
     }
-    a.headline:hover {
+    div#headline a:hover {
         text-decoration:none;
         cursor: pointer;
         color: gray;
@@ -128,7 +165,6 @@
       line-height: 18px;
       white-space: nowrap;
     }
-
     .dropdown-menu li > a:hover,
     .dropdown-menu .active > a,
     .dropdown-menu .active > a:hover {
@@ -143,14 +179,6 @@
     div#sitetitle {
         margin: 0 auto 0 auto;
     }
-    h1 {
-        line-height:32px;
-        margin-bottom:3px;
-    }
-    h3, h4, h5 {font-weight:normal;}
-    h5 {
-        margin: 5px 0;
-    }
     hr {
         margin:10px 0; 
         color: #CCC;
@@ -160,17 +188,10 @@
         margin: 0 0 10px 0;
     }
     div.datestamp {
-        font-size: 12px;
+        font-size: 14px;
         text-align: right;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         padding-right:10px;
-    }
-    div.detail {
-        margin: 10px 0 0 0;
-    }
-    div.detail h2 {
-        font-size:18px;
-        margin: 0 0 10px 0;
     }
     div.timestamp {
         margin: 5px auto;
@@ -194,8 +215,7 @@
         font-size:16px;
     }
     form#advancedsearch fieldset h4 {
-        font-weight:bold;
-        
+        font-size:20px;
         margin: 5px 0 5px 0;
     }
     form#advancedsearch ul {
