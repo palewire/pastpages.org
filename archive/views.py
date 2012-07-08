@@ -54,8 +54,6 @@ class Index(TemplateView):
         object_list = update.screenshot_set.filter(
             has_crop=True, site__on_the_homepage=True)
         object_list = object_list.select_related("site")
-        # A case-insensitive resorting of the list
-        object_list = sorted(object_list, key=lambda x: x.site.name.lower())
         object_list = group_objects_by_number(object_list, 4)
         return {
             'update': update,
@@ -227,7 +225,6 @@ class AdvancedSearch(TemplateView):
         
         # Pull the data for the form fields
         site_list = Site.objects.active()
-        site_list = sorted(site_list, key=lambda x: x.name.lower())
         context['site_list'] = site_list
         tag_list = Tag.objects.all().order_by("name")
         context['tag_list'] = tag_list
