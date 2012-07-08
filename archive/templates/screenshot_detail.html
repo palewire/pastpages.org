@@ -24,6 +24,7 @@
                     {% if object.site.timezone %}
                     / 
                     {{ object.timestamp|timezone:object.site.timezone|date:"P" }} local time
+                    {% if object.hometown %} in {{ object.hometown }}{% endif %}
                     {% endif %}
                 </h2>
             </div>
