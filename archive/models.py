@@ -18,11 +18,12 @@ class Site(models.Model):
     name = models.CharField(help_text='The formal name of the site that will display \
         for users', max_length=150)
     sortable_name = models.CharField(help_text='The version of the name used for sorting',
-        max_length=150, blank=True)
+        max_length=150)
     slug = models.SlugField(unique=True)
     url = models.URLField()
     display_url = models.URLField(blank=True)
     description = models.TextField(blank=True)
+    hometown = models.CharField(max_length=500, blank=True)
     timezone = models.CharField(max_length=500,
         blank=True, choices=[(i, i) for i in common_timezones],
     )
