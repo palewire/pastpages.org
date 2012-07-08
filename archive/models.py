@@ -15,7 +15,10 @@ class Site(models.Model):
     """
     A news website included in the archive.
     """
-    name = models.CharField(max_length=150)
+    name = models.CharField('The formal name of the site that will display \
+        for users', max_length=150)
+    sortable_name = models.CharField('The version of the name used for sorting',
+        max_length=150, blank=True)
     slug = models.SlugField(unique=True)
     url = models.URLField()
     display_url = models.URLField(blank=True)

@@ -3,10 +3,10 @@ from archive.models import Site, Update, Screenshot, Champion
 
 
 class SiteAdmin(admin.ModelAdmin):
-    list_display = ("name", "url", "status", "on_the_homepage")
+    list_display = ("name", "sortable_name", "url", "status", "on_the_homepage")
     list_filter = ("status",)
     prepopulated_fields = {"slug": ("name",)}
-    list_editable = ('status', 'on_the_homepage')
+    list_editable = ('sortable_name', 'status', 'on_the_homepage')
 
 admin.site.register(Site, SiteAdmin)
 
