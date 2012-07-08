@@ -15,9 +15,9 @@ class Site(models.Model):
     """
     A news website included in the archive.
     """
-    name = models.CharField('The formal name of the site that will display \
+    name = models.CharField(help_text='The formal name of the site that will display \
         for users', max_length=150)
-    sortable_name = models.CharField('The version of the name used for sorting',
+    sortable_name = models.CharField(help_text='The version of the name used for sorting',
         max_length=150, blank=True)
     slug = models.SlugField(unique=True)
     url = models.URLField()
@@ -38,7 +38,7 @@ class Site(models.Model):
     tags = TaggableManager(blank=True)
     
     class Meta:
-        ordering = ('name',)
+        ordering = ('sortable_name', 'name',)
     
     def __unicode__(self):
         return self.name
