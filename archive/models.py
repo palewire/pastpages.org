@@ -98,7 +98,7 @@ class Screenshot(models.Model):
     has_html = models.BooleanField(default=False)
     
     class Meta:
-        ordering = ("-update__start", "site__name")
+        ordering = ("-update__start", "site__sortable_name", "site__name")
         unique_together = ("site", "update")
     
     def __unicode__(self):
