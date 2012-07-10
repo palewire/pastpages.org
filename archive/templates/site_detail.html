@@ -26,9 +26,15 @@
         <div class="row">
             <div class="fivecol">
                 <a href="{{ latest_screenshot.get_absolute_url }}">
+                    {% if object.timezone %}
+                    <img alt="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
+                         title="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
+                         src="{{ latest_screenshot.image.url_449x3000 }}">
+                    {% else %}
                     <img alt="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
                          title="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
                          src="{{ latest_screenshot.image.url_449x3000 }}">
+                    {% endif %}
                 </a>
             </div>
             <div class="sevencol last">
