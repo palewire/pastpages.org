@@ -74,14 +74,26 @@
                                      {% else %}
                                      src="{{ obj.crop.url_300x251 }}"
                                      {% endif %}
-                                     alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
-                                     title="{{ obj.timestamp|date:"l N j, Y, P e" }}">
+                                    {% if object.timezone %}
+                                         alt="{{ obj.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
+                                         title="{{ obj.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}">
+                                    {% else %}
+                                         alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
+                                         title="{{ obj.timestamp|date:"l N j, Y, P e" }}">
+                                    {% endif %}
                                 {% if forloop.parentloop.parentloop.counter > 2 %}
                                 <noscript>
+                                {% if object.timezone %}
+                                <img alt="{{ obj.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
+                                     title="{{ obj.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
+                                     src="{{ obj.crop.url_300x251 }}">
+                                </noscript>
+                                {% else %}
                                 <img alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
                                      title="{{ obj.timestamp|date:"l N j, Y, P e" }}"
                                      src="{{ obj.crop.url_300x251 }}">
                                 </noscript>
+                                {% endif %}
                                 {% endif %}
                             </a>
                         </div>

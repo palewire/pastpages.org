@@ -143,7 +143,13 @@ class SiteDetail(DetailView):
     """
     template_name = 'site_detail.html'
     queryset = Site.objects.active()
-
+    
+    def convert_timezone(self, dt, tz):
+        if not tz:
+            return localtime(dt)
+        else:
+            return tz.normalize(dt.astimezone(tz))
+    
     def get_context_data(self, **kwargs):
         screenshot_list = Screenshot.objects.filter(
             site=self.object,
@@ -153,7 +159,11 @@ class SiteDetail(DetailView):
         try:
             latest_screenshot = screenshot_list[0]
             screenshot_groups = []
-            for key, group in groupby(screenshot_list[1:], lambda x: localtime(x.update.start).date()):
+            if self.object.timezone:
+                tz = pytz.timezone(self.object.timezone)
+            else:
+                tz = None
+            for key, group in groupby(screenshot_list[1:], lambda x: self.convert_timezone(x.update.start, tz).date()):
                 screenshot_groups.append((key, group_objects_by_number(list(group), 5)))
         except IndexError:
             latest_screenshot = None
