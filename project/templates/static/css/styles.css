@@ -198,12 +198,12 @@ div#footer .row {
 form#advancedsearch {
     margin: 0 0 20px 0;
 }
-form#advancedsearch fieldset{
+fieldset{
     padding: 10px;
     border: 1px solid #ccc;
     font-size:16px;
 }
-form#advancedsearch fieldset h4 {
+fieldset h4 {
     font-size:20px;
     margin: 5px 0 5px 0;
 }

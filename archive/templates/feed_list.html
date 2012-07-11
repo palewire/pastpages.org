@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load greeking_tags tz %}
+
+{% block title %}Feeds for {{ block.super }}{% endblock %}
+
+{% block facebook-meta %}
+    {{ block.super }}
+    <meta property="og:title" content="Feeds"/>
+    <meta property="og:url" content="http://{{ site }}{% url feeds-list %}"/>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="twelvecol last">
+                <h2>
+                    Feeds
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="sixcol">
+                <fieldset>
+                    <h4>You can</h4>
+                    <p><a href="{% url feeds-updates %}">Follow all updates</a></p>
+                    <h4>Or</h4>
+                    <script type="text/javascript">
+                        var gotoSite = function(e) {
+                            var value = e.value;
+                            if (value) {
+                                window.location.href = value;
+                            }
+                        }
+                    </script>
+                    <select name="sites" id="sites" onChange="gotoSite(this.options[selectedIndex]);">
+                        <option value="">Pick a site</option>
+                        {% for obj in site_list %}
+                        <option value="{% url feeds-sites obj.slug %}">{{ obj }}</option>
+                        {% endfor %}
+                    </select>
+                    <h4>Or</h4>
+                    <script type="text/javascript">
+                        var gotoTag = function(e) {
+                            var value = e.value;
+                            if (value) {
+                                window.location.href = value;
+                            }
+                        }
+                    </script>
+                    <select name="sites" id="sites" onChange="gotoTag(this.options[selectedIndex]);">
+                        <option value="">Pick a tag</option>
+                        {% for obj in tag_list %}
+                        <option value="{% url feeds-tags obj.slug %}">{{ obj }}</option>
+                        {% endfor %}
+                    </select>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+{% endblock %}

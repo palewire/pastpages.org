@@ -39,9 +39,10 @@ urlpatterns = patterns('',
     }),
     url(r'^robots\.txt$', include('robots.urls')),
     url(r'^api/', include('api.urls')),
-    url(r'feeds/updates/$', feeds.RecentUpdates(), name="feeds-updates"),
-    url(r'feeds/sites/(?P<slug>[-\w]+)/$', feeds.SiteFeed(), name="feeds-sites"),
-    url(r'feeds/tags/(?P<slug>[-\w]+)/$', feeds.TagFeed(), name="feeds-tags"),
+    url(r'^feeds/$', views.FeedList.as_view(), name='feeds-list'),
+    url(r'^feeds/updates/$', feeds.RecentUpdates(), name="feeds-updates"),
+    url(r'^feeds/sites/(?P<slug>[-\w]+)/$', feeds.SiteFeed(), name="feeds-sites"),
+    url(r'^feeds/tags/(?P<slug>[-\w]+)/$', feeds.TagFeed(), name="feeds-tags"),
     
     # Monitoring and administration
     url(r'^cache/$', 'toolbox.views.cache_status'),

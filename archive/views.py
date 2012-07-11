@@ -221,6 +221,19 @@ class TagDetail(DetailView):
         }
 
 
+class FeedList(TemplateView):
+    """
+    A list of all our RSS feeds in one easy place.
+    """
+    template_name = 'feed_list.html'
+    
+    def get_context_data(self, **kwargs):
+        return {
+            'site_list': Site.objects.active(),
+            'tag_list': Tag.objects.all()
+        }
+
+
 class AdvancedSearch(TemplateView):
     """
     An opportunity for users to craft more complex searches of the database.
