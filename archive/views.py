@@ -230,7 +230,7 @@ class FeedList(TemplateView):
     def get_context_data(self, **kwargs):
         return {
             'site_list': Site.objects.active(),
-            'tag_list': Tag.objects.all()
+            'tag_list': Tag.objects.all().order_by("name")
         }
 
 
