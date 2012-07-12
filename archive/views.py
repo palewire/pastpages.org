@@ -6,6 +6,7 @@ from django.utils import timezone
 from pytz import common_timezones
 from datetime import datetime, timedelta
 from taggit.models import Tag, TaggedItem
+from django.db.models import Min, Max
 from django.utils.timezone import localtime
 from django.core.urlresolvers import reverse
 from archive.models import Update, Site, Screenshot, Champion
@@ -151,27 +152,46 @@ class SiteDetail(DetailView):
             return tz.normalize(dt.astimezone(tz))
     
     def get_context_data(self, **kwargs):
-        screenshot_list = Screenshot.objects.filter(
+        # Pull all the live screenshots for this site
+        qs = Screenshot.objects.filter(
             site=self.object,
             has_image=True,
             has_crop=True,
-        ).select_related("site", "update")[:100]
+        ).select_related("site", "update")
+        # Slice off the latest hundred for display
+        screenshot_list = qs[:100]
         try:
+            # Get the latest screeenshot
             latest_screenshot = screenshot_list[0]
             screenshot_groups = []
+            # Check if this site has a timezone we need to adjust for
             if self.object.timezone:
                 tz = pytz.timezone(self.object.timezone)
             else:
                 tz = None
-            for key, group in groupby(screenshot_list[1:], lambda x: self.convert_timezone(x.update.start, tz).date()):
+            # Group screenshots from recent days, adjusting for the timezone
+            # if necessary
+            for key, group in groupby(
+                screenshot_list[1:],
+                lambda x: self.convert_timezone(x.update.start, tz).date()
+            ):
                 screenshot_groups.append((key, group_objects_by_number(list(group), 5)))
+            # Find the min and max dates where this site appears
+            min_timestamp = qs.aggregate(Min("timestamp"))['timestamp__min']
+            max_timestamp = qs.aggregate(Max("timestamp"))['timestamp__max']
+            # ... and convert them to their timezone
+            min_date = self.convert_timezone(min_timestamp, tz).date()
+            max_date = self.convert_timezone(max_timestamp, tz).date()
         except IndexError:
             latest_screenshot = None
             screenshot_groups = []
+            min_date, max_date = None, None
         return {
             'object': self.object,
             'latest_screenshot': latest_screenshot,
             'screenshot_list': screenshot_groups,
+            'min_date': min_date,
+            'max_date': max_date,
         }
 
 

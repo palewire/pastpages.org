@@ -87,11 +87,15 @@ div#toolbar ul#tools li {
     list-style-type: none;
     margin:5px;
 }
-div#toolbar #datepicker {
+div#toolbar #globaldatepicker {
     width:100px;
 }
-div#toolbar img {
+.datepicker {
+    display:inline;
+}
+.datepicker img {
     vertical-align:bottom;
+    display:inline;
 }
 div#toolbar select {
     width: 180px;

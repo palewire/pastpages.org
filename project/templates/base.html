@@ -96,22 +96,17 @@
                                 </script>
                             </li>
                             <li>
-                                <form name="input" action="/jump-to-date/" method="get" style="display:inline;">
-                                    <input id="datepicker" name="date" type="hidden">
+                                <form name="input" id="globaldatepicker" class="datepicker">
+                                    <input name="date" type="hidden">
                                 </form>
                                 <script type="text/javascript">
                                 $(function() {
-                                    $("#calendar").click(function() {
-                                        console.log("click");
-                                        $( "#datepicker" ).click();
-                                    })
-                                    $("#datepicker").datepicker({
+                                    $("#globaldatepicker input").datepicker({
                                         minDate: new {{ min_date.date|datejs }},
                                         maxDate: new {{ max_date.date|datejs }},
                                         buttonImage: '{{ STATIC_URL }}calendar.jpg',
                                         buttonImageOnly: true,
                                         showOn: 'both',
-                                        buttonText: 'Select a date',
                                         onSelect: function(dateText, inst) {
                                             var parts = dateText.split("/");
                                             var url = '/date/' + parts[2] + "/" + parts[0] + "/" + parts[1] + "/";

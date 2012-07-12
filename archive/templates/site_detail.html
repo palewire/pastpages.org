@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load greeking_tags humanize tz %}
+{% load greeking_tags humanize tz misc_tags %}
 
 {% block title %}{{ object }} screenshots by {{ block.super }}{% endblock %}
 
@@ -52,12 +52,36 @@
                                  {{ latest_screenshot.timestamp|timezone:"UTC"|date:"P" }} UTC)
                             {% endif %}
                         </h4>
-                        <h4><a href="{% url feeds-sites object.slug %}">RSS</a>
-                        {% if object.tags.all %}&nbsp;&nbsp;&nbsp;
-                        Tags: {% for tag in object.tags.all %}
-                            <a href="{% url archive-tag-detail tag %}">{{ tag }}</a>{% if not forloop.last %},&nbsp;{% endif %}
-                            {% endfor %}
-                        {% endif %}
+                        <h4>
+                            Archived since {{ min_date }}&nbsp;&nbsp;
+                            <form name="input" id="sitedatepicker" class="datepicker">
+                                <label>Filter:</label>
+                                <input name="date" type="hidden">
+                            </form>
+                            <script type="text/javascript">
+                            $(function() {
+                                $("#sitedatepicker input").datepicker({
+                                    minDate: new {{ min_date|datejs }},
+                                    maxDate: new {{ max_date|datejs }},
+                                    buttonImage: '{{ STATIC_URL }}calendar.jpg',
+                                    buttonImageOnly: true,
+                                    showOn: 'both',
+                                    onSelect: function(dateText, inst) {
+                                        var parts = dateText.split("/");
+                                        var dateStr = parts[2] + "/" + parts[0] + "/" + parts[1];
+                                        var tz = '{{ latest_screenshot.timestamp|date:"e" }}';
+                                        var url = '/advanced-search/?site={{ object.slug }}&tag=&timezone=' + tz + '&start_date=' + dateStr + '&end_date=' + dateStr;
+                                        window.location.href = url;
+                                    }
+                                });
+                            });
+                            </script>&nbsp;&nbsp;
+                            <a href="{% url feeds-sites object.slug %}">RSS</a>
+                            {% if object.tags.all %}&nbsp;&nbsp;
+                            Tags: {% for tag in object.tags.all %}
+                                <a href="{% url archive-tag-detail tag %}">{{ tag }}</a>{% if not forloop.last %},&nbsp;{% endif %}
+                                {% endfor %}
+                            {% endif %}
                         </h4>
                         <hr>
                     </div>
