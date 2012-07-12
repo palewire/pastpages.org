@@ -45,7 +45,7 @@
                             <a href="{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}">{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}</a>
                         </h3>
                         <h4 style="margin-bottom:5px;">
-                            Updated {{ latest_screenshot.update.start|naturaltime }}
+                            Updated {{ latest_screenshot.timestamp|naturaltime }}
                             {% if object.timezone %}
                                 ({{ latest_screenshot.timestamp|timezone:object.timezone|date:"P" }} local time
                                  {% if object.hometown %} in {{ object.hometown }}{% endif %},
