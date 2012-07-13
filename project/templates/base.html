@@ -109,7 +109,9 @@
                                         showOn: 'both',
                                         onSelect: function(dateText, inst) {
                                             var parts = dateText.split("/");
-                                            var url = '/date/' + parts[2] + "/" + parts[0] + "/" + parts[1] + "/";
+                                            var dateStr = parts[2] + "/" + parts[0] + "/" + parts[1];
+                                            var url = '/advanced-search/?site=&tag=&timezone=UTC' +
+                                                '&start_date=' + dateStr + '&end_date=' + dateStr;
                                             window.location.href = url;
                                         }
                                     });

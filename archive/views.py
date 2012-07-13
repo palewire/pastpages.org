@@ -94,50 +94,6 @@ class ScreenshotDetail(DetailView):
         return context
 
 
-class DateDetail(DetailView):
-    """
-    All the updates on a particular date.
-    """
-    template_name = 'date_detail.html'
-    queryset = Update.objects.dates()
-    
-    def get_object(self):
-        try:
-            date_parts = map(int, [
-                self.kwargs['year'],
-                self.kwargs['month'],
-                self.kwargs['day']
-            ])
-            date_obj = datetime(*date_parts)
-        except:
-            raise Http404
-        for i in self.queryset:
-            if i == date_obj.date():
-                return date_obj
-        raise Http404
-    
-    def get_context_data(self, **kwargs):
-        tz = timezone.get_current_timezone()
-        update_list = Update.objects.filter(
-            start__range=map(tz.localize, [
-                self.object,
-                self.object + timedelta(days=1)
-            ])
-        )
-        if not update_list:
-            raise Http404
-        screenshot_list = Screenshot.objects.filter(
-            update__in=update_list,
-        ).select_related("site", "update")
-        screenshot_groups = []
-        for key, group in groupby(screenshot_list, lambda x: x.update):
-            screenshot_groups.append((key, group_objects_by_number(list(group), 8)))
-        return {
-            'date': self.object,
-            'screenshot_groups': screenshot_groups,
-        }
-
-
 class SiteDetail(DetailView):
     """
     All about a particular site.
@@ -337,9 +293,6 @@ class AdvancedSearch(TemplateView):
             ]
             filters['site__in'] = tagged_list
             context['tag'] = tag
-        else:
-            context['has_error'] = True
-            context['error_message'] = 'Sorry. You must submit either a site or a tag with every search.'
         
         # Then the date range
         if not start_date and not end_date:

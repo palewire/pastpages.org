@@ -11,13 +11,6 @@ class SiteManager(models.Manager):
 
 class UpdateManager(models.Manager):
     
-    def dates(self):
-        """
-        Returns all the distinct dates that appear in the model.
-        """
-        return self.uniqify([timezone.localtime(i.start).date()
-            for i in self.all()])
-    
     def live(self):
         from django.db import connection
         from archive.models import Site
@@ -48,22 +41,3 @@ class UpdateManager(models.Manager):
         if latest_count < sites:
             obj.in_progress = True
         return obj
-    
-    def uniqify(self, seq, idfun=None): 
-       # order preserving
-       if idfun is None:
-           def idfun(x): return x
-       seen = {}
-       result = []
-       for item in seq:
-           marker = idfun(item)
-           # in old Python versions:
-           # if seen.has_key(marker)
-           # but in new ones:
-           if marker in seen: continue
-           seen[marker] = 1
-           result.append(item)
-       return result
-
-
-
