@@ -41,6 +41,8 @@ class StaticSitemap(Sitemap):
         'index':'/',
         'about':'/about/',
         'champions': '/champions/',
+        'contact': '/contact/',
+        'feeds': '/feeds/',
     }
     main_sitemaps = []
     for page in pages.keys():
