@@ -21,6 +21,14 @@ cookbook_file "/etc/apache2/sites-enabled/" + node[:app_name] do
   notifies :restart, resources(:service => "apache2")
 end
 
+cookbook_file "/etc/apache2/apache2.conf" do
+  source "apache/apache2.conf" 
+  mode 0640
+  owner "root"
+  group "root"
+  notifies :restart, resources(:service => "apache2")
+end
+
 bash "Remove default apache config" do
   user "root"
   group "root"
