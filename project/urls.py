@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
 from archive import views, sitemaps, feeds
+from django.views.generic import TemplateView
 from django.views.static import serve as static_serve
 from django.contrib.admin.views.decorators import staff_member_required
 admin.autodiscover()
@@ -25,6 +26,8 @@ urlpatterns = patterns('',
         name='archive-screenshot-detail'),
     url(r'^advanced-search/$', views.AdvancedSearch.as_view(),
         name='archive-advanced-search'),
+    url(r'^contact/$', TemplateView.as_view(template_name='contact.html'),
+        name='contact'),
     
     # Pages for machines
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index',

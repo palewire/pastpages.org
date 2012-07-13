@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Contact {{ block.super }}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra-css %}
+<style type="text/css">
+    p {
+        margin: 0 0 10px 0;
+        font-size:18px;
+        line-height:24px;
+        text-align:justify;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="row">
+            <div class="twelvecol last">
+                <h2>
+                    Contact
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="sixcol">
+            <p>
+                If there&rsquo;s something you want to know, ask, or complain about, there is only
+                person to find. It&rsquo;s me, <a rel="author" href="http://palewi.re/who-is-ben-welsh/">
+                Ben Welsh</a>.</p>
+                <p>Feel free to send me an email
+                at <a href="mailto:ben.welsh@gmail.com">ben.welsh@gmail.com</a>.
+            </p>
+        </div>
+        <div class="fivecol last"></div>
+    </div>
+
+{% endblock %}
