@@ -42,7 +42,6 @@ urlpatterns = patterns('',
     url(r'^feeds/tags/(?P<slug>[-\w]+)/$', feeds.TagFeed(), name="feeds-tags"),
     
     # Monitoring and administration
-    url(r'^cache/$', 'toolbox.views.cache_status'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^munin/(?P<path>.*)$', staff_member_required(static_serve), {
         'document_root': settings.MUNIN_ROOT,
