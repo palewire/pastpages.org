@@ -31,7 +31,7 @@ def get_random_string(length=6):
     return ''.join(random.choice(string.letters + string.digits) for i in xrange(length))
 
 
-@timeout(30)
+@timeout(45)
 def get_safe_screenshot(browser):
     """
     Grab a screenshot from inside Selenium, but timeout if it takes too long.

@@ -361,10 +361,13 @@ class AdvancedSearch(TemplateView):
             # Add a day so the search is "greedy" and includes screenshots
             # that happened on the end_date
             filters.update({
-                'timestamp__range': [start_date, end_date + timedelta(days=1)],
+                #'timestamp__range': [start_date, end_date + timedelta(days=1)],
+                'timestamp__gte': start_date,
+                'timestamp__lt': end_date + timedelta(days=1),
             })
         
         # Execute the filters and pass out the result
+        print filters
         context['object_list'] = Screenshot.objects.filter(**filters).order_by("timestamp")[:500]
         context['object_count'] = context['object_list'].count()
         screenshot_groups = []
