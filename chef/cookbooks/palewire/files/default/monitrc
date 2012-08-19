@@ -11,11 +11,10 @@
   check process apache with pidfile /var/run/apache2.pid
     start program = "/etc/init.d/apache2 start" with timeout 60 seconds
     stop program  = "/etc/init.d/apache2 stop"
-    if cpu > 60% for 2 cycles then alert
     if cpu > 80% for 5 cycles then restart
     if totalmem > 200.0 MB for 5 cycles then restart
     if children > 250 then restart
     if loadavg(5min) greater than 10 for 8 cycles then stop
-    if failed host 172.0.0.1 port 80 protocol http 
+    if failed host 108.171.187.207 port 80 protocol http 
        then restart
 
