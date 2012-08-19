@@ -8,7 +8,8 @@
         "palewire::apache",
         "palewire::cron",
         "palewire::selenium",
-        "palewire::munin"
+        "palewire::munin",
+        "palewire::monit"
     ],
     "base_packages": ["git-core", "bash-completion", "firefox", "xvfb",
         "flashplugin-installer", "s3cmd", "xfonts-intl-chinese", 
