@@ -41,11 +41,17 @@
         "python-virtualenv", "python-imaging", "python-lxml", "libxml2", 
         "libxml2-dev", "libxslt1-dev"
     ],
-    "pip_python_packages": {},
+    "pip_python_packages": [
+        "python-cloudfiles"
+    ],
 
     "db_user": "palewire",
     "db_name": "pastpages",
     "db_password": "",
+
+    "rackspace_user": "palewire",
+    "rackspace_apikey": "",
+    "rackspace_container": "pastpages.org",
 
     "app_name": "pastpages.org",
     "app_user": "palewire",
