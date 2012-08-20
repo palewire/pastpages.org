@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Count
 
@@ -36,8 +37,8 @@ class SiteManager(models.Manager):
                 'sortable_name': l[2],
                 'slug': l[3],
                 'total_screenshots': l[4],
-                'first_screenshot': l[5],
-                'last_screenshot': l[6],
+                'last_screenshot': timezone.localtime(l[6]),
+                'tardy': (timezone.now() - timezone.localtime(l[6])) > timedelta(days=1),
             })
         return sorted(results, key=lambda x: x['sortable_name'])
 

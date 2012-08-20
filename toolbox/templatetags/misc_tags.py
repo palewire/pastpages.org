@@ -1,8 +1,25 @@
 from django import template
+from django.utils import timezone
+from datetime import timedelta as td
+from django.utils.timesince import timesince
 from django.utils.safestring import mark_safe, SafeData
 from django.template.defaultfilters import stringfilter
 
 register = template.Library()
+
+def timedelta(value, arg=None):
+    if not value:
+        return ''
+    if arg:
+        cmp = arg
+    else:
+        cmp = timezone.now()
+    if value > cmp:
+        return "in %s" % timesince(cmp,value)
+    else:
+        return "%s ago" % timesince(value,cmp)
+timedelta.is_safe = True
+register.filter(timedelta)
 
 def datejs(dt):
     """

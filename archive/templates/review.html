@@ -1,4 +1,4 @@
-{% load i18n admin_static admin_modify humanize tz %}
+{% load i18n admin_static admin_modify humanize tz misc_tags %}
 <html>
 <body>
 <style type="text/css">
@@ -9,7 +9,13 @@
     {
         border: 1px solid black;
         padding: 5px;
+        margin: 5px;
+        line-height:140%;
         text-align:left;
+    }
+    td.tardy {
+        background-color:red;
+        color:white;
     }
 </style>
 <table>
@@ -17,8 +23,7 @@
         <tr>
             <th>Site</th>
             <th>Screenshots</th>
-            <th>First</th>
-            <th>Last</th>
+            <th>Last update</th>
         </tr>
     </thead>
     <tbody>
@@ -26,8 +31,7 @@
         <tr>
             <td>{{ obj.name }}</td>
             <td>{{ obj.total_screenshots|intcomma }}</td>
-            <td>{{ obj.first_screenshot|localtime }}</td>
-            <td>{{ obj.last_screenshot|localtime }}</td>
+            <td {% if obj.tardy %}class="tardy"{% endif %}>{{ obj.last_screenshot|timedelta }}</td>
         </tr>
     {% endfor %}
     </tbody>
