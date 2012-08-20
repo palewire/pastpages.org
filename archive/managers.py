@@ -26,7 +26,6 @@ class SiteManager(models.Manager):
             ON site.id = ssht.site_id
             WHERE site.status = 'active'
             GROUP BY 1, 2, 3, 4
-            ORDER BY site.sortable_name
         """
         cursor.execute(sql)
         results = []
@@ -34,12 +33,13 @@ class SiteManager(models.Manager):
             results.append({
                 'id': l[0],
                 'name': l[1],
+                'sortable_name': l[2],
                 'slug': l[3],
                 'total_screenshots': l[4],
                 'first_screenshot': l[5],
                 'last_screenshot': l[6],
             })
-        return results
+        return sorted(results, key=lambda x: x['sortable_name'])
 
 
 class UpdateManager(models.Manager):
