@@ -7,6 +7,38 @@ class SiteManager(models.Manager):
     
     def active(self):
         return self.filter(status='active')
+    
+    def stats(self):
+        from django.db import connection
+        from archive.models import Site
+        cursor = connection.cursor()
+        sql = """
+            SELECT
+                site.id,
+                site.name,
+                site.slug,
+                COUNT(ssht.id),
+                MIN(ssht.timestamp),
+                MAX(ssht.timestamp)
+            FROM archive_site as site
+            INNER JOIN archive_screenshot as ssht 
+            ON site.id = ssht.site_id
+            WHERE site.status = 'active'
+            GROUP BY 1, 2, 3
+            ORDER BY site.sortable_name
+        """
+        cursor.execute(sql)
+        results = []
+        for l in cursor.fetchall():
+            results.append({
+                'id': l[0],
+                'name': l[1],
+                'slug': l[2],
+                'total_screenshots': l[3],
+                'first_screenshot': l[4],
+                'last_screenshot': l[5],
+            })
+        return results
 
 
 class UpdateManager(models.Manager):

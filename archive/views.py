@@ -18,6 +18,19 @@ from django.views.generic import TemplateView, ListView, DetailView
 logger = logging.getLogger(__name__)
 
 
+class Review(TemplateView):
+    """
+    A private page for reviewing the screenshotting success rate, etc.
+    """
+    template_name = 'review.html'
+    
+    def get_context_data(self, **kwargs):
+        context = {
+            'site_list': Site.objects.stats(),
+        }
+        return context
+
+
 class AboutDetail(TemplateView):
     """
     Some background on this site.

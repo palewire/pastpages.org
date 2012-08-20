@@ -46,6 +46,7 @@ urlpatterns = patterns('',
     
     # Monitoring and administration
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^review/$', views.Review.as_view(), name='review'),
     url(r'^munin/(?P<path>.*)$', staff_member_required(static_serve), {
         'document_root': settings.MUNIN_ROOT,
     })

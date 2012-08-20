@@ -1,0 +1,36 @@
+{% load i18n admin_static admin_modify humanize tz %}
+<html>
+<body>
+<style type="text/css">
+    table {
+        border-collapse:collapse;
+    }
+    table, th, td
+    {
+        border: 1px solid black;
+        padding: 5px;
+        text-align:left;
+    }
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>Site</th>
+            <th>Screenshots</th>
+            <th>First</th>
+            <th>Last</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for obj in site_list %}
+        <tr>
+            <td>{{ obj.name }}</td>
+            <td>{{ obj.total_screenshots|intcomma }}</td>
+            <td>{{ obj.first_screenshot|localtime }}</td>
+            <td>{{ obj.last_screenshot|localtime }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
