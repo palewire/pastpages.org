@@ -16,6 +16,7 @@ class SiteManager(models.Manager):
             SELECT
                 site.id,
                 site.name,
+                site.sortable_name,
                 site.slug,
                 COUNT(ssht.id),
                 MIN(ssht.timestamp),
@@ -24,7 +25,7 @@ class SiteManager(models.Manager):
             INNER JOIN archive_screenshot as ssht 
             ON site.id = ssht.site_id
             WHERE site.status = 'active'
-            GROUP BY 1, 2, 3
+            GROUP BY 1, 2, 3, 4
             ORDER BY site.sortable_name
         """
         cursor.execute(sql)
@@ -33,10 +34,10 @@ class SiteManager(models.Manager):
             results.append({
                 'id': l[0],
                 'name': l[1],
-                'slug': l[2],
-                'total_screenshots': l[3],
-                'first_screenshot': l[4],
-                'last_screenshot': l[5],
+                'slug': l[3],
+                'total_screenshots': l[4],
+                'first_screenshot': l[5],
+                'last_screenshot': l[6],
             })
         return results
 
