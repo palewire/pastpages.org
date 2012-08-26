@@ -39,9 +39,9 @@ def get_safe_screenshot(browser):
     return browser.get_screenshot_as_base64()
 
 
-def get_screenshot(site_id, update_id):
+def get_selenium_screenshot(site_id, update_id):
     """
-    Create a screenshot and save it to the database
+    Create a screenshot using Selenium and Fire and save it to the database
     """
     # Get the objects we're working with
     site = Site.objects.get(id=site_id)
