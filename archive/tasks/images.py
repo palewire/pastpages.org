@@ -1,7 +1,10 @@
 # Misc.
+import os
 import base64
 import random
 import string
+import subprocess
+from django.conf import settings
 from django.utils import timezone
 from archive.models import Screenshot, Update, Site
 
@@ -29,6 +32,24 @@ def get_random_string(length=6):
     Generate a random string of letters and numbers
     """
     return ''.join(random.choice(string.letters + string.digits) for i in xrange(length))
+
+
+PHANTOM_BIN = os.path.join(settings.REPO_DIR, 'phantomjs', 'bin', 'phantomjs')
+PHANTOM_SCRIPT = os.path.join(settings.REPO_DIR, 'archive', 'tasks', 'images.js')
+
+def get_phantomjs_screenshot(site_id):#, update_id):
+    """
+    Fetch a screenshot using PhantomJS
+    """
+    # Get the objects we're working with
+    site = Site.objects.get(id=site_id)
+    #update = Update.objects.get(id=update_id)
+    
+    params = [PHANTOM_BIN, PHANTOM_SCRIPT, site.url, '%s.png' % site]
+    print params
+    exitcode = subprocess.call(params)
+    if exitcode == 0:
+        print "SUCCESS"
 
 
 @timeout(45)

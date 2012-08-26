@@ -1,5 +1,10 @@
 import os
 SETTINGS_DIR = os.path.dirname(__file__)
+REPO_DIR = os.path.join(
+    os.path.abspath(
+        os.path.join(SETTINGS_DIR, os.path.pardir),
+    ),
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
