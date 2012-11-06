@@ -153,7 +153,7 @@ def update_chef():
 def list_servers():
     compute = Compute(
         username='palewire',
-        apikey='ea820471f78a73f190e0edd604c4440b'
+        apikey=''
     )
     pprint(compute.servers.list())
 
