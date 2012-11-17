@@ -97,7 +97,7 @@ class TagFeed(Feed):
         return u"Screenshots of sites tagged as %s by PastPages" % obj.name
     
     def link(self, obj):
-        return reverse('archive-tag-detail', args=[obj.name])
+        return reverse('archive-tag-detail', args=[obj.slug])
         
     def items(self, obj):
         site_list = [i.content_object for i in
