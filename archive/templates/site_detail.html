@@ -79,7 +79,7 @@
                             <a href="{% url feeds-sites object.slug %}">RSS</a>
                             {% if object.tags.all %}&nbsp;&nbsp;
                             Tags: {% for tag in object.tags.all %}
-                                <a href="{% url archive-tag-detail tag %}">{{ tag }}</a>{% if not forloop.last %},&nbsp;{% endif %}
+                                <a href="{% url archive-tag-detail tag.slug %}">{{ tag }}</a>{% if not forloop.last %},&nbsp;{% endif %}
                                 {% endfor %}
                             {% endif %}
                         </h4>
