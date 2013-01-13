@@ -63,6 +63,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     
     # Convert the screenshot data into something we can save
     data = open(output_path, 'r').read()
+    os.remove(output_path)
     file_obj = ContentFile(data)
     
     # Create a screenshot object in the database
