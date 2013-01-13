@@ -72,7 +72,7 @@ class TagSitemap(Sitemap):
         return Tag.objects.all()
     
     def location(self, obj):
-        return reverse('archive-tag-detail', args=[obj.name])
+        return reverse('archive-tag-detail', args=[obj.slug])
 
 
 SITEMAPS = {
