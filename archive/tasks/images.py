@@ -37,19 +37,80 @@ def get_random_string(length=6):
 PHANTOM_BIN = os.path.join(settings.REPO_DIR, 'phantomjs', 'bin', 'phantomjs')
 PHANTOM_SCRIPT = os.path.join(settings.REPO_DIR, 'archive', 'tasks', 'images.js')
 
-def get_phantomjs_screenshot(site_id):#, update_id):
+def get_phantomjs_screenshot(site_id, update_id):
     """
     Fetch a screenshot using PhantomJS
     """
     # Get the objects we're working with
     site = Site.objects.get(id=site_id)
-    #update = Update.objects.get(id=update_id)
-    
-    params = [PHANTOM_BIN, PHANTOM_SCRIPT, site.url, '%s.png' % site]
-    print params
+    update = Update.objects.get(id=update_id)
+    # Prepare the parameters for our command line call to PhantomJS
+    output_path = os.path.join(
+        settings.REPO_DIR,
+        '%s.png' % site
+    )
+    params = [PHANTOM_BIN, PHANTOM_SCRIPT, site.url, output_path]
+    # Snap a screenshot of the target site
+    logger.debug("Opening %s" % site.url)
+    timestamp = timezone.now()
     exitcode = subprocess.call(params)
+    # Report back
     if exitcode == 0:
         print "SUCCESS"
+    else:
+        print "FAILED?: %s" % exitcode
+        return False
+    
+    # Convert the screenshot data into something we can save
+    data = open(output_path, 'r').read()
+    file_obj = ContentFile(data)
+    
+    # Create a screenshot object in the database
+    ssht, created = Screenshot.objects.get_or_create(site=site, update=update)
+    
+    # Save the image data to the object
+    target = ssht.get_image_name()
+    logger.debug("Saving %s" % target)
+    try:
+        ssht.image.save(target, file_obj)
+    except Exception, e:
+        logger.error("Image save failed.")
+        ssht.delete()
+        raise e
+    ssht.has_image = True
+    ssht.timestamp = timestamp
+    ssht.save()
+    logger.debug("Screenshot saved for %s" % site.url)
+    
+    # Reopen image as PIL object
+    file_obj.seek(0)
+    image = Image.open(file_obj)
+    # Crop it to 1000px tall, starting from the top
+    crop = image.crop(
+        (
+            0,
+             # Unless we provide an offset to scroll down before cropping
+            getattr(ssht.site, "y_offset", 0),
+            ssht.image.width,
+            1000
+        )
+    )
+    # Prep for db
+    crop_name = ssht.get_crop_name()
+    crop_data = prep_pil_for_db(crop, crop_name)
+    # Save to the database
+    try:
+        ssht.crop.save(crop_name, crop_data)
+    except Exception, e:
+        logger.error("Crop save failed.")
+        ssht.delete()
+        raise e
+    ssht.has_crop = True
+    ssht.save()
+    logger.debug("Crop saved for %s" % site.url)
+    
+    # Done
+    logger.debug("Finished %s" % site.url)
 
 
 @timeout(45)
