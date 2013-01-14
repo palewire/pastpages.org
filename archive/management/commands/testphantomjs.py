@@ -2,16 +2,21 @@ from django.core.management.base import BaseCommand, CommandError
 from archive.tasks.images import get_phantomjs_screenshot
 from archive.models import Site, Update
 from django.utils import timezone
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options): 
-        obj = Site.objects.all().order_by("?")[0]
         update = Update.objects.create(
             start=timezone.now(),
         )
-        get_phantomjs_screenshot(
-            obj.id,
-            update.id
-        )
+        for site in Site.objects.active():
+            try:
+                get_phantomjs_screenshot(
+                    site.id,
+                    update.id
+                )
+            except Exception, e:
+                logger.error(e)
