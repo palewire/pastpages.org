@@ -41,7 +41,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Prepare the parameters for our command line call to PhantomJS
     output_path = os.path.join(
         settings.REPO_DIR,
-        '%s.png' % site
+        '%s.png' % site.slug
     )
     url = '%s?random=%s' % (site.url, get_random_string())
     params = [PHANTOM_BIN, PHANTOM_SCRIPT, url, output_path]
@@ -66,7 +66,6 @@ def get_phantomjs_screenshot(site_id, update_id):
     
     # Save the image data to the object
     target = ssht.get_image_name()
-    logger.debug("Saving %s" % target)
     try:
         ssht.image.save(target, file_obj)
     except Exception, e:
