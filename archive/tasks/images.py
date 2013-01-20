@@ -32,7 +32,7 @@ def get_random_string(length=6):
 @task()
 def get_phantomjs_screenshot(site_id, update_id):
     """
-    Fetch a screenshot using PhantomJS
+    Fetch and save a screenshot using PhantomJS.
     """
     # Get the objects we're working with
     site = Site.objects.get(id=site_id)
