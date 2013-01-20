@@ -60,6 +60,28 @@ def restart_apache():
     sudo("service apache2 restart", pty=True)
 
 
+def restart_celery():
+    """
+    Restarts the celeryd task server
+    """
+    _venv("/etc/init.d/celeryd restart")
+
+
+def update_celery_daemon():
+    """
+    Update the celeryd init file on prod.
+    """
+    with settings(warn_only=True):
+        _venv("/etc/init.d/celeryd stop")
+    source = os.path.join(PATH, 'init.d', 'celeryd')
+    target = os.path.join('/etc', 'init.d', 'celeryd')
+    with settings(warn_only=True):
+        sudo("rm %s" % target)
+    sudo("cp %s %s" % (source, target))
+    sudo("chmod +x %s" % target)
+    _venv("/etc/init.d/celeryd restart")
+
+
 def clean():
     """
     Erases pyc files from our app code directory.
