@@ -47,7 +47,8 @@ def generate_thumb(img, thumb_size, format):
     image = Image.open(img)
     
     # Convert to RGB if necessary
-    if image.mode not in ('L', 'RGB'):
+    print "Mode: %s" % image.mode
+    if image.mode not in ('L', 'RGB', 'RGBA'):
         image = image.convert('RGB')
         
     # get size

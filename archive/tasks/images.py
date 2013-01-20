@@ -57,9 +57,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     timestamp = timezone.now()
     exitcode = subprocess.call(params)
     # Report back
-    if exitcode == 0:
-        print "SUCCESS"
-    else:
+    if exitcode != 0:
         print "FAILED?: %s" % exitcode
         return False
     

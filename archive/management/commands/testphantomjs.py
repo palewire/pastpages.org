@@ -12,5 +12,5 @@ class Command(BaseCommand):
         update = Update.objects.create(
             start=timezone.now(),
         )
-        for site in Site.objects.active():
+        for site in Site.objects.filter(slug='california-watch'):#.active():
             get_phantomjs_screenshot.delay(site.id, update.id)

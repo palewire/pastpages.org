@@ -33,7 +33,7 @@ import djcelery
 djcelery.setup_loader()
 BROKER_URL = 'django://'
 CELERY_SEND_TASK_ERROR_EMAILS = True
-CELERY_DEFAULT_RATE_LIMIT = 5
+CELERY_DEFAULT_RATE_LIMIT = 10
 SOUTH_MIGRATION_MODULES = {
     'djcelery': 'toolbox.migrations.djcelery',
     'transport': 'toolbox.migrations.transport',
