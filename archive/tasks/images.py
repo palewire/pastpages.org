@@ -6,6 +6,7 @@ import string
 import subprocess
 from django.conf import settings
 from django.utils import timezone
+from celery.decorators import task
 from archive.models import Screenshot, Update, Site
 
 # Browser spoofing
@@ -26,6 +27,9 @@ from django.core.files.base import ContentFile
 import logging
 logger = logging.getLogger(__name__)
 
+PHANTOM_BIN = os.path.join(settings.REPO_DIR, 'phantomjs', 'bin', 'phantomjs')
+PHANTOM_SCRIPT = os.path.join(settings.REPO_DIR, 'archive', 'tasks', 'images.js')
+
 
 def get_random_string(length=6):
     """
@@ -34,9 +38,7 @@ def get_random_string(length=6):
     return ''.join(random.choice(string.letters + string.digits) for i in xrange(length))
 
 
-PHANTOM_BIN = os.path.join(settings.REPO_DIR, 'phantomjs', 'bin', 'phantomjs')
-PHANTOM_SCRIPT = os.path.join(settings.REPO_DIR, 'archive', 'tasks', 'images.js')
-
+@task()
 def get_phantomjs_screenshot(site_id, update_id):
     """
     Fetch a screenshot using PhantomJS

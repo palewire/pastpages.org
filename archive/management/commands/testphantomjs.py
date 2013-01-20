@@ -13,10 +13,4 @@ class Command(BaseCommand):
             start=timezone.now(),
         )
         for site in Site.objects.active():
-            try:
-                get_phantomjs_screenshot(
-                    site.id,
-                    update.id
-                )
-            except Exception, e:
-                logger.error(e)
+            get_phantomjs_screenshot.delay(site.id, update.id)
