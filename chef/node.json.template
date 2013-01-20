@@ -7,7 +7,6 @@
         "palewire::memcached",
         "palewire::apache",
         "palewire::cron",
-        "palewire::selenium",
         "palewire::munin",
         "palewire::monit"
     ],
