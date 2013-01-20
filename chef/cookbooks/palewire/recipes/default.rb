@@ -63,14 +63,14 @@ node[:users].each_pair do |username, info|
       group username
     end
 
-    cookbook_file "/home/" + username + "/.ssh/id_rsa" do
+    cookbook_file "/home/#{username}/.ssh/id_rsa" do
       source "id_rsa"
       mode 0600
       owner username
       group username
     end
 
-    cookbook_file "/home/" + username + "/.ssh/id_rsa.pub" do
+    cookbook_file "/home/#{username}/.ssh/id_rsa.pub" do
       source "id_rsa.pub"
       mode 0644
       owner node[:apps_user]
@@ -108,4 +108,48 @@ cookbook_file "/root/.ssh/authorized_keys" do
   group "root"
 end
 
+template "/etc/sudoers" do
+  source "users/sudoers.erb"
+  mode 0440
+  owner "root"
+  group "root"
+  variables({
+     :app_user => node[:app_user]
+  })
+end
 
+script "Fix libfreetype.so" do
+  interpreter "bash"
+  user "root"
+  group "root"
+  code <<-EOH
+    ln -s /usr/lib/`uname -i`-linux-gnu/libfreetype.so /usr/lib/
+  EOH
+  not_if do
+    File.exists?("/usr/lib/libfreetype.so")
+  end
+end
+
+script "Fix libz.so" do
+  interpreter "bash"
+  user "root"
+  group "root"
+  code <<-EOH
+    ln -s /usr/lib/`uname -i`-linux-gnu/libz.so /usr/lib/
+  EOH
+  not_if do
+    File.exists?("/usr/lib/libz.so")
+  end
+end
+
+script "Fix libjpeg.so" do
+  interpreter "bash"
+  user "root"
+  group "root"
+  code <<-EOH
+    ln -s /usr/lib/`uname -i`-linux-gnu/libjpeg.so /usr/lib/
+  EOH
+  not_if do
+    File.exists?("/usr/lib/libjpeg.so")
+  end
+end
