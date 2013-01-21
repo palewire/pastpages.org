@@ -3,8 +3,18 @@ import cloudfiles
 from datetime import datetime
 from datetime import timedelta
 from django.conf import settings
+from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
+custom_options = (
+    make_option(
+        "--name",
+        action="store",
+        dest="name",
+        default='',
+        help="A custom name for the database we're creating"
+    ),
+)
 
 class Command(BaseCommand):
     args = '<date YYYY-MM-DD>'
@@ -25,7 +35,8 @@ class Command(BaseCommand):
         filename = self.download(dt)
         
         # Load the snapshot into the database
-        self.load("pastpages_%s" % dt.strftime("%Y-%m-%d"), filename)
+        target = options.get('name') or "pastpages_%s" % dt.strftime("%Y-%m-%d")
+        self.load(target, filename)
     
     def load(self, target, source):
         """

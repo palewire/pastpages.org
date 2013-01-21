@@ -16,7 +16,7 @@ script "Add to hosts file" do
   user "root"
   group "root"
   code <<-EOH
-    echo '127.0.0.1    pastpages-anderson' >> /etc/hosts
+    echo '127.0.0.1    pastpages-bradlee' >> /etc/hosts
   EOH
 end
 

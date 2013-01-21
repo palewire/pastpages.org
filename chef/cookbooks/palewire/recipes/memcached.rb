@@ -16,14 +16,3 @@ cookbook_file "/etc/memcached.conf" do
   group "root"
   notifies :restart, resources(:service => "memcached")
 end
-
-script "Start memcached" do
-  interpreter "bash"
-  user "root"
-  group "root"
-  code <<-EOH
-    /usr/bin/memcached -d -l 127.0.0.1 -p 11211 -u nobody -m 512 -c 1250 -P /var/run/memcached/memcached.pid
-  EOH
-end
-
-
