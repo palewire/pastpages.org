@@ -19,6 +19,7 @@ custom_options = (
 class Command(BaseCommand):
     args = '<date YYYY-MM-DD>'
     help = 'Load a database snapshot from our nightly archive. Pulls latest by default. Specify date for an older one.'
+    option_list = BaseCommand.option_list + custom_options
     
     def handle(self, *args, **options): 
         # If the user provides a date, try to use that
