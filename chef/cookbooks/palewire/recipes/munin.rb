@@ -10,11 +10,15 @@ package "munin-plugins-extra" do
     :upgrade
 end
 
-cookbook_file "/etc/munin/munin.conf" do
-  source "munin.conf"
+# Do the basic config for the node
+template "/etc/munin/munin.conf" do
+  source "munin/munin.conf.erb"
   mode "777"
   owner "root"
   group "root"
+  variables({
+     :name => node[:munin_name]
+  })
 end
 
 script "Zero out munin apache.conf" do
@@ -35,20 +39,41 @@ script "Install PyMunin" do
   EOH
 end
 
+# A postgresql plugin, first the conf...
+template "/etc/munin/plugin-conf.d/pgstats" do
+  source "munin/pgstats.erb"
+  owner "root"
+  group "root"
+  variables({
+     :munin_db_user => node[:db_user],
+     :munin_db_name => node[:db_name],
+     :munin_include_db_list => node[:db_name]
+  })
+end
+
+# A postgresql plugin
+script "Install postgresql adaptor for python" do
+  interpreter "bash"
+  user "root"
+  group "root"
+  code <<-EOH
+    pip install psycopg2 --use-mirrors;
+  EOH
+end
+
 script "Install pgstats for PyMunin" do
   interpreter "bash"
   user "root"
   group "root"
   code <<-EOH
-    pip install psycopg2 --use-mirrors
-    echo "[pgstats]
-    user #{node[:db_user]}
-    env.database #{node[:db_name]}
-    env.include_db #{node[:db_name]}" > /etc/munin/plugin-conf.d/pgstats
     ln -s /usr/share/munin/plugins/pgstats /etc/munin/plugins/pgstats
   EOH
+  not_if do
+    File.exists?("/etc/munin/plugins/pgstats")
+  end
 end
 
+# A memcached plugin
 script "Install memcachedstats for PyMunin" do
   interpreter "bash"
   user "root"
@@ -56,6 +81,9 @@ script "Install memcachedstats for PyMunin" do
   code <<-EOH
     ln -s /usr/share/munin/plugins/memcachedstats /etc/munin/plugins/memcachedstats
   EOH
+  not_if do
+    File.exists?("/etc/munin/plugins/memcachedstats")
+  end
 end
 
 cookbook_file "/usr/share/munin/plugins/rackspacestats.py" do
@@ -84,6 +112,19 @@ script "Install rackspacestats for PyMunin" do
     ln -s /usr/share/munin/plugins/rackspacestats.py /etc/munin/plugins/rackspacestats
     chmod 0755 /etc/munin/plugins/rackspacestats
   EOH
+end
+
+# Varnish plugin
+script "Install varnishstats for PyMunin" do
+  interpreter "bash"
+  user "root"
+  group "root"
+  code <<-EOH
+    ln -s /usr/share/munin/plugins/varnishstats /etc/munin/plugins/varnishstats
+  EOH
+  not_if do
+    File.exists?("/etc/munin/plugins/varnishstats")
+  end
 end
 
 script "Restart Munin" do
