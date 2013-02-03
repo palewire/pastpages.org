@@ -36,7 +36,7 @@ if [ -f "/etc/default/celeryd" ]; then
 fi
 
 # Local config for this project
-CELERYD_NODES="pastpages1,pastpages2"
+CELERYD_NODES="pastpages1"
 CELERYD_CHDIR="/apps/pastpages.org/repo/"
 ENV_PYTHON="/apps/pastpages.org/bin/python"
 CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi"
@@ -44,7 +44,7 @@ CELERYCTL="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryctl"
 CELERY_CONFIG_MODULE="celeryconfig"
 CELERYD_LOG_FILE="/var/log/celeryd@%n.log"
 CELERYD_PID_FILE="/var/log/celeryd@%n.pid"
-CELERYD_OPTS="--purge --settings=project.settings"
+CELERYD_OPTS="--purge --settings=project.settings --concurrency=2"
 CELERYD_USER="root"
 CELERYD_GROUP="root"
 export DJANGO_SETTINGS_MODULE="settings"
