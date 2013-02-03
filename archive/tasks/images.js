@@ -3,7 +3,7 @@ var address = phantom.args[0];
 var outfile = phantom.args[1];
 page.viewportSize = { width: 1024, height: 768 };
 page.settings.userAgent = "PastPages.org's pet robot";
-page.open(address, function (status) {
+page.onLoadFinished = function (status) {
     if (status !== 'success') {
         console.log('Unable to access the network!');
         phantom.exit();
@@ -13,4 +13,5 @@ page.open(address, function (status) {
             phantom.exit();
         }, 200);
     }
-});
+};
+page.open(address);

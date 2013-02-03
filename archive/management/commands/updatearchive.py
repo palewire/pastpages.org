@@ -13,5 +13,13 @@ class Command(BaseCommand):
         update = Update.objects.create(
             start=timezone.now(),
         )
-        for site in Site.objects.active():
-            get_phantomjs_screenshot.delay(site.id, update.id)
+        shit_list = [
+            'bloomberg',
+            'caijing',
+            'al-jazeera',
+            'times-of-india',
+            'usa-today',
+        ]
+        for site in Site.objects.active(): #.filter(slug__in=shit_list):
+            #get_phantomjs_screenshot.delay(site.id, update.id)
+            get_phantomjs_screenshot(site.id, update.id)

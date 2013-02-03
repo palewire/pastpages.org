@@ -49,6 +49,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Snap a screenshot of the target site
     logger.debug("Opening %s" % site.url)
     timestamp = timezone.now()
+    print params
     exitcode = subprocess.call(params)
     
     # Report back
