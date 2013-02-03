@@ -36,7 +36,7 @@ if [ -f "/etc/default/celeryd" ]; then
 fi
 
 # Local config for this project
-CELERYD_NODES="pastpages1"
+CELERYD_NODES="pastpages1,pastpages2"
 CELERYD_CHDIR="/apps/pastpages.org/repo/"
 ENV_PYTHON="/apps/pastpages.org/bin/python"
 CELERYD_MULTI="$ENV_PYTHON $CELERYD_CHDIR/manage.py celeryd_multi"
