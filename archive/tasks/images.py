@@ -49,7 +49,6 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Snap a screenshot of the target site
     logger.debug("Opening %s" % site.url)
     timestamp = timezone.now()
-    print params
     exitcode = subprocess.call(params)
     
     # Report back
@@ -59,7 +58,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     
     # Convert the screenshot data into something we can save
     data = open(output_path, 'r').read()
-    os.remove(output_path)
+    #os.remove(output_path)
     file_obj = ContentFile(data)
     
     # Create a screenshot object in the database
