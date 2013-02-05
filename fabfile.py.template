@@ -15,7 +15,7 @@ def prod():
     env.user = ''
     env.password = ''
     env.hosts = ['',]
-    env.chef = '/var/lib/gems/1.8/bin/chef-solo -c solo.rb -j node.json'
+    env.chef = '/usr/local/bin/chef-solo -c solo.rb -j node.json'
     env.repo = 'git@github.com:pastpages/pastpages.org.git'
     env.app_user = 'palewire'
     env.project_dir = '/apps/pastpages.org/repo/'
@@ -39,7 +39,6 @@ def deploy():
     with settings(warn_only=True):
         clean()
     install_requirements()
-    #collectstatic()
     restart_apache()
 
 
@@ -67,19 +66,26 @@ def restart_celery():
     _venv("/etc/init.d/celeryd restart")
 
 
-def update_celery_daemon():
+def update_celery():
     """
     Update the celeryd init file on prod.
     """
     with settings(warn_only=True):
         _venv("/etc/init.d/celeryd stop")
-    source = os.path.join(PATH, 'init.d', 'celeryd')
+    source = os.path.join(env.project_dir, 'init.d', 'celeryd')
     target = os.path.join('/etc', 'init.d', 'celeryd')
     with settings(warn_only=True):
         sudo("rm %s" % target)
     sudo("cp %s %s" % (source, target))
     sudo("chmod +x %s" % target)
-    _venv("/etc/init.d/celeryd restart")
+    run("/etc/init.d/celeryd restart")
+
+
+def restart_varnish():
+    """
+    Restarts (and clears) the Varnish cache
+    """
+    sudo("service varnish restart", pty=True)
 
 
 def clean():
@@ -93,14 +99,14 @@ def install_requirements():
     """
     Install the Python requirements.
     """
-    _venv("pip install -r requirements.txt")
+    _venv("pip install -r requirements.txt", as_sudo=True)
 
 
 def pull():
     """
     Pulls the latest code from github.
     """
-    _venv("git pull origin master")
+    _venv("git pull origin %s" % env.branch)
 
 
 def manage(cmd):
@@ -135,59 +141,58 @@ def backup_postgres():
     _venv('python toolbox/backups/postgres.py')
 
 
-def _venv(cmd):
+def _venv(cmd, as_sudo=False):
     """
     A wrapper for running commands in our prod virturalenv
     """
     with cd(env.project_dir):
-        sudo(
-            "%s && %s && %s" % (env.activate, env.activate, cmd),
-            pty=True,
-            user=env.app_user
-        )
+        cmd = "%s && %s && %s" % (env.activate, env.activate, cmd)
+        if as_sudo:
+            sudo(cmd)
+        else:
+            sudo(cmd, user=env.app_user)
+
 
 def loaddb(date=''):
     """
     Load the latest db using our management command.
     """
-    local("python manage.py loaddb %s".strip() % date)
+    cmd = "python manage.py loaddb %s".strip() % date
+    _venv(cmd + " --name=pastpages")
+
 
 #
-# OpenStack
+# Bootstrap
 #
 
 def bootstrap():
+    """
+    Configure and boot up a blank slate server.
+    """
     install_chef()
-    update_chef()
+    cook()
+    push_settings()
+    loaddb()
+    update_celery()
 
 
 def install_chef():
+    """
+    Install chef dependencies.
+    """
     sudo('apt-get update', pty=True)
     sudo('apt-get install -y git-core rubygems ruby ruby-dev', pty=True)
+    sudo("echo 'gem: --no-ri --no-rdoc' > /root/.gemrc")
     sudo('gem install chef', pty=True)
 
 
-def update_chef():
+def cook():
+    """
+    Run the chef cookbook.
+    """
     local('rsync -av ./chef/ %s@%s:/etc/chef' % (env.user, env.hosts[0]))
     sudo('cd /etc/chef && %s' % env.chef, pty=True)
 
-
-def list_servers():
-    compute = Compute(
-        username='palewire',
-        apikey=''
-    )
-    pprint(compute.servers.list())
-
-
-def create_server(name, image='Ubuntu 11.04', flavor=256):
-    compute = Compute(
-        username='',
-        apikey=''
-    )
-    fl = compute.flavors.find(ram=flavor)
-    im = compute.images.find(name=image)
-    compute.servers.create(name, image=im, flavor=fl)
 
 #
 # Misc
