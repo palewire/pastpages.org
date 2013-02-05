@@ -10,4 +10,4 @@ The news homepage archive. At "pastpages.org":http://www.pastpages.org.
 
 h3. How it works
 
-PastPages is built using Python, Django and PostgreSQL. Screenshots are taken by Selenium using the Firefox Web browser (though I'm interested in switching to fancy new tricks like PhantomJS). The files collected are stored in the Rackspace cloud. Deployment is managed with Chef and you can review how the environment is configured in its configuration files.
+PastPages is built using Python, Django and PostgreSQL. Screenshots are taken by PhantomJS via a Celery task queue. The files collected are stored in the Rackspace cloud. Deployment is managed with Chef and you can review how the environment is configured in its configuration files.
