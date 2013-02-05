@@ -76,7 +76,7 @@ class TagSitemap(Sitemap):
 
 
 SITEMAPS = {
-    'screenshots': ScreenshotSitemap,
+    #'screenshots': ScreenshotSitemap,
     'sites': SiteSitemap,
     'static': StaticSitemap,
     'tags': TagSitemap,
