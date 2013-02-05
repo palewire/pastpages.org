@@ -24,34 +24,39 @@
 {% block body %}
     <div class="container detail">
         <div class="row">
-            <div class="fivecol">
+            <div class="fivecol" itemscope itemtype="http://schema.org/ImageObject">
                 <a href="{{ latest_screenshot.get_absolute_url }}">
                     {% if object.timezone %}
                     <img alt="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
                          title="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
-                         src="{{ latest_screenshot.image.url_449x3000 }}">
+                         src="{{ latest_screenshot.image.url_449x3000 }}"
+                         itemprop="contentURL">
+                    <span itemprop="datePublished" content="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"c" }}"></span>
                     {% else %}
                     <img alt="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
                          title="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
-                         src="{{ latest_screenshot.image.url_449x3000 }}">
+                         src="{{ latest_screenshot.image.url_449x3000 }}"
+                         itemprop="contentURL">
+                    <span itemprop="datePublished" content="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"c" }}"></span>
                     {% endif %}
                 </a>
             </div>
             <div class="sevencol last">
                 <div class="row" id="sitetitle">
-                    <div class="twelvecol">
-                        <h1>{{ object }}</h1>
+                    <div class="twelvecol" itemscope itemtype="http://schema.org/Organization">
+                        <h1 itemprop="name">{{ object }}</h1>
                         <h3>
-                            <a href="{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}">{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}</a>
+                            <a itemprop="url" href="{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}">{% if object.display_url %}{{ object.display_url }}{% else %}{{ object.url }}{% endif %}</a>
                         </h3>
                         <h4 style="margin-bottom:5px;">
                             Updated {{ latest_screenshot.timestamp|naturaltime }}
                             {% if object.timezone %}
                                 ({{ latest_screenshot.timestamp|timezone:object.timezone|date:"P" }} local time
-                                 {% if object.hometown %} in {{ object.hometown }}{% endif %},
+                                 {% if object.hometown %} in <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"><span itemprop="addressLocality">{{ object.hometown }}</span></span>{% endif %},
                                  {{ latest_screenshot.timestamp|timezone:"UTC"|date:"P" }} UTC)
                             {% endif %}
                         </h4>
+                        <span itemprop="image" content="{{ latest_screenshot.crop.url_300x251 }}"></span>
                         <h4>
                             Archived since {{ min_date }}&nbsp;&nbsp;
                             <form name="input" id="sitedatepicker" class="datepicker">
