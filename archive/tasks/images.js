@@ -1,7 +1,7 @@
 var page = require('webpage').create();
 var address = phantom.args[0];
 var outfile = phantom.args[1];
-var secondsToWait = 3;
+var secondsToWait = 5;
 page.viewportSize = { width: 1024, height: 768 };
 page.open(address, function (status) {
     if (status !== 'success') {
