@@ -47,6 +47,11 @@ sub vcl_recv {
         return (pass);
     }
 
+    # Don't cache review page
+    if (req.url ~ "^/review/") {
+        return (pass);
+    }
+
     if (req.url ~ "^/server-status") {
         return (pass);
     }
