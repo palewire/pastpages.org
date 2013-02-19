@@ -11,6 +11,6 @@ page.open(address, function (status) {
         window.setTimeout(function () {
             page.render(outfile);
             phantom.exit();
-        }, secondsToWait * 100);
+        }, secondsToWait * 1000);
     }
 });
