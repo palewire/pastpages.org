@@ -10,6 +10,7 @@
     <meta property="og:title" content="{{ object.site }} at {{ object.timestamp|date:"N j, Y, P" }}"/>
     <meta property="og:url" content="http://{{ site }}{{ object.get_absolute_url }}"/>
     <meta property="og:image" content="{{ object.crop.url_300x251 }}"/>
+    <link rel="canonical" href="http://{{ site }}{{ object.get_absolute_url }}"/>
 {% endblock %}
 
 
