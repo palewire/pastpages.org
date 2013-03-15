@@ -70,8 +70,8 @@ def get_phantomjs_screenshot(site_id, update_id):
         ssht.image.save(target, file_obj)
     except Exception, e:
         logger.error("Image save failed.")
+        logger.error(str(e))
         ssht.delete()
-        raise e
     ssht.has_image = True
     ssht.timestamp = timestamp
     ssht.save()
@@ -97,8 +97,8 @@ def get_phantomjs_screenshot(site_id, update_id):
         ssht.crop.save(crop_name, crop_data)
     except Exception, e:
         logger.error("Crop save failed.")
+        logger.error(str(e))
         ssht.delete()
-        raise e
     ssht.has_crop = True
     ssht.save()
     
