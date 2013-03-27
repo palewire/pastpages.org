@@ -6,6 +6,7 @@ import subprocess
 from django.conf import settings
 from django.utils import timezone
 from celery.decorators import task
+from toolbox.decorators import timeout
 from archive.models import Screenshot, Update, Site
 
 # Image manipulation
@@ -29,6 +30,12 @@ def get_random_string(length=6):
     return ''.join(random.choice(string.letters + string.digits) for i in xrange(length))
 
 
+@timeout(seconds=60)
+def run_phantom_js(params):
+    exitcode = subprocess.call(params)
+    return exitcode
+
+
 @task()
 def get_phantomjs_screenshot(site_id, update_id):
     """
@@ -49,7 +56,12 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Snap a screenshot of the target site
     logger.debug("Opening %s" % site.url)
     timestamp = timezone.now()
-    exitcode = subprocess.call(params)
+    
+    try:
+        exitcode = run_phantom_js(params)
+    except:
+        logger.error("Phantom JS error: %s" % site)
+        return False
     
     # Report back
     if exitcode != 0:
