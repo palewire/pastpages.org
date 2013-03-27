@@ -31,7 +31,7 @@ def get_random_string(length=6):
     return ''.join(random.choice(string.letters + string.digits) for i in xrange(length))
 
 
-@timeout(seconds=10)
+@timeout(seconds=60)
 def run_phantom_js(params):
     exitcode = subprocess.call(params)
     return exitcode
