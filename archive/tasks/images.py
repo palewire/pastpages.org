@@ -2,6 +2,7 @@
 import os
 import random
 import string
+import signal
 import subprocess
 from django.conf import settings
 from django.utils import timezone
@@ -30,7 +31,7 @@ def get_random_string(length=6):
     return ''.join(random.choice(string.letters + string.digits) for i in xrange(length))
 
 
-@timeout(seconds=60)
+@timeout(seconds=10)
 def run_phantom_js(params):
     exitcode = subprocess.call(params)
     return exitcode
@@ -60,7 +61,15 @@ def get_phantomjs_screenshot(site_id, update_id):
     try:
         exitcode = run_phantom_js(params)
     except:
-        logger.error("Phantom JS error: %s" % site)
+        logger.error("Phantom JS timeout: %s" % site)
+        cmd = "ps -ef | grep phantomjs | grep %s | grep -v grep | awk '{print $2}'" % site.slug
+        logger.error(cmd)
+        output = subprocess.check_output([cmd], shell=True)
+        if output:
+            pid_list = output.split()
+            for pid in pid_list:
+                logger.error("Killing PID %s" % pid)
+                os.kill(int(pid), signal.SIGKILL)
         return False
     
     # Report back
