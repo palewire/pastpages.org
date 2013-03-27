@@ -5,4 +5,4 @@ INSTANCE=$(uname -n)
 DAEMON_OPTS="-a :80 \
              -T :6082 \
              -f /etc/varnish/default.vcl \
-             -s file,/var/lib/varnish/$INSTANCE/varnish_storage.bin,1.25G"
+             -s file,/var/lib/varnish/$INSTANCE/varnish_storage.bin,1G"
