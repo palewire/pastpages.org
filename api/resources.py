@@ -14,6 +14,7 @@ from archive.models import Site, Update, Screenshot
 from tastypie import fields
 from tastypie.serializers import Serializer
 from tastypie.resources import ModelResource
+from tastypie.constants import ALL, ALL_WITH_RELATIONS
 
 # Diff throttle depending on env
 if settings.PRODUCTION:
@@ -51,6 +52,10 @@ class ScreenshotResource(ModelResource):
         throttle = Throttle(throttle_at=50)
         serializer = PastPagesSerializer
         include_absolute_url = True
+        filtering = {
+            "site": ALL_WITH_RELATIONS,
+            "timestamp": ALL_WITH_RELATIONS,
+        }
 
 
 class SiteResource(ModelResource):
