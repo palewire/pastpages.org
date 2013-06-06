@@ -26,7 +26,7 @@ else:
 PastPagesSerializer = Serializer(
     formats=['json', 'jsonp' , 'plist', 'xml', 'yaml'],
     content_types = {
-        'json': 'text/javascript',
+        'json': 'application/javascript',
         'jsonp': 'text/javascript',
         'plist': 'application/x-plist',
         'xml': "text/xml",
@@ -36,6 +36,7 @@ PastPagesSerializer = Serializer(
 #
 # API resources
 #
+
 
 class ScreenshotResource(ModelResource):
     """
