@@ -18,6 +18,10 @@ from django.views.generic import TemplateView, ListView, DetailView
 logger = logging.getLogger(__name__)
 
 
+class Fail(TemplateView):
+    template_name = 'fail.html'
+
+
 class Review(TemplateView):
     """
     A private page for reviewing the screenshotting success rate, etc.
