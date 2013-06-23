@@ -31,6 +31,7 @@ INSTALLED_APPS = (
 ALLOWED_HOSTS = [
     'www.pastpages.org',
     'pastpages.org',
+    'localhost',
 ]
 
 # Celery
