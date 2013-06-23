@@ -40,6 +40,7 @@ class StaticSitemap(Sitemap):
     pages = {
         'index':'/',
         'about':'/about/',
+        'api': '/api/docs/',
         'champions': '/champions/',
         'contact': '/contact/',
         'feeds': '/feeds/',
