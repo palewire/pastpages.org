@@ -7,7 +7,13 @@ h1 {
     line-height:120%;
 }
 h2 {
+    margin: 10px 0 5px 0;
     line-height:120%;
+}
+h3 {
+    font-size:20px;
+    line-height:120%;
+    margin:10px 0 5px 0;
 }
 body {
     font-family: "TheanoDidotRegular", Arial, sans-serif;
@@ -223,6 +229,25 @@ form#advancedsearch ul li label {
 span.error {
     margin:10px 0;
     color:red;
+}
+article p {
+    margin: 0 0 10px 0;
+    font-size:18px;
+    line-height:24px;
+    text-align:justify;
+}
+pre {
+    font-size:14px;
+}
+table {
+    font-size:16px;
+    width:100%;
+    margin: 0 0 10px 0;
+}
+table td {
+    border-bottom:1px solid #ddd;
+    padding: 5px 0;
+    margin: 0;
 }
 
 /* ============================= */

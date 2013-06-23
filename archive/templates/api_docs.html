@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}API {{ block.super }}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="row">
+            <div class="twelvecol last">
+                <h2>
+                    API
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="sevencol">
+            <p>
+                There is a machine-readable version of this site you can access via this experimental API.
+            </p>
+            <p>
+                It is currently free and requires no registration, however access is throttled 
+                and the system is likely to change in the future.
+            </p>
+            <p>
+                If you encounter any problems, please contact me via 
+                <a href="mailto:ben.welsh@gmail.com">email</a>
+                or <a href="https://github.com/pastpages/pastpages.org/pulls">file a ticket</a>.
+            </p>
+        </div>
+        <div class="fivecol last"></div>
+    </div>
+
+    <div class="row">
+        <div class="sevencol">
+            <h3>Resources</h3>
+            <table>
+                <tr>
+                    <td>Screenshots</td>
+                    <td>/api/beta/screenshots/</td>
+                    <td><a target="_blank" href="/api/beta/screenshots/">URL</a>
+                </tr>
+                <tr>
+                    <td>Sites</td>
+                    <td>/api/beta/sites/</td>
+                    <td><a target="_blank" href="/api/beta/sites/">URL</a>
+                </tr>
+                <tr>
+                    <td>Tags</td>
+                    <td>/api/beta/tags/</td>
+                    <td><a target="_blank" href="/api/beta/tags/">URL</a>
+                </tr>
+                <tr>
+                    <td>Updates</td>
+                    <td>/api/beta/updates/</td>
+                    <td><a target="_blank" href="/api/beta/updates/">URL</a>
+                </tr>
+            </table>
+        </div>
+        <div class="fivecol last"></div>
+    </div>
+
+    <div class="row">
+        <div class="sevencol">
+            <h3>Pagination arguments</h3>
+            <table>
+                <tr>
+                    <td>limit</td>
+                    <td>The number of objects per page. 20 default. X max.</td>
+                    <td><a target="_blank" href="/api/beta/screenshots/?limit=1">Example</a>
+                </tr>
+                <tr>
+                    <td>offset</td>
+                    <td>The index in the list to where the list being. Zero default.</td>
+                    <td><a target="_blank" href="/api/beta/sites/?offset=50">Example</a>
+                </tr>
+            </table>
+        </div>
+        <div class="fivecol last"></div>
+    </div>
+
+{% endblock %}
+
+
