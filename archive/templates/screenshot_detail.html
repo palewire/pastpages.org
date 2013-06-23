@@ -11,12 +11,13 @@
     <meta property="og:url" content="http://{{ site }}{{ object.get_absolute_url }}"/>
     <meta property="og:image" content="{{ object.crop.url_300x251 }}"/>
     <link rel="canonical" href="http://{{ site }}{{ object.get_absolute_url }}"/>
-    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="photo">
     <meta name="twitter:site" content="@Past_Pages">
     <meta name="twitter:creator" content="@Past_Pages">
+    <meta name="twitter:domain" content="pastpages.org">
     <meta name="twitter:title" content="{{ object.site }} at {{ object.timestamp|date:"N j, Y, P" }}">
-    <meta name="twitter:description" content="A screenshot of {{ object.site.url }">
-    <meta name="twitter:image" content="{{ object.crop.url_300x251 }}">
+    <meta name="twitter:description" content="A screenshot of {{ object.site.url }}">
+    <meta name="twitter:image:src" content="{{ object.crop.url_300x251 }}">
 {% endblock %}
 
 
