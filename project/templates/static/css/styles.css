@@ -240,9 +240,10 @@ pre {
     font-size:14px;
 }
 table {
-    font-size:16px;
+    font-size:14px;
     width:100%;
     margin: 0 0 10px 0;
+    font-family: monospace;
 }
 table td {
     border-bottom:1px solid #ddd;

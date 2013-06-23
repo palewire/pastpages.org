@@ -47,6 +47,7 @@ class ScreenshotResource(ModelResource):
     
     class Meta:
         resource_name = 'screenshots'
+        max_limit = 100
         queryset = Screenshot.objects.filter(site__status='active').select_related("update")
         excludes = ['has_html', 'html_archived', 'html_raw']
         allowed_methods = ['get',]
@@ -67,6 +68,7 @@ class SiteResource(ModelResource):
     
     class Meta:
         resource_name = 'sites'
+        max_limit = 100
         queryset = Site.objects.active()
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
@@ -83,6 +85,7 @@ class TagResource(ModelResource):
     """
     class Meta:
         resource_name = 'tags'
+        max_limit = 100
         queryset = Tag.objects.all()
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
@@ -97,6 +100,7 @@ class UpdateResource(ModelResource):
     
     class Meta:
         resource_name = 'updates'
+        max_limit = 100
         queryset = Update.objects.all()
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
