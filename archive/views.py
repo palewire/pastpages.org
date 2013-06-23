@@ -258,14 +258,14 @@ class AdvancedSearch(TemplateView):
         if not is_search:
             return context
         
-        # Check if this page has already been cached
-        ckey = 'advsearch:%s' % (
-            urllib.urlencode(dict(self.request.GET))
-        )
-        ckey = sha1(ckey).hexdigest()
-        cdata = cache.get(ckey)
-        if cdata:
-            return cdata
+#        # Check if this page has already been cached
+#        ckey = 'advsearch:%s' % (
+#            urllib.urlencode(dict(self.request.GET))
+#        )
+#        ckey = sha1(ckey).hexdigest()
+#        cdata = cache.get(ckey)
+#        if cdata:
+#            return cdata
         
         # Examine the valid keys and see what's been submitted
         site = self.request.GET.get('site', None)
@@ -327,17 +327,17 @@ class AdvancedSearch(TemplateView):
         if not start_date and not end_date:
             context['has_error'] = True
             context['error_message'] = 'Sorry. You must submit both a start and end date.'
-            cache.set(ckey, context)
+            #cache.set(ckey, context)
             return context
         elif start_date and not end_date:
             context['has_error'] = True
             context['error_message'] = 'Sorry. You must submit both a start and end date.'
-            cache.set(ckey, context)
+            #cache.set(ckey, context)
             return context
         elif end_date and not start_date:
             context['has_error'] = True
             context['error_message'] = 'Sorry. You must submit both a start and end date.'
-            cache.set(ckey, context)
+            #cache.set(ckey, context)
             return context
         elif start_date and end_date:
             # Validate the start date
@@ -347,7 +347,7 @@ class AdvancedSearch(TemplateView):
             except ValueError:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your start date was not properly formatted.'
-                cache.set(ckey, context)
+                #cache.set(ckey, context)
                 return context
             # Validate the end date
             try:
@@ -356,7 +356,7 @@ class AdvancedSearch(TemplateView):
             except ValueError:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your end date was not properly formatted.'
-                cache.set(ckey, context)
+                #cache.set(ckey, context)
                 return context
             # Add dates to the context
             context.update({
@@ -367,13 +367,13 @@ class AdvancedSearch(TemplateView):
             if end_date < start_date:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. Your end date comes before you start date.'
-                cache.set(ckey, context)
+                #cache.set(ckey, context)
                 return context
             # Limit date range to seven days
             if (end_date-start_date).days > 7:
                 context['has_error'] = True
                 context['error_message'] = 'Sorry. The maximum date range allowed is seven days. You requested %s.' % ((end_date-start_date).days)
-                cache.set(ckey, context)
+                #cache.set(ckey, context)
                 return context
             # Add a day so the search is "greedy" and includes screenshots
             # that happened on the end_date
@@ -391,7 +391,7 @@ class AdvancedSearch(TemplateView):
         for key, group in groupby(context['object_list'], lambda x: self.convert_timezone(x.update.start, user_timezone).date()):
             screenshot_groups.append((key, group_objects_by_number(list(group), 6)))
         context['object_groups'] = screenshot_groups
-        cache.set(ckey, context)
+        #cache.set(ckey, context)
         return context
 
 
