@@ -26,7 +26,6 @@ django-robots==0.8.1
 django-storages==1.1.4
 django-taggit==0.9.3
 django-tastypie==0.9.15
-django-tastypie-swagger==0.1.1
 entrypoint2==0.0.5
 envoy==0.0.2
 greeking==0.131

@@ -26,7 +26,7 @@ else:
 PastPagesSerializer = Serializer(
     formats=['json', 'jsonp' , 'plist', 'xml', 'yaml'],
     content_types = {
-        'json': 'application/javascript',
+        'json': 'application/json',
         'jsonp': 'text/javascript',
         'plist': 'application/x-plist',
         'xml': "text/xml",
@@ -55,7 +55,7 @@ class ScreenshotResource(ModelResource):
         include_absolute_url = True
         filtering = {
             "site": ALL_WITH_RELATIONS,
-            "timestamp": ALL_WITH_RELATIONS,
+            "timestamp": ALL,
         }
 
 
