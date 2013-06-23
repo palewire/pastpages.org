@@ -2,8 +2,8 @@ from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
 from archive import views, sitemaps, feeds
-from django.views.generic import TemplateView
 from django.views.static import serve as static_serve
+from django.views.generic import TemplateView, RedirectView
 from django.contrib.admin.views.decorators import staff_member_required
 admin.autodiscover()
 
@@ -37,11 +37,12 @@ urlpatterns = patterns('',
         {'sitemaps': sitemaps.SITEMAPS}),
     url(r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
         {'sitemaps': sitemaps.SITEMAPS}),
-    ('^favicon.ico$', 'django.views.generic.simple.redirect_to', {
-        'url': '%sfavicon.ico' % settings.STATIC_URL
-    }),
+    ('^favicon.ico$', RedirectView.as_view(
+        url='%sfavicon.ico' % settings.STATIC_URL
+        )),
     url(r'^robots\.txt$', include('robots.urls')),
     url(r'^api/', include('api.urls')),
+    url(r'api/docs/', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
     url(r'^feeds/$', views.FeedList.as_view(), name='feeds-list'),
     url(r'^feeds/updates/$', feeds.RecentUpdates(), name="feeds-updates"),
     url(r'^feeds/sites/(?P<slug>[-\w]+)/$', feeds.SiteFeed(), name="feeds-sites"),

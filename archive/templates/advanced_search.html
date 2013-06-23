@@ -6,7 +6,7 @@
 {% block facebook-meta %}
     {{ block.super }}
     <meta property="og:title" content="Advanced search"/>
-    <meta property="og:url" content="http://{{ site }}{% url archive-advanced-search %}"/>
+    <meta property="og:url" content="http://{{ site }}{% url 'archive-advanced-search' %}"/>
 {% endblock %}
 
 {% block body %}

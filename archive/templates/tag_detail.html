@@ -16,7 +16,7 @@
 {% block extra-rss %}
     {{ block.super }}
     <link rel="alternate"
-          href="{% url feeds-tags object.slug %}"
+          href="{% url 'feeds-tags' object.slug %}"
           type="application/rss+xml"
           title="Latest {{ object.name }} screenshots"
           id="latest-{{ object.slug }}-screenshots" />

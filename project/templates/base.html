@@ -32,7 +32,7 @@
 
         {% block extra-rss %}
             <link rel="alternate"
-                  href="{% url feeds-updates %}"
+                  href="{% url 'feeds-updates' %}"
                   type="application/rss+xml"
                   title="Latest Updates"
                   id="latest-updates" />
@@ -124,11 +124,11 @@
                                     More <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="{% url about %}">About</a></li>
-                                    <li><a href="{% url archive-advanced-search %}">Advanced search</a></li>
+                                    <li><a href="{% url 'about' %}">About</a></li>
+                                    <li><a href="{% url 'archive-advanced-search' %}">Advanced search</a></li>
                                     <li><a href="http://blog.pastpages.org">Blog</a></li>
-                                    <li><a href="{% url contact %}">Contact</a></li>
-                                    <li><a href="{% url feeds-list %}">Feeds</a></li>
+                                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                                    <li><a href="{% url 'feeds-list' %}">Feeds</a></li>
                                 </ul>
                             </li>
                             <script type="text/javascript">
@@ -156,7 +156,7 @@
             <div class="row">
                 <div class="twelvecol">
                     Updated hourly.
-                    <a href="{% url about %}">Read all about it</a>.
+                    <a href="{% url 'about' %}">Read all about it</a>.
                 </div>
             </div>
         </div>

@@ -8,7 +8,7 @@
     <meta property="og:description"
           content="An archive of news homepages taken this day." />
     <meta property="og:title" content="{{ date }}"/>
-    <meta property="og:url" content="http://{{ site }}{% url archive-date-detail date.year date.month date.day %}"/>
+    <meta property="og:url" content="http://{{ site }}{% url 'archive-date-detail' date.year date.month date.day %}"/>
     <meta property="og:image" content="{{ screenshot_groups.0.1.0.0.crop.url_300x251 }}"/>
 {% endblock %}
 

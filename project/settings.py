@@ -23,10 +23,16 @@ INSTALLED_APPS = (
     'south',
     'taggit',
     'tastypie',
+    'tastypie_swagger',
     'toolbox',
     'djcelery',
     'djcelery.transport',
 )
+
+ALLOWED_HOSTS = [
+    'www.pastpages.org',
+    'pastpages.org',
+]
 
 # Celery
 import djcelery
@@ -162,6 +168,9 @@ CACHE_MIDDLEWARE_SECONDS = 60 * 5
 CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 CACHE_MIDDLEWARE_KEY_PREFIX  = ''
 DJANGO_MEMCACHED_REQUIRE_STAFF = True
+
+# API docs
+TASTYPIE_SWAGGER_API_MODULE = 'api.urls.api'
 
 try:
     from settings_dev import *

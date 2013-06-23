@@ -16,7 +16,7 @@
 {% block extra-rss %}
     {{ block.super }}
     <link rel="alternate"
-          href="{% url feeds-sites object.slug %}"
+          href="{% url 'feeds-sites' object.slug %}"
           type="application/rss+xml"
           title="Latest {{ object.name }} screenshots"
           id="latest-{{ object.slug }}-screenshots" />
@@ -82,10 +82,10 @@
                                 });
                             });
                             </script>&nbsp;&nbsp;
-                            <a href="{% url feeds-sites object.slug %}">RSS</a>
+                            <a href="{% url 'feeds-sites' object.slug %}">RSS</a>
                             {% if object.tags.all %}&nbsp;&nbsp;
                             Tags: {% for tag in object.tags.all %}
-                                <a href="{% url archive-tag-detail tag.slug %}">{{ tag }}</a>{% if not forloop.last %},&nbsp;{% endif %}
+                                <a href="{% url 'archive-tag-detail' tag.slug %}">{{ tag }}</a>{% if not forloop.last %},&nbsp;{% endif %}
                                 {% endfor %}
                             {% endif %}
                         </h4>
