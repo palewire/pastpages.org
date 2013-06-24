@@ -15,7 +15,7 @@
     </div>
 
     <div class="row">
-        <div class="sevencol">
+        <div class="eightcol">
             <p>
                 There is a machine-readable version of this site you can pull via this experimental API.
             </p>
@@ -28,11 +28,11 @@
                 or <a href="https://github.com/pastpages/pastpages.org/issues">file a ticket</a>. Thank you.
             </p>
         </div>
-        <div class="fivecol last"></div>
+        <div class="fourcol last"></div>
     </div>
 
     <div class="row">
-        <div class="sevencol">
+        <div class="eightcol">
             <h3>List endpoints</h3>
             <table>
                 <tr>
@@ -57,11 +57,11 @@
                 </tr>
             </table>
         </div>
-        <div class="fivecol last"></div>
+        <div class="fourcol last"></div>
     </div>
 
     <div class="row">
-        <div class="sevencol">
+        <div class="eightcol">
             <h3>Detail endpoints</h3>
             <table>
                 <tr>
@@ -86,11 +86,11 @@
                 </tr>
             </table>
         </div>
-        <div class="fivecol last"></div>
+        <div class="fourcol last"></div>
     </div>
 
     <div class="row">
-        <div class="sevencol">
+        <div class="eightcol">
             <h3>Pagination options</h3>
             <table>
                 <tr>
@@ -105,11 +105,11 @@
                 </tr>
             </table>
         </div>
-        <div class="fivecol last"></div>
+        <div class="fourcol last"></div>
     </div>
 
     <div class="row">
-        <div class="sevencol">
+        <div class="eightcol">
             <h3>Formatting options</h3>
             <table>
                 <tr>
@@ -124,11 +124,11 @@
                 </tr>
             </table>
         </div>
-        <div class="fivecol last"></div>
+        <div class="fourcol last"></div>
     </div>
 
     <div class="row">
-        <div class="sevencol">
+        <div class="eightcol">
             <h3>Screenshot filters</h3>
             <table>
                 <tr>
@@ -137,13 +137,61 @@
                     <td><a target="_blank" href="/api/beta/screenshots/?site__slug=bbc">Example</a>
                 </tr>
                 <tr>
+                    <td>tag</td>
+                    <td>Return only shots from sites with provided tag</td>
+                    <td><a target="_blank" href="/api/beta/screenshots/?site__tags__name=french">Example</a>
+                </tr>
+                <tr>
                     <td>timestamp</td>
                     <td>Return shots that match provided time, or that fit between two.</td>
                     <td><a target="_blank" href="/api/beta/screenshots/?site__slug=xinhua&timestamp__gte=2013-01-01%2000:00&timestamp__lte=2013-01-01%2001:00:00">Example</a>
                 </tr>
             </table>
         </div>
-        <div class="fivecol last"></div>
+        <div class="fourcol last"></div>
+    </div>
+
+    <div class="row">
+        <div class="eightcol">
+            <h3>Site filters</h3>
+            <table>
+                <tr>
+                    <td>name</td>
+                    <td>Return only sites with provided name.</td>
+                    <td><a target="_blank" href="/api/beta/sites/?name=Los Angeles Times">Example</a>
+                </tr>
+                <tr>
+                    <td>slug</td>
+                    <td>Return only sites that match provided slug.</td>
+                    <td><a target="_blank" href="/api/beta/sites/?slug=los-angeles-times">Example</a>
+                </tr>
+                <tr>
+                    <td>tag</td>
+                    <td>Return only sites with provided tag</td>
+                    <td><a target="_blank" href="/api/beta/sites/?tags__name=french">Example</a>
+                </tr>
+            </table>
+        </div>
+        <div class="fourcol last"></div>
+    </div>
+
+    <div class="row">
+        <div class="eightcol">
+            <h3>Tag filters</h3>
+            <table>
+                <tr>
+                    <td>name</td>
+                    <td>Return only tags with provided name.</td>
+                    <td><a target="_blank" href="/api/beta/tags/?name=tribune">Example</a>
+                </tr>
+                <tr>
+                    <td>slug</td>
+                    <td>Return only tags that match provided slug.</td>
+                    <td><a target="_blank" href="/api/beta/tags/?slug=tribune">Example</a>
+                </tr>
+            </table>
+        </div>
+        <div class="fourcol last"></div>
     </div>
 
 {% endblock %}

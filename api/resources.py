@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.conf.urls.defaults import url
 
 # Models
-from taggit.models import Tag
+from taggit.models import Tag, TaggedItem
 from archive.models import Site, Update, Screenshot
 
 # Tastypie
@@ -58,6 +58,34 @@ class ScreenshotResource(ModelResource):
             "site": ALL_WITH_RELATIONS,
             "timestamp": ALL,
         }
+    
+    def build_filters(self, filters=None):
+        """
+        Override build_filters to support geoqueries.
+        """
+        if filters is None:
+            filters = {}
+        orm_filters = super(ScreenshotResource, self).build_filters(filters)
+        # Check if there are any tag filters
+        tag_filters = [d for d in orm_filters.keys() if d.startswith("site__tags__")]
+        if tag_filters:
+            # If so grab the filter and value
+            k = tag_filters[0]
+            v = orm_filters[k]
+            # Split off the stuff we don't need
+            # on the front of the filter
+            f = k.split("site__tags__")[1]
+            # Pull the tag
+            tag = Tag.objects.filter(**{f:v})
+            # Pull the related sites
+            site_list = [i.content_object for i in
+                TaggedItem.objects.filter(tag=tag)
+            ]
+            # Clear out the filter we started with
+            del orm_filters[k]
+            # Add the new one we've created
+            orm_filters.update({'site__in': site_list})
+        return orm_filters
 
 
 class SiteResource(ModelResource):
@@ -75,7 +103,9 @@ class SiteResource(ModelResource):
         serializer = PastPagesSerializer
         include_absolute_url = True
         filtering = {
-            "slug": ('exact',),
+            "name": ALL,
+            "slug": ALL,
+            "tags": ALL_WITH_RELATIONS,
         }
 
 
@@ -90,6 +120,10 @@ class TagResource(ModelResource):
         allowed_methods = ['get',]
         throttle = Throttle(throttle_at=50)
         serializer = PastPagesSerializer
+        filtering = {
+            "name": ALL,
+            "slug": ALL,
+        }
 
 
 class UpdateResource(ModelResource):
