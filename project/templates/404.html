@@ -1,1 +1,28 @@
-404 Error
+{% extends "base.html" %}
+
+{% block title %}Page not found (404 error) - {{ block.super }}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="twelvecol last">
+            <h2>
+                Page not found (404 error)
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="ninecol">
+            <p>
+                The page you requested could not be found. Check the URL to make sure it is correct.
+            </p>
+            <p>
+                If you think a page should be here, please contact me via 
+                <a href="mailto:ben.welsh@gmail.com">email</a>. Thank you.
+            </p>
+        </div>
+        <div class="threecol last"></div>
+    </div>
+
+{% endblock %}
