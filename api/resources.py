@@ -3,6 +3,7 @@ Configuration of a public API that user django-tastypie
 """
 # Misc.
 from django.conf import settings
+from django.utils.timezone import is_naive
 from django.core.urlresolvers import reverse
 from django.conf.urls.defaults import url
 
@@ -22,8 +23,20 @@ if settings.PRODUCTION:
 else:
     from tastypie.throttle import BaseThrottle as Throttle
 
+
+class MyDateSerializer(Serializer):
+    """
+    Our own serializer to format datetimes in ISO 8601 but with timezone
+    offset.
+    """
+    def format_datetime(self, data):
+        # If naive or rfc-2822, default behavior...
+        if is_naive(data) or self.datetime_formatting == 'rfc-2822':
+            return super(MyDateSerializer, self).format_datetime(data) 
+        return data.isoformat()
+
 # Configure out serializer for the site
-PastPagesSerializer = Serializer(
+PastPagesSerializer = MyDateSerializer(
     formats=['json', 'jsonp' , 'plist', 'xml', 'yaml'],
     content_types = {
         'json': 'application/json',
