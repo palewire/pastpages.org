@@ -66,6 +66,24 @@ sub vcl_recv {
         }
     }
     
+    # You know, people really like to use jQuery.
+    # The jQuery $.ajax() and similar functions will pull JSON from an API
+    # behind your Varnish server. Sadly, browsers will cache the JSON
+    # response basically forever unless you use the cache: false declaration.
+    #
+    # In practice, this just appends a new URL parameter to the request, like
+    # &_=1234567890, but it changes with each request. This sucks for caching.
+    #
+    # This function performs a regex substitution. The regex here matches
+    # URL parameters that start with ? or &, follow with _= and then
+    # contain up to 25 other characters EXCEPT for an ampersand.
+    # An ampersand means that we're starting a second URL parameter.
+    #
+    # By stripping this parameter out, we can serve a cached response for
+    # the ever-changing URL since all but the &_= parameter stay identical.
+ 
+    set req.url = regsuball(req.url,"[?&]_=[^&]{1,25}","");
+    
     # Grace mode is magical. When you have a request for an object that is in
     # the cache but has expired, Grace mode will continue to serve the old
     # expired cache object for everyone except for the very first client
