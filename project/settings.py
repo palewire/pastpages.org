@@ -99,6 +99,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "toolbox.context_processors.site",
 )
 
+from django.core.exceptions import SuspiciousOperation
+
+def skip_suspicious_operations(record):
+  if record.exc_info:
+    exc_value = record.exc_info[1]
+    if isinstance(exc_value, SuspiciousOperation):
+      return False
+  return True
 
 # Extras
 SITE_ID = 1
@@ -109,7 +117,11 @@ LOGGING = {
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
-        }
+        },
+        'skip_suspicious_operations': {
+            '()': 'django.utils.log.CallbackFilter',
+            'callback': skip_suspicious_operations,
+         },
     },
     'handlers': {
         'mail_admins': {
