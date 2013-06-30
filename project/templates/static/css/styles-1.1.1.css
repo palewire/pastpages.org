@@ -288,6 +288,7 @@ table.stacked-responsive th, table.stacked-responsive td
         position: absolute;
         top: -9999px;
         left: -9999px;
+        padding: 0;
     }
  
     .stacked-responsive tr { border: 1px solid #ccc; }
@@ -297,7 +298,7 @@ table.stacked-responsive th, table.stacked-responsive td
         border: none !important;
         border-bottom: 1px solid #eee; 
         position: relative;
-        padding-left: 50%; 
+        padding-left: 50% !important; 
         white-space: normal;
         text-align:left;
     }
