@@ -7,7 +7,7 @@
         <meta name="Author" content="pastpages.org" />
         <meta name="description" content="{% block description %}The news homepage archive{% endblock %}" />
         <meta name="keywords" content="{% block keywords %}pastpages, news, homepages, screenshots, snapshots, archive{% endblock %}" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {% block viewport %}<meta name="viewport" content="width=device-width, initial-scale=1.0" />{% endblock %}
 
         {% block facebook-meta %}
         <meta property="fb:admins" content="1257725335"/>
@@ -19,7 +19,7 @@
         {% block extra-meta %}{% endblock %}
         
         <!--[if lte IE 9]><link rel="stylesheet" href="{{ STATIC_URL }}css/ie.css" type="text/css" media="screen" /><![endif]-->
-        <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/styles-1.1.0.css" type="text/css" media="screen" />
         <link type="text/css" href="{{ STATIC_URL }}css/jquery-ui/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
         {% block extra-css %}{% endblock %}
         

@@ -5,19 +5,6 @@
 
 {% block extra-css %}
 <style type="text/css">
-    table {
-        border-collapse:collapse;
-        margin: 10px !important;
-        width:95%;
-    }
-    th, td
-    {
-        border: 1px solid black;
-        padding: 5px !important;
-        margin: 5px !important;
-        line-height:140%;
-        text-align:left;
-    }
     td.tardy {
         background-color:red;
         color:white;
@@ -187,10 +174,10 @@
 <div class="row">
     <div class="twelvecol last">
         <h3>Sites</h3>
-        <table>
+        <table class="stacked-responsive">
             <thead>
                 <tr>
-                    <th>Site</th>
+                    <th>Name</th>
                     <th>First screenshot</th>
                     <th>Last screenshot</th>
                     <th>Screenshots</th>
@@ -199,10 +186,10 @@
             <tbody>
             {% for obj in site_list %}
                 <tr>
-                    <td><a href="{% url 'archive-site-detail' obj.slug %}">{{ obj.name }}</a></td>
-                    <td>{{ obj.first_screenshot }}</td>
-                    <td {% if obj.tardy %}class="tardy"{% endif %}>{{ obj.last_screenshot|timedelta }}</td>
-                    <td>{{ obj.total_screenshots|intcomma }}</td>
+                    <td data-title="Name"><a href="{% url 'archive-site-detail' obj.slug %}">{{ obj.name }}</a></td>
+                    <td data-title="First">{{ obj.first_screenshot.date }}</td>
+                    <td data-title="Latest" {% if obj.tardy %}class="tardy"{% endif %}>{{ obj.last_screenshot|timedelta }}</td>
+                    <td data-title="Total">{{ obj.total_screenshots|intcomma }}</td>
                 </tr>
             {% endfor %}
             </tbody>
