@@ -130,6 +130,7 @@
                                     <li><a href="http://blog.pastpages.org">Blog</a></li>
                                     <li><a href="{% url 'contact' %}">Contact</a></li>
                                     <li><a href="{% url 'feeds-list' %}">Feeds</a></li>
+                                    <li><a href="{% url 'status' %}">Status</a></li>
                                 </ul>
                             </li>
                             <script type="text/javascript">
@@ -182,5 +183,7 @@
               loadChartbeat : function() { oldonload(); loadChartbeat(); };
           })();
         </script>
+        {% block body-bottom %}
+        {% endblock %}
     </body>
 </html>

@@ -22,15 +22,20 @@ class Fail(TemplateView):
     template_name = 'fail.html'
 
 
-class Review(TemplateView):
+class Status(TemplateView):
     """
     A private page for reviewing the screenshotting success rate, etc.
     """
-    template_name = 'review.html'
+    template_name = 'status.html'
     
     def get_context_data(self, **kwargs):
+        site_list = Site.objects.stats()
+        update_list = Update.objects.stats()
         context = {
-            'site_list': Site.objects.stats(),
+            'site_list': site_list,
+            'min_date': min([d['first_screenshot'] for d in site_list]),
+            'screenshot_total': sum([d['total_screenshots'] for d in site_list]),
+            'update_list': update_list,
         }
         return context
 

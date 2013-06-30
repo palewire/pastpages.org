@@ -37,6 +37,7 @@ class SiteManager(models.Manager):
                 'sortable_name': l[2],
                 'slug': l[3],
                 'total_screenshots': l[4],
+                'first_screenshot': timezone.localtime(l[5]),
                 'last_screenshot': timezone.localtime(l[6]),
                 'tardy': (timezone.now() - timezone.localtime(l[6])) > timedelta(days=1),
             })
@@ -75,3 +76,29 @@ class UpdateManager(models.Manager):
         if latest_count < sites:
             obj.in_progress = True
         return obj
+
+    def stats(self):
+        from django.db import connection
+        from archive.models import Site
+        cursor = connection.cursor()
+        sql = """
+            SELECT
+                update.id,
+                update.start,
+                COUNT(ssht.id)
+            FROM archive_update as update
+            INNER JOIN archive_screenshot as ssht 
+            ON update.id = ssht.update_id
+            GROUP BY 1, 2
+            ORDER BY 2 DESC
+            LIMIT 49
+        """
+        cursor.execute(sql)
+        results = []
+        for l in cursor.fetchall():
+            results.append({
+                'id': l[0],
+                'start': timezone.localtime(l[1]),
+                'screenshots': l[2],
+            })
+        return results[1:]
