@@ -1,0 +1,71 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_static admin_modify %}
+{% load admin_urls %}
+
+{% block after_related_objects %}
+<table>
+    <thead>
+        <tr>
+            <th>Full image</th>
+            <th>449x3000</th>
+        </tr>
+    </thead>
+    <tr>
+        <td>
+            <textarea width=200>{{ original.image.url }}</textarea>
+        </td>
+        <td>
+            <textarea width=200>{{ original.image.url_449x3000 }}</textarea>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ original.image.url }}">
+                <img width=200 src="{{ original.image.url }}">
+            </a>
+        </td>
+        <td>
+            <a href="{{ original.image.url_449x3000 }}">
+                <img width=200 src="{{ original.image.url_449x3000 }}">
+            </a>
+        </td>
+    </tr>
+</table>
+<table>
+    <thead>
+        <tr>
+            <th>Crop</th>
+            <th>300x251</th>
+            <th>101x84</th>
+        </tr>
+    </thead>
+    <tr>
+        <td>
+            <textarea width=200>{{ original.image.url }}</textarea>
+        </td>
+        <td>
+            <textarea width=200>{{ original.crop.url_300x251 }}</textarea>
+        </td>
+        <td>
+            <textarea width=100>{{ original.crop.url_101x84 }}</textarea>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ original.crop.url }}">
+                <img width=200 src="{{ original.crop.url }}">
+            </a>
+        </td>
+        <td>
+            <a href="{{ original.crop.url_300x251 }}">
+                <img width=200 src="{{ original.crop.url_300x251 }}">
+            </a>
+        </td>
+        <td>
+            <a href="{{ original.crop.url_101x84 }}">
+                <img width=100 src="{{ original.crop.url_101x84 }}">
+            </a>
+        </td>
+    </tr>
+</table>
+{% endblock %}
