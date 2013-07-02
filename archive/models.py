@@ -92,7 +92,7 @@ class Screenshot(models.Model):
         sizes=((449, 3000),))
     has_image = models.BooleanField(default=False)
     crop = ImageWithThumbsField(upload_to=get_image_path, blank=True,
-         sizes=((300, 251),(101, 84)))
+         sizes=((300, 251),))
     has_crop = models.BooleanField(default=False)
     html_raw = models.FileField(upload_to=get_html_path, blank=True)
     html_archived = models.FileField(upload_to=get_html_path, blank=True)

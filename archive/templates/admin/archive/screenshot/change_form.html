@@ -36,7 +36,6 @@
         <tr>
             <th>Crop</th>
             <th>300x251</th>
-            <th>101x84</th>
         </tr>
     </thead>
     <tr>
@@ -45,9 +44,6 @@
         </td>
         <td>
             <textarea width=200>{{ original.crop.url_300x251 }}</textarea>
-        </td>
-        <td>
-            <textarea width=100>{{ original.crop.url_101x84 }}</textarea>
         </td>
     </tr>
     <tr>
@@ -59,11 +55,6 @@
         <td>
             <a href="{{ original.crop.url_300x251 }}">
                 <img width=200 src="{{ original.crop.url_300x251 }}">
-            </a>
-        </td>
-        <td>
-            <a href="{{ original.crop.url_101x84 }}">
-                <img width=100 src="{{ original.crop.url_101x84 }}">
             </a>
         </td>
     </tr>
