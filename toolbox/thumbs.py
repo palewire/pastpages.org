@@ -77,7 +77,10 @@ def generate_thumb(img, thumb_size, format):
     if format.upper()=='JPG':
         format = 'JPEG'
     
-    image2.save(io, format, quality=80)
+    if format.upper() == 'JPEG':
+        image2.save(io, format, quality=80)
+    else:
+        image2.save(io, format)
     return ContentFile(io.getvalue())
 
 class ImageWithThumbsFieldFile(ImageFieldFile):

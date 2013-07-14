@@ -116,7 +116,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Save the image data to the object
     target = ssht.get_image_name()
     try:
-        ssht.image.save(target, jpg_obj)
+        ssht.image.save(target, png_obj)
     except Exception, e:
         logger.error("Image save failed.")
         logger.error(str(e))

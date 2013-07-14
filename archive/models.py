@@ -110,7 +110,7 @@ class Screenshot(models.Model):
         return ("archive-screenshot-detail", [self.id])
     
     def get_image_name(self):
-        return '%s-%s-%s-image.jpg' % (self.site.slug, self.update.id, self.id)
+        return '%s-%s-%s-image.png' % (self.site.slug, self.update.id, self.id)
     
     def get_crop_name(self):
         return '%s-%s-%s-crop.jpg' % (self.site.slug, self.update.id, self.id)
