@@ -78,22 +78,36 @@ def get_phantomjs_screenshot(site_id, update_id):
         logger.error("FAILED?: %s" % exitcode)
         return False
     
-    # Convert the screenshot data into something we can save
+    # Read the image file into memory
     data = open(output_path, 'r').read()
+    
+    # Convert the data to a Django object
     png_obj = ContentFile(data)
+    
+    # Remove the image from the local filesystem
     os.remove(output_path)
     
-    # Convert to RGB by pasting the alpha channel to the background
+    #  Open the image data in PIL
     png = Image.open(png_obj)
+    
+    # Convert to RGB by pasting the alpha channel to the background
     png.load()  # needed for split()
     background = Image.new('RGB', png.size, (255, 255, 255)) # White background
     background.paste(png, mask=png.split()[3])  # 3 is the alpha channel
     
-    # Then convert to an JPG
+    # Open a temporary in-memory file
     tmp = cStringIO.StringIO()
+    
+    # Save the RGB image into the temporary file in reduced-quality JPEG format
     background.save(tmp, format='JPEG', quality=80)
+    
+    # Reset to the top of the temporary file
     tmp.seek(0)
+    
+    # Convert the temporary file to a Django object
     jpg_obj = ContentFile(tmp.getvalue())
+    
+    # Close the temporary file
     tmp.close()
     
     # Create a screenshot object in the database
