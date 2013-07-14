@@ -17,13 +17,13 @@ def prep_pil_for_db(pil_obj, filename):
     """
     # Load the cropped image into a temporary file object
     tempfile_io = StringIO.StringIO()
-    pil_obj.save(tempfile_io, format='PNG')
+    pil_obj.save(tempfile_io, format='JPEG')
     # Convert that temporary file object to something Django likes
     return InMemoryUploadedFile(
         tempfile_io, 
         None,
         filename,
-        'image/png',
+        'image/jpeg',
         tempfile_io.len,
         None
     )
@@ -63,7 +63,7 @@ def generate_thumb(img, thumb_size, format):
         ynewsize = (ysize-minsize)/2
         # crop it
         image2 = image.crop((xnewsize, ynewsize, xsize-xnewsize, ysize-ynewsize))
-        # load is necessary after crop                
+        # load is necessary after crop
         image2.load()
         # thumbnail of the cropped image (with ANTIALIAS to make it look better)
         image2.thumbnail(thumb_size, Image.ANTIALIAS)
@@ -77,8 +77,8 @@ def generate_thumb(img, thumb_size, format):
     if format.upper()=='JPG':
         format = 'JPEG'
     
-    image2.save(io, format)
-    return ContentFile(io.getvalue())    
+    image2.save(io, format, quality=80)
+    return ContentFile(io.getvalue())
 
 class ImageWithThumbsFieldFile(ImageFieldFile):
     """

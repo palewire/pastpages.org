@@ -12,6 +12,7 @@ from archive.models import Screenshot, Update, Site
 
 # Image manipulation
 import Image
+import cStringIO
 from toolbox.thumbs import prep_pil_for_db
 from django.core.files.base import ContentFile
 
@@ -79,8 +80,21 @@ def get_phantomjs_screenshot(site_id, update_id):
     
     # Convert the screenshot data into something we can save
     data = open(output_path, 'r').read()
+    png_obj = ContentFile(data)
     os.remove(output_path)
-    file_obj = ContentFile(data)
+    
+    # Convert to RGB by pasting the alpha channel to the background
+    png = Image.open(png_obj)
+    png.load()  # needed for split()
+    background = Image.new('RGB', png.size, (255, 255, 255)) # White background
+    background.paste(png, mask=png.split()[3])  # 3 is the alpha channel
+    
+    # Then convert to an JPG
+    tmp = cStringIO.StringIO()
+    background.save(tmp, format='JPEG', quality=80)
+    tmp.seek(0)
+    jpg_obj = ContentFile(tmp.getvalue())
+    tmp.close()
     
     # Create a screenshot object in the database
     ssht, created = Screenshot.objects.get_or_create(site=site, update=update)
@@ -88,7 +102,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Save the image data to the object
     target = ssht.get_image_name()
     try:
-        ssht.image.save(target, file_obj)
+        ssht.image.save(target, jpg_obj)
     except Exception, e:
         logger.error("Image save failed.")
         logger.error(str(e))
@@ -99,8 +113,8 @@ def get_phantomjs_screenshot(site_id, update_id):
     ssht.save()
     
     # Reopen image as PIL object
-    file_obj.seek(0)
-    image = Image.open(file_obj)
+    jpg_obj.seek(0)
+    image = Image.open(jpg_obj)
     # Crop it to 1000px tall, starting from the top
     crop = image.crop(
         (
