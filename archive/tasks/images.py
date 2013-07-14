@@ -99,7 +99,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     tmp = cStringIO.StringIO()
     
     # Save the RGB image into the temporary file in reduced-quality JPEG format
-    background.save(tmp, format='JPEG', quality=80)
+    background.save(tmp, format='JPEG', quality=90)
     
     # Reset to the top of the temporary file
     tmp.seek(0)
