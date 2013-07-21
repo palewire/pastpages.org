@@ -19,6 +19,10 @@ page.open(address, function (status) {
           document.head.insertBefore(style, document.head.firstChild);
         });
         window.setTimeout(function () {
+            if (getComputedStyle(document.body, null).backgroundColor === 'rgba(0, 0, 0, 0)') {
+              console.log("Setting background color to white");
+              document.body.bgColor = '#ffffff';
+            }
             page.render(outfile);
             phantom.exit();
         }, secondsToWait * 1000);
