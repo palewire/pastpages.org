@@ -50,7 +50,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Prepare the parameters for our command line call to PhantomJS
     output_path = os.path.join(
         settings.REPO_DIR,
-        '%s.png' % site.slug
+        '%s.jpg' % site.slug
     )
     url = '%s?random=%s' % (site.url, get_random_string())
     params = [PHANTOM_BIN, PHANTOM_SCRIPT, url, output_path]
@@ -82,33 +82,10 @@ def get_phantomjs_screenshot(site_id, update_id):
     data = open(output_path, 'r').read()
     
     # Convert the data to a Django object
-    png_obj = ContentFile(data)
+    jpg_obj = ContentFile(data)
     
     # Remove the image from the local filesystem
     os.remove(output_path)
-    
-    #  Open the image data in PIL
-    png = Image.open(png_obj)
-    
-    # Convert to RGB by pasting the alpha channel to the background
-    png.load()  # needed for split()
-    background = Image.new('RGB', png.size, (255, 255, 255)) # White background
-    background.paste(png, mask=png.split()[3])  # 3 is the alpha channel
-    
-    # Open a temporary in-memory file
-    tmp = cStringIO.StringIO()
-    
-    # Save the RGB image into the temporary file in reduced-quality JPEG format
-    background.save(tmp, format='JPEG', quality=90)
-    
-    # Reset to the top of the temporary file
-    tmp.seek(0)
-    
-    # Convert the temporary file to a Django object
-    jpg_obj = ContentFile(tmp.getvalue())
-    
-    # Close the temporary file
-    tmp.close()
     
     # Create a screenshot object in the database
     ssht, created = Screenshot.objects.get_or_create(site=site, update=update)
@@ -116,7 +93,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Save the image data to the object
     target = ssht.get_image_name()
     try:
-        ssht.image.save(target, png_obj)
+        ssht.image.save(target, jpg_obj)
     except Exception, e:
         logger.error("Image save failed.")
         logger.error(str(e))
