@@ -14,8 +14,8 @@ class Command(BaseCommand):
             start=timezone.now(),
         )
         shit_list = [
-            'cedar-rapids-gazette',
+            'usa-today',
         ]
         for site in Site.objects.filter(slug__in=shit_list):
-            get_phantomjs_screenshot.delay(site.id, update.id)
-            #get_phantomjs_screenshot(site.id, update.id)
+            #get_phantomjs_screenshot.delay(site.id, update.id)
+            get_phantomjs_screenshot(site.id, update.id)
