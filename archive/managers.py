@@ -77,7 +77,7 @@ class UpdateManager(models.Manager):
             obj.in_progress = True
         return obj
 
-    def stats(self):
+    def stats(self, limit=50):
         from django.db import connection
         from archive.models import Site
         cursor = connection.cursor()
@@ -91,8 +91,8 @@ class UpdateManager(models.Manager):
             ON update.id = ssht.update_id
             GROUP BY 1, 2
             ORDER BY 2 DESC
-            LIMIT 49
-        """
+            LIMIT %s
+        """ % limit
         cursor.execute(sql)
         results = []
         for l in cursor.fetchall():

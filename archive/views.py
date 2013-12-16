@@ -30,7 +30,8 @@ class Status(TemplateView):
     
     def get_context_data(self, **kwargs):
         site_list = Site.objects.stats()
-        update_list = Update.objects.stats()
+        update_list = Update.objects.stats(limit=101)
+        update_list.reverse()
         context = {
             'site_list': site_list,
             'min_date': min([d['first_screenshot'] for d in site_list]),

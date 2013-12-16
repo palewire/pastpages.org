@@ -51,15 +51,16 @@
         var data = [{% for obj in update_list %}
             { 
                 id: {{ obj.id }},
-                start: "{{ obj.start|date:'Y-m-d H' }}",
+                day: "{{ obj.start|date:'M d' }}",
+                hour: "{{ obj.start|date:'gA' }}",
                 hed: "{{ obj.screenshots|intcomma }} at {{ obj.start|date:'P \o\n N j' }}",
                 url: "{% url 'archive-update-detail' obj.id %}",
                 screenshots: {{ obj.screenshots }}
             }{% if not forloop.last %},{% endif %}
         {% endfor %}];
 
-    var div = d3.select("body").append("div")   
-        .attr("class", "tooltip")               
+    var div = d3.select("body").append("div")
+        .attr("class", "tooltip")
         .style("opacity", 0);
 
     function showTooltip(d, i) {
@@ -87,13 +88,11 @@
             width = 960 - margin.left - margin.right,
             height = 200 - margin.top - margin.bottom;
 
-        var minDate = d3.min(data, function(d) { return parseDate(d.start); });
-        var maxDate = d3.max(data, function(d) { return parseDate(d.start); });
         var maxScreenshots = d3.max(data, function(d) { return d.screenshots; });
 
-        var x = d3.time.scale()
-            .range([0, width])
-            .domain([minDate, maxDate]);
+        var x = d3.scale.ordinal()
+            .domain(d3.range(data.length))
+            .rangeBands([0, width-margin.right-margin.left], 0.025);
 
         var y = d3.scale.linear()
             .range([height, 0])
@@ -101,7 +100,13 @@
 
         var xAxis = d3.svg.axis()
             .scale(x)
-            .orient("bottom");
+            .orient("bottom")
+            .tickValues(x.domain().filter(function(i) {
+                if ($.inArray(data[i].hour, ['12AM']) > -1) {
+                    return i;
+                }
+            }))
+            .tickFormat(function(i) { return data[i].day });
 
         var yAxis = d3.svg.axis()
             .scale(y)
@@ -136,15 +141,13 @@
             .enter().append("rect")
               .attr("class", "bar")
               .attr("id", function(d) { return "bar-" + d.id; })
-              .attr("x", function(d, i) { return x(parseDate(d.start)); })
-              .attr("width", 18)
+              .attr("x", function(d, i) { return x(i); })
+              .attr("width", x.rangeBand())
               .attr("y", function(d) { return y(d.screenshots); })
               .attr("height", function(d) { return height - y(d.screenshots); })
               .on("mouseover", showTooltip)
               .on("mouseout", hideTooltip)
               .on("click", function(d) { window.location = d.url; });
-
-
     </script>
 {% endblock %}
 
@@ -165,11 +168,10 @@
 
 <div class="row">
     <div class="twelvecol last">
-        <h3>Recent updates</h3>
+        <h3>Last {{ update_list|length }} updates</h3>
         <div id="update-chart" class="scroll-responsive"></div>
     </div>
 </div>
-
 
 <div class="row">
     <div class="twelvecol last">
