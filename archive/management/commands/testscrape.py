@@ -6,5 +6,5 @@ from archive.models import Site, Screenshot
 class Command(BaseCommand):
 
     def handle(self, *args, **options): 
-        obj = Site.objects.get(name="Yahoo!")
+        obj = Site.objects.get(name="Los Angeles Times")
         get_html(Screenshot.objects.filter(site=obj)[0].id)
