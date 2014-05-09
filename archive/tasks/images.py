@@ -21,7 +21,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # PhantomJS bits we'll use for screenshots
-PHANTOM_BIN = os.path.join(settings.REPO_DIR, 'phantomjs', 'bin', 'phantomjs')
+PHANTOM_BIN = '/usr/bin/phantomjs'
 PHANTOM_SCRIPT = os.path.join(settings.REPO_DIR, 'archive', 'tasks', 'images.js')
 
 
