@@ -12,6 +12,13 @@ page.open(address, function (status) {
         console.log('Unable to load the address!');
         phantom.exit();
     } else {
+        if (address.substring(0, "http://www.latimes.com/".length) === "http://www.latimes.com/") {
+            console.log("Setting custom latimes cookie");
+            var d = page.evaluate(function() {
+                window.sessionStorage.setItem('trb.browsersupport.supported', 'true');
+            });
+            page.reload();
+        }
         page.evaluate(function() {
           var style = document.createElement('style'),
               text = document.createTextNode('body { background: #fff }');
