@@ -7,6 +7,7 @@ from django.conf import settings
 from pytz import common_timezones
 from taggit.managers import TaggableManager
 from toolbox.thumbs import ImageWithThumbsField
+from urlarchivefield.fields import URLArchiveField
 from django.template.defaultfilters import date as dateformat
 logger = logging.getLogger(__name__)
 
@@ -33,6 +34,7 @@ class Site(models.Model):
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES,
         default='active')
+    has_html_screenshots = models.BooleanField(default=False)
     y_offset = models.IntegerField(default=0, blank=True)
     on_the_homepage = models.BooleanField(default=True)
     objects = managers.SiteManager()
@@ -94,8 +96,7 @@ class Screenshot(models.Model):
     crop = ImageWithThumbsField(upload_to=get_image_path, blank=True,
          sizes=((300, 251),))
     has_crop = models.BooleanField(default=False)
-    html_raw = models.FileField(upload_to=get_html_path, blank=True)
-    html_archived = models.FileField(upload_to=get_html_path, blank=True)
+    html = URLArchiveField(upload_to=get_html_path)
     has_html = models.BooleanField(default=False)
     
     class Meta:
