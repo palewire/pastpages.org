@@ -20,6 +20,7 @@ admin.site.register(Update, UpdateAdmin)
 
 class ScreenshotAdmin(admin.ModelAdmin):
     list_display = ("site", "update",)
+    readonly_fields = ('site', 'update', 'timestamp')
 
 admin.site.register(Screenshot, ScreenshotAdmin)
 
