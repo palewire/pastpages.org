@@ -59,4 +59,21 @@
         </td>
     </tr>
 </table>
+{% if original.has_html %}
+<table>
+    <caption>HTML</caption>
+    <tr>
+        <th>Name</th>
+        <td>{{ original.html.name }}</td>
+    </tr>
+    <tr>
+        <th>URL</th>
+        <td>{{ original.html.archive_url }}</td>
+    </tr>
+    <tr>
+        <th>Timestamp</th>
+        <td>{{ original.html.archive_timestamp }}</td>
+    </tr>
+</table>
+{% endif %}
 {% endblock %}

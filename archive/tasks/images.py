@@ -130,5 +130,11 @@ def get_phantomjs_screenshot(site_id, update_id):
     ssht.has_crop = True
     ssht.save()
     
+    if site.has_html_screenshots:
+        logger.info("Logging HTML for %s" % site.url)
+        ssht.html = site.url
+        ssht.has_html = True
+        ssht.save()
+
     # Finish
     logger.debug("Finished %s" % site)
