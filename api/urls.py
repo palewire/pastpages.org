@@ -1,6 +1,6 @@
 import resources
 from tastypie.api import Api
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 api = Api(api_name='beta')
 api.register(resources.ScreenshotResource(), canonical=True)
