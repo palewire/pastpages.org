@@ -35,7 +35,7 @@ class Status(TemplateView):
         context = {
             'site_list': site_list,
             'min_date': min([d['first_screenshot'] for d in site_list]),
-            'screenshot_total': sum([d['total_screenshots'] for d in site_list]),
+            'screenshot_total': sum([d['total_images'] for d in site_list]),
             'update_list': update_list,
         }
         return context

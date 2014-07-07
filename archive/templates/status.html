@@ -182,7 +182,8 @@
                     <th>Name</th>
                     <th>First screenshot</th>
                     <th>Last screenshot</th>
-                    <th>Screenshots</th>
+                    <th>Images</th>
+                    <th>HTML</th>
                 </tr>
             </thead>
             <tbody>
@@ -191,7 +192,8 @@
                     <td data-title="Name"><a href="{% url 'archive-site-detail' obj.slug %}">{{ obj.name }}</a></td>
                     <td data-title="First">{{ obj.first_screenshot.date }}</td>
                     <td data-title="Latest" {% if obj.tardy %}class="tardy"{% endif %}>{{ obj.last_screenshot|timedelta }}</td>
-                    <td data-title="Total">{{ obj.total_screenshots|intcomma }}</td>
+                    <td data-title="Images">{{ obj.total_images|intcomma }}</td>
+                    <td data-title="HTML">{{ obj.total_html|intcomma }}</td>
                 </tr>
             {% endfor %}
             </tbody>

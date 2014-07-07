@@ -19,11 +19,12 @@ class SiteManager(models.Manager):
                 site.name,
                 site.sortable_name,
                 site.slug,
-                COUNT(ssht.id),
+                SUM(CASE WHEN ssht.has_image = true THEN 1 ELSE 0 END),
+                SUM(CASE WHEN ssht.has_html = true THEN 1 ELSE 0 END),
                 MIN(ssht.timestamp),
                 MAX(ssht.timestamp)
             FROM archive_site as site
-            INNER JOIN archive_screenshot as ssht 
+            INNER JOIN archive_screenshot as ssht
             ON site.id = ssht.site_id
             WHERE site.status = 'active'
             GROUP BY 1, 2, 3, 4
@@ -36,10 +37,11 @@ class SiteManager(models.Manager):
                 'name': l[1],
                 'sortable_name': l[2],
                 'slug': l[3],
-                'total_screenshots': l[4],
-                'first_screenshot': timezone.localtime(l[5]),
-                'last_screenshot': timezone.localtime(l[6]),
-                'tardy': (timezone.now() - timezone.localtime(l[6])) > timedelta(days=1),
+                'total_images': l[4],
+                'total_html': l[5],
+                'first_screenshot': timezone.localtime(l[6]),
+                'last_screenshot': timezone.localtime(l[7]),
+                'tardy': (timezone.now() - timezone.localtime(l[7])) > timedelta(days=1),
             })
         return sorted(results, key=lambda x: x['sortable_name'])
 
