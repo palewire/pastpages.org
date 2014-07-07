@@ -412,5 +412,3 @@ def group_objects_by_number(object_list, number_in_each_group=3):
         new_list.append([x for x in object_list[i:i+number_in_each_group]])
         i += number_in_each_group
     return new_list
-
-
