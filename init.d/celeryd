@@ -47,7 +47,7 @@ CELERYD_PID_FILE="/var/log/celeryd@%n.pid"
 CELERYD_OPTS="--purge --settings=project.settings --concurrency=2"
 CELERYD_USER="root"
 CELERYD_GROUP="root"
-export DJANGO_SETTINGS_MODULE="settings"
+export DJANGO_SETTINGS_MODULE="project.settings"
 
 CELERYD_PID_FILE=${CELERYD_PID_FILE:-${CELERYD_PIDFILE:-$DEFAULT_PID_FILE}}
 CELERYD_LOG_FILE=${CELERYD_LOG_FILE:-${CELERYD_LOGFILE:-$DEFAULT_LOG_FILE}}
