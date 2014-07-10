@@ -13,9 +13,5 @@ class Command(BaseCommand):
         update = Update.objects.create(
             start=timezone.now(),
         )
-        shit_list = [
-            'politico',
-        ]
-        for site in Site.objects.active(): #.filter(slug__in=shit_list):
+        for site in Site.objects.active():
             get_phantomjs_screenshot.delay(site.id, update.id)
-            #get_phantomjs_screenshot(site.id, update.id)
