@@ -3,7 +3,6 @@ import logging
 from archive import managers
 from django.db import models
 from datetime import datetime
-from django.conf import settings
 from pytz import common_timezones
 from taggit.managers import TaggableManager
 from toolbox.thumbs import ImageWithThumbsField

@@ -1,19 +1,13 @@
 import pytz
-import urllib
 import logging
-from hashlib import sha1
 from itertools import groupby
 from django.http import Http404
-from django.utils import timezone
 from pytz import common_timezones
-from django.core.cache import cache
 from datetime import datetime, timedelta
 from taggit.models import Tag, TaggedItem
 from django.db.models import Min, Max
 from django.utils.timezone import localtime
-from django.core.urlresolvers import reverse
 from archive.models import Update, Site, Screenshot, Champion
-from django.template.defaultfilters import date as dateformat
 from django.views.generic import TemplateView, ListView, DetailView
 logger = logging.getLogger(__name__)
 
@@ -55,7 +49,7 @@ class CryForHelp(TemplateView):
     template_name = 'cry_for_help.html'
     
     def get_context_data(self, **kwargs):
-        context = super(BuildableTemplateView, self).get_context_data(**kwargs)
+        context = super(CryForHelp, self).get_context_data(**kwargs)
         context['champion_list'] = Champion.objects.all()
         return context
 

@@ -3,9 +3,7 @@ Configuration of a public API that user django-tastypie
 """
 # Misc.
 from django.conf import settings
-from django.conf.urls import url
 from django.utils.timezone import is_naive
-from django.core.urlresolvers import reverse
 
 # Models
 from taggit.models import Tag, TaggedItem

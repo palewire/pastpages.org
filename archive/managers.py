@@ -1,7 +1,6 @@
 from django.db import models
 from datetime import timedelta
 from django.utils import timezone
-from django.db.models import Count
 
 
 class SiteManager(models.Manager):
@@ -11,7 +10,6 @@ class SiteManager(models.Manager):
     
     def stats(self):
         from django.db import connection
-        from archive.models import Site
         cursor = connection.cursor()
         sql = """
             SELECT
@@ -81,7 +79,6 @@ class UpdateManager(models.Manager):
 
     def stats(self, limit=50):
         from django.db import connection
-        from archive.models import Site
         cursor = connection.cursor()
         sql = """
             SELECT

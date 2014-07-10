@@ -8,7 +8,7 @@ from archive.models import Update, Site, Screenshot
 
 # Feeds
 from toolbox.mrss import MediaRSSFeed
-from django.contrib.syndication.views import Feed, FeedDoesNotExist
+from django.contrib.syndication.views import Feed
 
 # Misc
 from django.utils import timezone

@@ -1,5 +1,5 @@
-from django.core.management.base import BaseCommand, CommandError
-from archive.tasks.images import get_phantomjs_screenshot
+from django.core.management.base import BaseCommand
+from archive.tasks import get_phantomjs_screenshot
 from archive.models import Site, Update
 from django.utils import timezone
 import logging
@@ -7,9 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
+    help = 'Archive screenshots for all sites'
 
     def handle(self, *args, **options):
-        help = 'Archive screenshots for all sites'
         update = Update.objects.create(
             start=timezone.now(),
         )
