@@ -51,4 +51,4 @@ six==1.7.3
 sqlparse==0.1.11
 ssh==1.7.13
 webkit2png==0.8.2
-django-urlarchivefield==0.0.7
+django-urlarchivefield==0.0.8
