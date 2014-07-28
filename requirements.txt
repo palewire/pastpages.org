@@ -50,6 +50,5 @@ selenium==2.21.1
 six==1.7.3
 sqlparse==0.1.11
 ssh==1.7.13
-storytracker==0.0.2
 webkit2png==0.8.2
-django-urlarchivefield==0.0.6
+django-urlarchivefield==0.0.7
