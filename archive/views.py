@@ -1,7 +1,8 @@
+import six
 import pytz
 import logging
 from itertools import groupby
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from pytz import common_timezones
 from datetime import datetime, timedelta
 from taggit.models import Tag, TaggedItem
@@ -88,7 +89,7 @@ class ScreenshotDetail(DetailView):
     """
     template_name = 'screenshot_detail.html'
     queryset = Screenshot.objects.filter(site__status='active').select_related("update")
-    
+
     def get_context_data(self, **kwargs):
         context = super(ScreenshotDetail, self).get_context_data(**kwargs)
         try:
@@ -112,6 +113,24 @@ class ScreenshotDetail(DetailView):
             'prev': prev,
         })
         return context
+
+
+class ScreenshotDetailHyperlinksCSV(DetailView):
+    queryset = Screenshot.objects.filter(site__status='active').select_related("update")
+
+    def get_context_data(self, **kwargs):
+        if not self.object.has_html:
+            raise Http404 
+        return {
+            'object': self.object,
+            'archive_obj': self.object.html.archive_obj,
+        }
+
+    def render_to_response(self, context, **kwargs):
+        r = HttpResponse(content_type='text/csv')
+        r['Content-Disposition'] = 'attachment; filename="hyperlinks.csv'
+        r = context['archive_obj'].write_hyperlinks_csv_to_file(r)
+        return r
 
 
 class SiteDetail(DetailView):
