@@ -1,7 +1,8 @@
 @import url("1140.css");
-@import url("fonts.css");
+@import url("fonts-1.1.0.css");
 h1, h2, h3, h4, h5, b { font-weight:normal; }
 h1 {
+    font-family: "TheanoDidotRegular", 'TheanoDidotRegularRemote', Georgia, serif;
     text-transform:uppercase;
     font-size: 32px;
     line-height:120%;
@@ -16,7 +17,7 @@ h3 {
     margin:10px 0 5px 0;
 }
 body {
-    font-family: Arial, sans-serif;
+    font-family: Georgia, serif;
     font-size:18px;
     line-height:120%;
     color:black;
@@ -62,7 +63,7 @@ div#toolbar {
     position:relative;
 }
 div#headline {
-    font-family: "TheanoDidotRegular", Arial, sans-serif;
+    font-family: "TheanoDidotRegular", 'TheanoDidotRegularRemote', Georgia, serif;
     width:275px;
     text-align:center;
 }
@@ -252,11 +253,80 @@ table td {
     margin: 0;
 }
 
+/* Responsive tables */
+table.stacked-responsive {
+    border-collapse:collapse;
+    margin: 10px !important;
+    width:95%;
+    border-spacing: 0;
+    display: table-cell;
+}
+table.stacked-responsive th, table.stacked-responsive td
+{
+    border: 1px solid black;
+    line-height:140%;
+    text-align:left;
+    padding:5px;
+}
+
 /* ============================= */
 /* ! Layout for mobile version   */
 /* ============================= */
 
 @media handheld, only screen and (max-width: 767px) {
+    
+    /* Force table to not be like tables anymore */
+    table.stacked-responsive, 
+    .stacked-responsive thead, 
+    .stacked-responsive tbody, 
+    .stacked-responsive th, 
+    .stacked-responsive td, 
+    .stacked-responsive tr { 
+        display: block;
+    }
+ 
+    /* Hide table headers (but not display: none;, for accessibility) */
+    .stacked-responsive thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+        padding: 0;
+    }
+ 
+    .stacked-responsive tr { border: 1px solid #ccc; }
+ 
+    .stacked-responsive td { 
+        /* Behave  like a "row" */
+        border: none !important;
+        border-bottom: 1px solid #eee; 
+        position: relative;
+        padding-left: 50% !important; 
+        white-space: normal;
+        text-align:left;
+    }
+ 
+    .stacked-responsive td:before { 
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%; 
+        padding-right: 10px; 
+        white-space: nowrap;
+        text-align:left;
+        font-weight: bold;
+    }
+ 
+    /*
+    Label the data
+    */
+    .stacked-responsive td:before { content: attr(data-title); }
+
+    .scroll-responsive {
+        overflow:scroll;
+    }
+
 }
 
 

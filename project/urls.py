@@ -65,5 +65,6 @@ if settings.DEBUG:
     urlpatterns += patterns('',
         url(r'^static/(?P<path>.*)$', static_serve, {
             'document_root': settings.STATIC_ROOT,
+            'show_indexes': True,
         }),
    )

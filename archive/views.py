@@ -120,7 +120,7 @@ class ScreenshotDetailHyperlinksCSV(DetailView):
 
     def get_context_data(self, **kwargs):
         if not self.object.has_html:
-            raise Http404 
+            raise Http404
         return {
             'object': self.object,
             'archive_obj': self.object.html.archive_obj,
