@@ -1,6 +1,7 @@
 chef/node.json
 fabfile.py
 build/*
+project/newrelic.ini
 project/static/*
 project/media/archive/*
 project/django.log
