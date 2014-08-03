@@ -50,6 +50,10 @@ def push_settings():
         'project/settings_prod.py',
         os.path.join(env.project_dir, 'project/settings_prod.py')
     )
+    put(
+        'project/newrelic.ini',
+        os.path.join(env.project_dir, 'project/newrelic.ini')
+    )
 
 
 def restart_apache():
