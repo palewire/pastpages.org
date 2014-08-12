@@ -12,8 +12,11 @@ page.open(address, function (status) {
         console.log('Unable to load the address!');
         phantom.exit();
     } else {
-        if (address.substring(0, "http://www.latimes.com/".length) === "http://www.latimes.com/") {
-            console.log("Setting custom latimes cookie");
+        if (
+            address.substring(0, "http://www.latimes.com/".length) === "http://www.latimes.com/" ||
+            address.substring(0, "http://www.chicagotribune.com/".length) === "http://www.chicagotribune.com/"
+           ) {
+            console.log("Setting custom Tribune NGUX cookie");
             var d = page.evaluate(function() {
                 window.sessionStorage.setItem('trb.browsersupport.supported', 'true');
             });
