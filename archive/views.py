@@ -152,9 +152,10 @@ class SiteDetail(DetailView):
             site=self.object,
             has_image=True,
             has_crop=True,
-        ).select_related("site", "update")
+        ).defer("html", "has_html", "has_crop", "has_image"
+        ).select_related("update")
         # Slice off the latest hundred for display
-        screenshot_list = qs[:100]
+        screenshot_list = list(qs[:100])
         try:
             # Get the latest screeenshot
             latest_screenshot = screenshot_list[0]
@@ -172,8 +173,9 @@ class SiteDetail(DetailView):
             ):
                 screenshot_groups.append((key, group_objects_by_number(list(group), 5)))
             # Find the min and max dates where this site appears
-            min_timestamp = qs.aggregate(Min("timestamp"))['timestamp__min']
-            max_timestamp = qs.aggregate(Max("timestamp"))['timestamp__max']
+            #min_timestamp = qs.aggregate(Min("timestamp"))['timestamp__min']
+            min_timestamp = min([o.timestamp for o in screenshot_list])
+            max_timestamp = max([o.timestamp for o in screenshot_list])
             # ... and convert them to their timezone
             min_date = self.convert_timezone(min_timestamp, tz).date()
             max_date = self.convert_timezone(max_timestamp, tz).date()
