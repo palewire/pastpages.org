@@ -93,19 +93,19 @@ class ScreenshotDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ScreenshotDetail, self).get_context_data(**kwargs)
         try:
-            next = Screenshot.objects.exclude(id=context['object'].id).filter(
+            next = Screenshot.objects.filter(
                 site=context['object'].site,
                 has_image=True,
-                timestamp__gte=context['object'].timestamp
-            ).order_by("timestamp")[0]
+                id__gt=context['object'].id
+            ).order_by("-id").only("id")[0]
         except IndexError:
             next = None
         try:
-            prev = Screenshot.objects.exclude(id=context['object'].id).filter(
+            prev = Screenshot.objects.filter(
                 site=context['object'].site,
                 has_image=True,
-                timestamp__lte=context['object'].timestamp
-            )[0]
+                id__lt=context['object'].id
+            ).order_by("-id").only("id")[0]
         except IndexError:
             prev = None
         context.update({
