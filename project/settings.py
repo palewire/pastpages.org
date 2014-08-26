@@ -43,6 +43,7 @@ CELERY_DEFAULT_RATE_LIMIT = 10
 SOUTH_MIGRATION_MODULES = {
     'djcelery': 'toolbox.migrations.djcelery',
     'transport': 'toolbox.migrations.transport',
+    'taggit': 'taggit.south_migrations',
 }
 
 # Localization

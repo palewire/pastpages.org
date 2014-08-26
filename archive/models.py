@@ -91,10 +91,10 @@ class Screenshot(models.Model):
     timestamp = models.DateTimeField(blank=True, null=True)
     image = ImageWithThumbsField(upload_to=get_image_path, blank=True,
         sizes=((449, 3000),))
-    has_image = models.BooleanField(default=False)
+    has_image = models.BooleanField(default=False, db_index=True)
     crop = ImageWithThumbsField(upload_to=get_image_path, blank=True,
          sizes=((300, 251),))
-    has_crop = models.BooleanField(default=False)
+    has_crop = models.BooleanField(default=False, db_index=True)
     html = URLArchiveField(upload_to=get_html_path)
     has_html = models.BooleanField(default=False)
     

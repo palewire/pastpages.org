@@ -139,13 +139,13 @@ class SiteDetail(DetailView):
     """
     template_name = 'site_detail.html'
     queryset = Site.objects.active()
-    
+
     def convert_timezone(self, dt, tz):
         if not tz:
             return localtime(dt)
         else:
             return tz.normalize(dt.astimezone(tz))
-    
+
     def get_context_data(self, **kwargs):
         # Pull all the live screenshots for this site
         qs = Screenshot.objects.filter(
