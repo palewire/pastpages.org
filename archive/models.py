@@ -46,13 +46,13 @@ class Site(models.Model):
     on_the_homepage = models.BooleanField(default=True)
     objects = managers.SiteManager()
     tags = TaggableManager(blank=True)
-    
+
     class Meta:
         ordering = ('sortable_name', 'name',)
-    
+
     def __unicode__(self):
         return self.name
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ("archive-site-detail", [self.slug])
@@ -105,24 +105,24 @@ class Screenshot(models.Model):
     has_crop = models.BooleanField(default=False, db_index=True)
     html = URLArchiveField(upload_to=get_html_path)
     has_html = models.BooleanField(default=False)
-    
+
     class Meta:
         ordering = ("-update__start", "site__sortable_name", "site__name")
         unique_together = ("site", "update")
-    
+
     def __unicode__(self):
         return u'%s (%s)' % (self.site, self.update.start)
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ("archive-screenshot-detail", [self.id])
-    
+
     def get_image_name(self):
         return '%s-%s-%s-image.jpg' % (self.site.slug, self.update.id, self.id)
-    
+
     def get_crop_name(self):
         return '%s-%s-%s-crop.jpg' % (self.site.slug, self.update.id, self.id)
-    
+
     def get_mla_citation(self):
         """
         The proper way to cite a screenshot in MLA style.
@@ -136,7 +136,7 @@ class Screenshot(models.Model):
         )
         return style % data
     mla_citation = property(get_mla_citation)
-    
+
     def get_apa_citation(self):
         """
         The proper way to cite a screenshot in APA style.
@@ -149,7 +149,7 @@ class Screenshot(models.Model):
         )
         return style % data
     apa_citation = property(get_apa_citation)
-    
+
     def get_chicago_citation(self):
         """
         The proper way to cite a screenshot in Chicago style.
@@ -162,7 +162,7 @@ class Screenshot(models.Model):
         )
         return style % data
     chicago_citation = property(get_chicago_citation)
-    
+
     def get_wikipedia_citation(self):
         """
         The proper way to cite a screenshot in Wikipedia markup.
@@ -193,6 +193,6 @@ class Champion(models.Model):
     """
     name = models.CharField(max_length=500)
     link = models.URLField(blank=True)
-    
+
     def __unicode__(self):
         return self.name
