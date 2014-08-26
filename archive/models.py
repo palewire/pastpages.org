@@ -15,10 +15,14 @@ class Site(models.Model):
     """
     A news website included in the archive.
     """
-    name = models.CharField(help_text='The formal name of the site that will display \
-        for users', max_length=150)
-    sortable_name = models.CharField(help_text='The version of the name used for sorting',
-        max_length=150)
+    name = models.CharField(
+        help_text='The formal name of the site that will display for users',
+        max_length=150
+    )
+    sortable_name = models.CharField(
+        help_text='The version of the name used for sorting',
+        max_length=150
+    )
     slug = models.SlugField(unique=True)
     url = models.URLField()
     display_url = models.URLField(blank=True)
@@ -31,8 +35,12 @@ class Site(models.Model):
         ('active', 'Active'),
         ('inactive', 'Inactive'),
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES,
-        default='active')
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='active',
+        db_index=True,
+    )
     has_html_screenshots = models.BooleanField(default=False)
     y_offset = models.IntegerField(default=0, blank=True)
     on_the_homepage = models.BooleanField(default=True)
