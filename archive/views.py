@@ -155,7 +155,7 @@ class SiteDetail(DetailView):
         ).defer("html", "has_html", "has_crop", "has_image"
         ).select_related("update")
         # Slice off the latest hundred for display
-        screenshot_list = list(qs[:100])
+        screenshot_list = list(qs[:50])
         try:
             # Get the latest screeenshot
             latest_screenshot = screenshot_list[0]
