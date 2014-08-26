@@ -56,14 +56,14 @@ class Update(models.Model):
     """
     start = models.DateTimeField()
     objects = managers.UpdateManager()
-    
+
     class Meta:
         ordering = ('-start',)
         get_latest_by = ("start")
-    
+
     def __unicode__(self):
         return u'%s' % (self.start)
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ("archive-update-detail", [self.id])

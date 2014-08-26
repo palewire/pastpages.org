@@ -23,25 +23,19 @@ class RecentUpdates(Feed):
     """
     title = "Latest updates from PastPages"
     link = "http://www.pastpages.org/"
-    
+
     def items(self):
-        qs = Update.objects.all()
-        # Count how many screenshots they have
-        qs = qs.annotate(count=Count("screenshot"))
-        # And limit it to those that are at least near completion.
-        sites = Site.objects.active().count()
-        cutoff = int(sites * 0.7)
-        return qs.filter(count__gte=cutoff)[:10]
-    
+        return Update.objects.all().order_by('-start')[:20]
+
     def item_pubdate(self, item):
         return item.start
-    
+
     def item_title(self, item):
         return u'Screenshots taken at %s' % dateformat(
             timezone.localtime(item.start),
             'l N j, Y, P e',
         )
-    
+
     def item_description(self, item):
         return None
 
@@ -51,19 +45,19 @@ class SiteFeed(Feed):
     The most recent pages from a site.
     """
     feed_type = MediaRSSFeed
-    
+
     def get_object(self, request, slug):
         return get_object_or_404(Site, slug=slug)
-        
+
     def title(self, obj):
         return u'%s screenshots by PastPages' % obj.name
-    
+
     def link(self, obj):
         return obj.get_absolute_url()
-        
+
     def items(self, obj):
         return obj.screenshot_set.all()[:10]
-    
+
     def item_title(self, item):
         return u'Screenshots of %s taken at %s' % (
             item.site,
@@ -72,10 +66,10 @@ class SiteFeed(Feed):
                 'l N j, Y, P e',
             )
         )
-    
+
     def item_description(self, item):
         return None
-    
+
     def item_extra_kwargs(self, item):
         d = {}
         if item.has_crop:
@@ -89,16 +83,16 @@ class TagFeed(Feed):
     The most recent pages from a tag.
     """
     feed_type = MediaRSSFeed
-    
+
     def get_object(self, request, slug):
         return get_object_or_404(Tag, slug=slug)
-        
+
     def title(self, obj):
         return u"Screenshots of sites tagged as %s by PastPages" % obj.name
-    
+
     def link(self, obj):
         return reverse('archive-tag-detail', args=[obj.slug])
-        
+
     def items(self, obj):
         site_list = [i.content_object for i in
             TaggedItem.objects.filter(tag=obj)
@@ -110,7 +104,7 @@ class TagFeed(Feed):
             has_crop=True,
             has_image=True,
         )
-    
+
     def item_title(self, item):
         return u'Screenshots of %s taken at %s' % (
             item.site,
@@ -119,10 +113,10 @@ class TagFeed(Feed):
                 'l N j, Y, P e',
             )
         )
-    
+
     def item_description(self, item):
         return None
-    
+
     def item_extra_kwargs(self, item):
         d = {}
         if item.has_crop:
