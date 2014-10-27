@@ -14,7 +14,13 @@ page.open(address, function (status) {
     } else {
         if (
             address.substring(0, "http://www.latimes.com/".length) === "http://www.latimes.com/" ||
-            address.substring(0, "http://www.chicagotribune.com/".length) === "http://www.chicagotribune.com/"
+            address.substring(0, "http://www.chicagotribune.com/".length) === "http://www.chicagotribune.com/" ||
+            address.substring(0, "http://www.baltimoresun.com/".length) === "http://www.baltimoresun.com/" ||
+            address.substring(0, "http://www.dailypress.com/".length) === "http://www.dailypress.com/" ||
+            address.substring(0, "http://www.courant.com/".length) === "http://www.courant.com/" ||
+            address.substring(0, "http://www.mcall.com/".length) === "http://www.mcall.com/" ||
+            address.substring(0, "http://www.sun-sentinel.com/".length) === "http://www.sun-sentinel.com/" ||
+            address.substring(0, "http://www.orlandosentinel.com/".length) === "http://www.orlandosentinel.com/"
            ) {
             console.log("Setting custom Tribune NGUX cookie");
             var d = page.evaluate(function() {
