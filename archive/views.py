@@ -97,7 +97,7 @@ class ScreenshotDetail(DetailView):
                 site=context['object'].site,
                 has_image=True,
                 id__gt=context['object'].id
-            ).order_by("-id").only("id")[0]
+            ).order_by("id").only("id")[0]
         except IndexError:
             next = None
         try:
