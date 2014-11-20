@@ -21,6 +21,8 @@ if settings.PRODUCTION:
 else:
     from tastypie.throttle import BaseThrottle as Throttle
 
+THROTTLE_AT = 100
+
 
 class MyDateSerializer(Serializer):
     """
@@ -30,7 +32,7 @@ class MyDateSerializer(Serializer):
     def format_datetime(self, data):
         # If naive or rfc-2822, default behavior...
         if is_naive(data) or self.datetime_formatting == 'rfc-2822':
-            return super(MyDateSerializer, self).format_datetime(data) 
+            return super(MyDateSerializer, self).format_datetime(data)
         return data.isoformat()
 
 # Configure out serializer for the site
@@ -55,21 +57,21 @@ class ScreenshotResource(ModelResource):
     """
     update = fields.ToOneField('api.resources.UpdateResource', 'update')
     site = fields.ToOneField('api.resources.SiteResource', 'site')
-    
+
     class Meta:
         resource_name = 'screenshots'
         max_limit = 100
         queryset = Screenshot.objects.filter(site__status='active').select_related("update")
         excludes = ['has_html', 'html_archived', 'html_raw']
         allowed_methods = ['get',]
-        throttle = Throttle(throttle_at=50)
+        throttle = Throttle(throttle_at=THROTTLE_AT)
         serializer = PastPagesSerializer
         include_absolute_url = True
         filtering = {
             "site": ALL_WITH_RELATIONS,
             "timestamp": ALL,
         }
-    
+
     def build_filters(self, filters=None):
         """
         Override build_filters to support geoqueries.
@@ -104,13 +106,13 @@ class SiteResource(ModelResource):
     Instructions for how to serialize the Site model.
     """
     tags = fields.ToManyField('api.resources.TagResource', 'tags')
-    
+
     class Meta:
         resource_name = 'sites'
         max_limit = 100
         queryset = Site.objects.active()
         allowed_methods = ['get',]
-        throttle = Throttle(throttle_at=50)
+        throttle = Throttle(throttle_at=THROTTLE_AT)
         serializer = PastPagesSerializer
         include_absolute_url = True
         filtering = {
@@ -129,7 +131,7 @@ class TagResource(ModelResource):
         max_limit = 100
         queryset = Tag.objects.all()
         allowed_methods = ['get',]
-        throttle = Throttle(throttle_at=50)
+        throttle = Throttle(throttle_at=THROTTLE_AT)
         serializer = PastPagesSerializer
         filtering = {
             "name": ALL,
@@ -142,12 +144,12 @@ class UpdateResource(ModelResource):
     Instructions for how to serialize the Update model.
     """
     screenshots = fields.ToManyField('api.resources.ScreenshotResource', 'screenshot_set')
-    
+
     class Meta:
         resource_name = 'updates'
         max_limit = 100
         queryset = Update.objects.all()
         allowed_methods = ['get',]
-        throttle = Throttle(throttle_at=50)
+        throttle = Throttle(throttle_at=THROTTLE_AT)
         serializer = PastPagesSerializer
         include_absolute_url = True
