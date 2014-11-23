@@ -1,0 +1,7 @@
+<{{ original_url }}>;rel="original",
+ <{{ timemap_url }}>
+   ; rel="self";type="application/link-format"
+   ; from="Tue, 20 Jun 2000 18:02:59 GMT"
+   ; until="Wed, 09 Apr 2008 20:30:51 GMT",{% for item in items %}
+ <{{ item.link }}>
+   ; rel="memento";datetime="{{ item.datetime|date:"r" }}"{% endfor %},

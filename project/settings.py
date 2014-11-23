@@ -26,6 +26,7 @@ INSTALLED_APPS = (
     'toolbox',
     'djcelery',
     'djcelery.transport',
+    'toolbox.timemap',
 )
 
 ALLOWED_HOSTS = [
