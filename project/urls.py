@@ -8,7 +8,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    
+
 #    url(r'^(.*)$', views.Fail.as_view(),
 #        name='archive-fail'),
 
@@ -34,24 +34,44 @@ urlpatterns = patterns('',
         name='archive-advanced-search'),
     url(r'^contact/$', TemplateView.as_view(template_name='contact.html'),
         name='contact'),
-    
+
     # Pages for machines
     url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index',
         {'sitemaps': sitemaps.SITEMAPS}),
-    url(r'^sitemap-(?P<section>.+)\.xml$', 'django.contrib.sitemaps.views.sitemap',
-        {'sitemaps': sitemaps.SITEMAPS}),
+    url(
+        r'^sitemap-(?P<section>.+)\.xml$',
+        'django.contrib.sitemaps.views.sitemap',
+        {'sitemaps': sitemaps.SITEMAPS}
+    ),
     ('^favicon.ico$', RedirectView.as_view(
         url='%sfavicon.ico' % settings.STATIC_URL
         )),
     url(r'^robots\.txt$', include('robots.urls')),
     url(r'^api/', include('api.urls')),
-    url(r'^api/docs/', TemplateView.as_view(template_name='api_docs.html'),
-        name='api-docs'),
+    url(
+        r'^api/docs/',
+        TemplateView.as_view(template_name='api_docs.html'),
+        name='api-docs'
+    ),
     url(r'^feeds/$', views.FeedList.as_view(), name='feeds-list'),
     url(r'^feeds/updates/$', feeds.RecentUpdates(), name="feeds-updates"),
-    url(r'^feeds/sites/(?P<slug>[-\w]+)/$', feeds.SiteFeed(), name="feeds-sites"),
-    url(r'^feeds/tags/(?P<slug>[-\w]+)/$', feeds.TagFeed(), name="feeds-tags"),
-    
+    url(
+        r'^feeds/sites/(?P<slug>[-\w]+)/$',
+        feeds.SiteFeed(),
+        name="feeds-sites"
+    ),
+    url(
+        r'^feeds/tags/(?P<slug>[-\w]+)/$',
+        feeds.TagFeed(),
+        name="feeds-tags"
+    ),
+    url(
+        r'^timemap/link/(?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|\
+[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)/$',
+        feeds.SiteTimemapLinkFeed(),
+        name="timemap-url-link-feed"
+    ),
+
     # Monitoring and administration
     url(r'^admin/', include(admin.site.urls)),
     url(r'^status/$', views.Status.as_view(), name='status'),
