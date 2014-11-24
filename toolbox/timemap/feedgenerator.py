@@ -34,11 +34,25 @@ class TimemapLinkFeedGenerator(object):
         item.update(kwargs)
         self.items.append(item)
 
+    def minimum_datetime(self):
+        """
+        Returns the earliest datetime in the item list.
+        """
+        return min([i['datetime'] for i in self.items])
+
+    def maximum_datetime(self):
+        """
+        Returns the latest datetime in the item list.
+        """
+        return max([i['datetime'] for i in self.items])
+
     def write(self, outfile, encoding):
         context = {
             'original_url': self.feed['original_url'],
             'timemap_url': self.feed['timemap_url'],
-            'items': self.items,
+            'minimum_datetime': self.minimum_datetime(),
+            'maximum_datetime': self.maximum_datetime(),
+            'items': sorted(self.items, key=lambda x:x['datetime']),
         }
         s = render_to_string("timemap/link_list.txt", context)
         outfile.write(s)
