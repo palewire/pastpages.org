@@ -122,6 +122,9 @@ class Screenshot(models.Model):
     class Meta:
         ordering = ("-update__start", "site__sortable_name", "site__name")
         unique_together = ("site", "update")
+        index_together = [
+            ["site", "has_image", "has_crop"],
+        ]
 
     def __unicode__(self):
         return u'%s (%s)' % (self.site, self.update.start)
