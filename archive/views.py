@@ -180,8 +180,12 @@ class SiteDetail(DetailView):
                 )
             # Find the min and max dates where this site appears
             #min_timestamp = qs.aggregate(Min("timestamp"))['timestamp__min']
-            min_timestamp = min([o.timestamp for o in screenshot_list])
-            max_timestamp = max([o.timestamp for o in screenshot_list])
+            min_timestamp = min([
+                o.timestamp for o in screenshot_list if o.timestamp
+            ])
+            max_timestamp = max([
+                o.timestamp for o in screenshot_list if o.timestamp
+            ])
             # ... and convert them to their timezone
             min_date = self.convert_timezone(min_timestamp, tz).date()
             max_date = self.convert_timezone(max_timestamp, tz).date()
