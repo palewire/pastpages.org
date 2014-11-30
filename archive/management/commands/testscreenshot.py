@@ -7,14 +7,14 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = 'Archive screenshots for all sites'
+    help = 'Archive screenshots for a white list of sites'
 
     def handle(self, *args, **options):
         update = Update.objects.create(
             start=timezone.now(),
         )
         shit_list = [
-            'chicago-tribune',
+            'baltimore-sun',
         ]
         for site in Site.objects.filter(slug__in=shit_list):
             #get_phantomjs_screenshot.delay(site.id, update.id)

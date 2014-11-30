@@ -68,7 +68,8 @@ def get_phantomjs_screenshot(site_id, update_id):
         exitcode = run_phantom_js(params)
     except:
         logger.error("Phantom JS timeout: %s" % site)
-        cmd = "ps -ef | grep phantomjs | grep %s | grep -v grep | awk '{print $2}'" % site.slug
+        cmd = "ps -ef | grep phantomjs | grep %s | grep -v grep \
+| awk '{print $2}'" % site.slug
         logger.error(cmd)
         output = subprocess.check_output([cmd], shell=True)
         if output:
@@ -116,7 +117,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     crop = image.crop(
         (
             0,
-             # Unless we provide an offset to scroll down before cropping
+            # Unless we provide an offset to scroll down before cropping
             getattr(ssht.site, "y_offset", 0),
             ssht.image.width,
             1000

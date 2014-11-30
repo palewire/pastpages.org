@@ -34,6 +34,7 @@ page.open(address, function (status) {
           style.setAttribute('type', 'text/css');
           style.appendChild(text);
           document.head.insertBefore(style, document.head.firstChild);
+          //window.document.body.scrollTop = document.body.scrollHeight;
         });
         window.setTimeout(function () {
             if (getComputedStyle(document.body, null).backgroundColor === 'rgba(0, 0, 0, 0)') {
