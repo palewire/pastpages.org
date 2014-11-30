@@ -1,5 +1,5 @@
   set daemon 120                  # check services at 2-minute intervals
-   with start delay 240         # optional: delay the first check by 4-minutes 
+   with start delay 240         # optional: delay the first check by 4-minutes
   set logfile /var/log/monit.log
   set idfile /var/lib/monit/id
   set statefile /var/lib/monit/state
@@ -14,7 +14,6 @@
     if cpu > 80% for 5 cycles then restart
     if totalmem > 200.0 MB for 5 cycles then restart
     if children > 250 then restart
-    if loadavg(5min) greater than 10 for 8 cycles then stop
-    if failed host 108.171.187.207 port 80 protocol http 
+    if failed host 108.171.187.207 port 80 protocol http
        then restart
 
