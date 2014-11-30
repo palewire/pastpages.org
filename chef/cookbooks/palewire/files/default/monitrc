@@ -14,6 +14,6 @@
     if cpu > 80% for 5 cycles then restart
     if totalmem > 200.0 MB for 5 cycles then restart
     if children > 250 then restart
-    if failed host 108.171.187.207 port 80 protocol http
+    if failed host www.pastpages.org port 80 protocol http
        then restart
 
