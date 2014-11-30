@@ -2,12 +2,19 @@
 Memento timemap syndication
 """
 from archive.models import Site
-from toolbox.timemap import TimemapLinkList
 from django.shortcuts import get_object_or_404
+from toolbox.timemap import TimemapLinkList, TimemapLinkIndex
 
 
+class SiteTimemapLinkIndex(TimemapLinkIndex):
+    """
+    Returns a memento timemap index linking to other timemaps of screenshots
+    archived for a site in our database.
+    """
+    pass
 
-class SiteTimemapLinkFeed(TimemapLinkList):
+
+class SiteTimemapLinkList(TimemapLinkList):
     """
     Returns a memento timemap of screenshots archived for a site in our
     database.
@@ -19,7 +26,7 @@ class SiteTimemapLinkFeed(TimemapLinkList):
         return obj.url
 
     def items(self, obj):
-        return obj.screenshot_set.all()[:10]
+        return obj.screenshot_set.all()
 
     def item_datetime(self, item):
         return item.timestamp

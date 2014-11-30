@@ -4,4 +4,4 @@
    ; from="{{ minimum_datetime|date:"r" }}"
    ; until="{{ maximum_datetime|date:"r" }}",{% for item in items %}
  <{{ item.link }}>
-   ; rel="{% if forloop.first %}first {% endif %}{% if forloop.last %}last {% endif %}memento";datetime="{{ item.datetime|date:"r" }}"{% if not forloop.last %},{% endif %}{% endfor %}
+   ; rel="{% if forloop.first %}first {% endif %}{% if forloop.last %}last {% endif %}memento"; datetime="{{ item.datetime|date:"r" }}"{% if not forloop.last %},{% endif %}{% endfor %}

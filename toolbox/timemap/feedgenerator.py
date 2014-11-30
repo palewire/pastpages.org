@@ -11,9 +11,11 @@ from django.utils.encoding import iri_to_uri
 from django.core.exceptions import ImproperlyConfigured
 
 
-class TimemapLinkFeedGenerator(object):
+class TimemapLinkListGenerator(object):
     "Base class for all syndication feeds. Subclasses should provide write()"
     mime_type = 'application/rss+xml; charset=utf-8'
+    #mime_type = 'application/link-format; charset=utf-8'
+    template_name = "timemap/link_list.txt"
 
     def __init__(self, original_url, timemap_url, **kwargs):
         self.feed = {
@@ -46,15 +48,18 @@ class TimemapLinkFeedGenerator(object):
         """
         return max([i['datetime'] for i in self.items])
 
-    def write(self, outfile, encoding):
-        context = {
+    def get_context(self):
+        return {
             'original_url': self.feed['original_url'],
             'timemap_url': self.feed['timemap_url'],
             'minimum_datetime': self.minimum_datetime(),
             'maximum_datetime': self.maximum_datetime(),
             'items': sorted(self.items, key=lambda x:x['datetime']),
         }
-        s = render_to_string("timemap/link_list.txt", context)
+
+    def write(self, outfile, encoding):
+        context = self.get_context()
+        s = render_to_string(self.template_name, context)
         outfile.write(s)
 
     def writeString(self, encoding):
@@ -64,3 +69,11 @@ class TimemapLinkFeedGenerator(object):
         s = StringIO()
         self.write(s, encoding)
         return s.getvalue()
+
+
+class TimemapLinkIndexGenerator(TimemapLinkListGenerator):
+
+    def get_context(self):
+        return {
+
+        }
