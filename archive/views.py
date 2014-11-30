@@ -155,8 +155,11 @@ class SiteDetail(DetailView):
             has_image=True,
             has_crop=True,
         ).defer(
-            "html", "has_html", "has_crop", "has_image"
-        ).select_related("update")
+            "html",
+            "has_html",
+            "has_crop",
+            "has_image"
+        ).select_related("update").order_by("-timestamp")
         # Slice off the latest hundred for display
         screenshot_list = list(qs[:50])
         try:
