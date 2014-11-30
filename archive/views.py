@@ -157,7 +157,7 @@ class SiteDetail(DetailView):
             "has_html",
             "has_crop",
             "has_image"
-        ).select_related("update").order_by("-id")
+        ).order_by("-id")
         # Slice off the latest hundred for display
         screenshot_list = list(qs[:50])
         try:
@@ -173,7 +173,7 @@ class SiteDetail(DetailView):
             # if necessary
             for key, group in groupby(
                 screenshot_list[1:],
-                lambda x: self.convert_timezone(x.update.start, tz).date()
+                lambda x: self.convert_timezone(x.timestamp, tz).date()
             ):
                 screenshot_groups.append(
                     (key, group_objects_by_number(list(group), 5))
