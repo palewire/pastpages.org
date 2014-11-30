@@ -28,8 +28,10 @@ class Site(models.Model):
     display_url = models.URLField(blank=True)
     description = models.TextField(blank=True)
     hometown = models.CharField(max_length=500, blank=True)
-    timezone = models.CharField(max_length=500,
-        blank=True, choices=[(i, i) for i in common_timezones],
+    timezone = models.CharField(
+        max_length=500,
+        blank=True,
+        choices=[(i, i) for i in common_timezones],
     )
     STATUS_CHOICES = (
         ('active', 'Active'),
@@ -86,8 +88,13 @@ def get_html_path(instance, filename):
 
 
 def get_screenshot_path(instance, type, filename):
-    return os.path.join('archive', str(instance.update.id),
-        instance.site.slug, type, filename)
+    return os.path.join(
+        'archive',
+        str(instance.update.id),
+        instance.site.slug,
+        type,
+        filename
+    )
 
 
 class Screenshot(models.Model):
@@ -97,11 +104,17 @@ class Screenshot(models.Model):
     site = models.ForeignKey(Site)
     update = models.ForeignKey(Update)
     timestamp = models.DateTimeField(blank=True, null=True)
-    image = ImageWithThumbsField(upload_to=get_image_path, blank=True,
-        sizes=((449, 3000),))
+    image = ImageWithThumbsField(
+        upload_to=get_image_path,
+        blank=True,
+        sizes=((449, 3000),)
+    )
     has_image = models.BooleanField(default=False, db_index=True)
-    crop = ImageWithThumbsField(upload_to=get_image_path, blank=True,
-         sizes=((300, 251),))
+    crop = ImageWithThumbsField(
+        upload_to=get_image_path,
+        blank=True,
+        sizes=((300, 251),)
+    )
     has_crop = models.BooleanField(default=False, db_index=True)
     html = URLArchiveField(upload_to=get_html_path)
     has_html = models.BooleanField(default=False)
@@ -196,3 +209,25 @@ class Champion(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+class ScreenshotLog(models.Model):
+    """
+    A log entry made while saving a screenshot.
+    """
+    update = models.ForeignKey(Update)
+    site = models.ForeignKey(Site)
+    screenshot = models.ForeignKey(Screenshot, null=True)
+    MESSAGE_TYPE_CHOICES = (
+        ('debug', 'Debug'),
+        ('info', 'Info'),
+        ('error', 'Error'),
+    )
+    message_type = models.CharField(
+        choices=MESSAGE_TYPE_CHOICES,
+        max_length=100,
+    )
+    message = models.TextField()
+
+    def __unicode__(self):
+        return self.message
