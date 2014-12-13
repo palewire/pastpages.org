@@ -11,7 +11,7 @@ class SiteAdmin(admin.ModelAdmin):
     )
     list_filter = ("status",)
     prepopulated_fields = {"slug": ("name",)}
-    list_editable = ('status', 'has_html_screenshots', 'on_the_homepage')
+    #list_editable = ('status', 'has_html_screenshots', 'on_the_homepage')
 
 
 class UpdateAdmin(admin.ModelAdmin):
