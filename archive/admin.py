@@ -9,9 +9,8 @@ class SiteAdmin(admin.ModelAdmin):
         "has_html_screenshots",
         "on_the_homepage"
     )
-    list_filter = ("status",)
+    list_filter = ("status", 'has_html_screenshots', 'on_the_homepage')
     prepopulated_fields = {"slug": ("name",)}
-    #list_editable = ('status', 'has_html_screenshots', 'on_the_homepage')
 
 
 class UpdateAdmin(admin.ModelAdmin):
