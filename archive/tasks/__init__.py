@@ -8,7 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 from celery.decorators import task
 from toolbox.decorators import timeout
-from archive.models import Screenshot, Update, Site
+from archive.models import Screenshot, Update, Site, ScreenshotLog
 
 # Image manipulation
 import Image
@@ -37,7 +37,7 @@ def get_random_string(length=6):
     )
 
 
-@timeout(seconds=60)
+@timeout(seconds=80)
 def run_phantom_js(params):
     exitcode = subprocess.call(params)
     return exitcode
@@ -68,7 +68,14 @@ def get_phantomjs_screenshot(site_id, update_id):
         exitcode = run_phantom_js(params)
     except:
         logger.error("Phantom JS timeout: %s" % site)
-        cmd = "ps -ef | grep phantomjs | grep %s | grep -v grep | awk '{print $2}'" % site.slug
+        ScreenshotLog.objects.create(
+            update=update,
+            site=site,
+            message_type="error",
+            message="Phantom JS timeout"
+        )
+        cmd = "ps -ef | grep phantomjs | grep %s | grep -v grep \
+| awk '{print $2}'" % site.slug
         logger.error(cmd)
         output = subprocess.check_output([cmd], shell=True)
         if output:
@@ -81,10 +88,26 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Report back
     if exitcode != 0:
         logger.error("FAILED?: %s" % exitcode)
+        ScreenshotLog.objects.create(
+            update=update,
+            site=site,
+            message_type="error",
+            message="Failed with exitcode %s" % exitcode
+        )
         return False
 
     # Read the image file into memory
-    data = open(output_path, 'r').read()
+    try:
+        data = open(output_path, 'r').read()
+    except IOError, e:
+        logger.error("IOError: %s" % e)
+        ScreenshotLog.objects.create(
+            update=update,
+            site=site,
+            message_type="error",
+            message="IOError: %s" % e
+        )
+        return False
 
     # Convert the data to a Django object
     jpg_obj = ContentFile(data)
@@ -102,6 +125,12 @@ def get_phantomjs_screenshot(site_id, update_id):
     except Exception, e:
         logger.error("Image save failed.")
         logger.error(str(e))
+        ScreenshotLog.objects.create(
+            update=update,
+            site=site,
+            message_type="error",
+            message="Image save failed: %s" % e
+        )
         ssht.delete()
         return False
     ssht.has_image = True
@@ -116,7 +145,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     crop = image.crop(
         (
             0,
-             # Unless we provide an offset to scroll down before cropping
+            # Unless we provide an offset to scroll down before cropping
             getattr(ssht.site, "y_offset", 0),
             ssht.image.width,
             1000
@@ -133,6 +162,12 @@ def get_phantomjs_screenshot(site_id, update_id):
     except Exception, e:
         logger.error("Crop save failed.")
         logger.error(str(e))
+        ScreenshotLog.objects.create(
+            update=update,
+            site=site,
+            message_type="error",
+            message="Crop save failed: %s" % e
+        )
         ssht.delete()
         return False
     ssht.has_crop = True
