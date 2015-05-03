@@ -56,7 +56,14 @@ class SiteFeed(Feed):
         return obj.get_absolute_url()
 
     def items(self, obj):
-        return obj.screenshot_set.all()[:10]
+        return Screenshot.objects.filter(
+            site=obj,
+        ).defer(
+            "html",
+            "has_html",
+            "has_crop",
+            "has_image"
+        ).select_related("site", "update").order_by("-id")[:10]
 
     def item_title(self, item):
         return u'Screenshots of %s taken at %s' % (
