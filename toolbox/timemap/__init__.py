@@ -1,16 +1,10 @@
 from django.utils import six
-from django.utils.six import StringIO
-from django.shortcuts import get_object_or_404
-from django.utils.timezone import is_naive
-from django.utils import tzinfo
 from django.core import paginator
 from django.templatetags.tz import utc
-from django.utils.feedgenerator import rfc3339_date
-from django.contrib.syndication.views import Feed, add_domain
-from django.contrib.sites.models import get_current_site
-from django.utils.xmlutils import SimplerXMLGenerator
-from django.utils.encoding import iri_to_uri
+from django.utils.timezone import is_naive
 from django.core.exceptions import ImproperlyConfigured
+from django.contrib.sites.models import get_current_site
+from django.contrib.syndication.views import Feed, add_domain
 from .feedgenerator import TimemapLinkListGenerator, TimemapLinkIndexGenerator
 
 

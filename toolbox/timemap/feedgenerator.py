@@ -1,14 +1,6 @@
-from django.utils import six
 from django.utils.six import StringIO
-from django.utils import tzinfo
-from django.template.loader import get_template, render_to_string
-from django.utils.timezone import is_naive
-from django.utils.feedgenerator import rfc3339_date
-from django.contrib.syndication.views import Feed, add_domain
-from django.contrib.sites.models import get_current_site
-from django.utils.xmlutils import SimplerXMLGenerator
 from django.utils.encoding import iri_to_uri
-from django.core.exceptions import ImproperlyConfigured
+from django.template.loader import render_to_string
 
 
 class TimemapLinkListGenerator(object):
