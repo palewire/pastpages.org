@@ -5,8 +5,7 @@ from django.template.loader import render_to_string
 
 class TimemapLinkListGenerator(object):
     "Base class for all syndication feeds. Subclasses should provide write()"
-    mime_type = 'application/rss+xml; charset=utf-8'
-    #mime_type = 'application/link-format; charset=utf-8'
+    mime_type = 'application/link-format; charset=utf-8'
     template_name = "timemap/link_list.txt"
 
     def __init__(self, original_url, timemap_url, **kwargs):
