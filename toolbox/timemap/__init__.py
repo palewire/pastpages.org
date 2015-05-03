@@ -16,7 +16,7 @@ class TimemapLinkList(Feed):
     """
     An feed class that returns a list in Memento's Timemap format.
     """
-    limit = 50000
+    limit = 1000
     feed_type = TimemapLinkListGenerator
 
     def item_datetime(self, item):

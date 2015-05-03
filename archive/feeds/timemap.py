@@ -19,6 +19,8 @@ class SiteTimemapLinkList(TimemapLinkList):
     Returns a memento timemap of screenshots archived for a site in our
     database.
     """
+    limit = 10
+
     def get_object(self, request, url):
         return get_object_or_404(Site, url__startswith=url)
 
