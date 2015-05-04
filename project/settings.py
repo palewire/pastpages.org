@@ -26,7 +26,7 @@ INSTALLED_APPS = (
     'toolbox',
     'djcelery',
     'djcelery.transport',
-    'toolbox.timemap',
+    'memento',
 )
 
 ALLOWED_HOSTS = [

@@ -2,7 +2,7 @@
 Memento timemap syndication
 """
 from archive.models import Site
-from toolbox.timemap import TimemapLinkList
+from memento.timemap import TimemapLinkList
 from django.shortcuts import get_object_or_404
 
 
@@ -11,7 +11,7 @@ class SiteTimemapLinkList(TimemapLinkList):
     Returns a memento timemap of screenshots archived for a site in our
     database.
     """
-    paginate_by = 100
+    paginate_by = 1000
 
     def get_object(self, request, url):
         return get_object_or_404(Site, url__startswith=url)

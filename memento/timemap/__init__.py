@@ -1,10 +1,7 @@
 from django.utils import six
-from django.core import paginator
 from django.templatetags.tz import utc
-from django.utils.http import http_date
 from django.utils.timezone import is_naive
 from django.http import Http404, HttpResponse
-from django.core.exceptions import ImproperlyConfigured
 from django.contrib.sites.models import get_current_site
 from django.core.paginator import InvalidPage, Paginator
 from django.contrib.syndication.views import add_domain
@@ -25,7 +22,10 @@ class TimemapLinkList(object):
             obj = self.get_object(request, *args, **kwargs)
         except ObjectDoesNotExist:
             raise Http404('Feed object does not exist.')
-        feedgen = self.get_feed(obj, request)
+        self.request = request
+        self.current_site = get_current_site(request)
+        self.queryset = self.__get_dynamic_attr('memento_list', obj)
+        feedgen = self.get_feed(obj)
         response = HttpResponse(content_type=feedgen.mime_type)
         feedgen.write(response, 'utf-8')
         return response
@@ -61,65 +61,86 @@ your %s class.' % self.__class__.__name__)
                 )
             )
 
-    def get_page(self, queryset, request):
-        paginator = self.paginate_queryset(queryset)
-        page = request.GET.get(self.page_kwarg) or 1
+    def get_page_number(self):
+        page = self.request.GET.get(self.page_kwarg) or None
+        if not page:
+            return None
         try:
-            page_number = int(page)
+            return int(page)
         except ValueError:
             raise Http404("Page can't be converted to an int.")
+
+    def get_paginator(self, queryset):
+        return self.paginator_class(queryset, self.paginate_by)
+
+    def get_page(self, page_number):
+        paginator = self.get_paginator(self.queryset)
         try:
-            print queryset, page_number
-            page = paginator.page(page_number)
-            return (paginator, page, page.object_list, page.has_other_pages())
+            return paginator.page(page_number)
         except InvalidPage as e:
             raise Http404('Invalid page (%(page_number)s): %(message)s' % {
                 'page_number': page_number,
                 'message': str(e)
             })
 
-    def get_queryset(self, obj):
-        return self.__get_dynamic_attr('memento_list', obj)
-
-    def paginate_queryset(self, queryset):
-        return self.paginator_class(queryset, self.paginate_by)
-
-    def get_feed_type(self):
-        return TimemapLinkListGenerator
-
-    def get_feed(self, obj, request):
-        """
-        Returns a feedgenerator.DefaultFeed object, fully populated, for
-        this feed. Raises FeedDoesNotExist for invalid parameters.
-        """
-        feed_type = self.get_feed_type()
-        current_site = get_current_site(request)
+    def get_list_feed(self, obj, page_number=None):
+        feed_type = TimemapLinkListGenerator
         feed = feed_type(
-            original_url = self.get_original_url(obj),
-            timemap_url = add_domain(
-                current_site.domain,
-                request.path,
-                request.is_secure(),
+            original_url=self.get_original_url(obj),
+            timemap_url=add_domain(
+                self.current_site.domain,
+                self.request.path,
+                self.request.is_secure(),
             ),
         )
-        if self.paginate_by:
-            paginator, page, queryset, is_paginated = self.get_page(
-                self.get_queryset(obj),
-                request
-            )
-        else:
-            queryset = self.get_queryset(obj)
-        for item in queryset:
+        if page_number:
+            self.queryset = self.get_page(page_number).object_list
+        for item in self.queryset:
             link = add_domain(
-                current_site.domain,
+                self.current_site.domain,
                 self.__get_dynamic_attr('memento_link', item),
-                request.is_secure(),
+                self.request.is_secure(),
             )
             item_datetime = self.__get_dynamic_attr('memento_datetime', item)
             if item_datetime and is_naive(item_datetime):
                 item_datetime = utc(item_datetime)
             feed.add_item(
-                link = link,
-                datetime = item_datetime,
+                link=link,
+                datetime=item_datetime,
             )
         return feed
+
+    def get_index_feed(self, obj):
+        feed_type = TimemapLinkIndexGenerator
+        timemap_url = add_domain(
+            self.current_site.domain,
+            self.request.path,
+            self.request.is_secure(),
+        )
+        feed = feed_type(
+            original_url=self.get_original_url(obj),
+            timemap_url=timemap_url,
+        )
+        paginator = self.get_paginator(self.queryset)
+        for page in paginator.page_range:
+            link = add_domain(
+                self.current_site.domain,
+                "%s?%s=%s" % (timemap_url, self.page_kwarg, page),
+                self.request.is_secure(),
+            )
+            feed.add_item(link=link)
+        return feed
+
+    def get_feed(self, obj):
+        """
+        Returns a feedgenerator.DefaultFeed object, fully populated, for
+        this feed. Raises FeedDoesNotExist for invalid parameters.
+        """
+        if self.paginate_by:
+            page_number = self.get_page_number()
+            if page_number:
+                return self.get_list_feed(obj, page_number)
+            else:
+                return self.get_index_feed(obj)
+        else:
+            return self.get_list_feed(obj)
