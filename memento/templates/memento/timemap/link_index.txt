@@ -1,0 +1,9 @@
+<{{ original_url }}>;rel="original",
+ <{{ timemap_url }}>
+   ; rel="self";type="application/link-format"{% if item.minimum_datetime and item.maximum_datetime %}
+   ; from="{{ minimum_datetime|date:"r" }}"
+   ; until="{{ maximum_datetime|date:"r" }}"{% endif %},{% for item in items %}
+ <{{ item.link }}>
+   ; rel="timemap";type="application/link-format"{% if item.minimum_datetime and item.maximum_datetime %}
+   ; from="{{ item.minimum_datetime|date:"r" }}"
+   ; until="{{ item.maximum_datetime|date:"r" }}"{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
