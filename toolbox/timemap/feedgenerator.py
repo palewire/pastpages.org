@@ -67,6 +67,5 @@ class TimemapLinkListGenerator(object):
 
 class TimemapLinkIndexGenerator(TimemapLinkListGenerator):
 
-
     def get_context(self):
         return {}
