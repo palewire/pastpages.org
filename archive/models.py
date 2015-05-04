@@ -59,6 +59,10 @@ class Site(models.Model):
     def get_absolute_url(self):
         return ("archive-site-detail", [self.slug])
 
+    @models.permalink
+    def get_timemap_index_url(self):
+        return ("timemap-url-link-feed", [], dict(url=self.url))
+
 
 class Update(models.Model):
     """
