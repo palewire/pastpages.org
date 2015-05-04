@@ -2,9 +2,11 @@
 Memento timemap syndication
 """
 import urllib
+import logging
 from archive.models import Site, Screenshot
 from memento.timemap import TimemapLinkList
 from django.shortcuts import get_object_or_404
+logger = logging.getLogger(__name__)
 
 
 class SiteTimemapLinkList(TimemapLinkList):
@@ -14,6 +16,7 @@ class SiteTimemapLinkList(TimemapLinkList):
     paginate_by = 1000
 
     def get_object(self, request, url):
+        logger.debug(url)
         url = urllib.unquote(url)
         return get_object_or_404(Site, url__startswith=url)
 
