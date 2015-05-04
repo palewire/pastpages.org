@@ -1,7 +1,6 @@
 """
 Memento timemap syndication
 """
-import urllib
 import logging
 from archive.models import Site, Screenshot
 from memento.timemap import TimemapLinkList
@@ -16,8 +15,9 @@ class SiteTimemapLinkList(TimemapLinkList):
     paginate_by = 1000
 
     def get_object(self, request, url):
+        url = url.replace("http:/", "http://")
+        url = url.replace("http:///", "http://")
         logger.debug(url)
-        url = urllib.unquote(url)
         return get_object_or_404(Site, url__startswith=url)
 
     def get_original_url(self, obj):
