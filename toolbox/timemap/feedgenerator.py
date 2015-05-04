@@ -1,10 +1,13 @@
 from django.utils.six import StringIO
 from django.utils.encoding import iri_to_uri
 from django.template.loader import render_to_string
+from django.core.paginator import InvalidPage, Paginator
 
 
 class TimemapLinkListGenerator(object):
-    "Base class for all syndication feeds. Subclasses should provide write()"
+    """
+    Base class for creating a timemap.
+    """
     mime_type = 'application/link-format; charset=utf-8'
     template_name = "timemap/link_list.txt"
 
@@ -64,7 +67,6 @@ class TimemapLinkListGenerator(object):
 
 class TimemapLinkIndexGenerator(TimemapLinkListGenerator):
 
-    def get_context(self):
-        return {
 
-        }
+    def get_context(self):
+        return {}

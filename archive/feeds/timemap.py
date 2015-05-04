@@ -6,20 +6,12 @@ from django.shortcuts import get_object_or_404
 from toolbox.timemap import TimemapLinkList, TimemapLinkIndex
 
 
-class SiteTimemapLinkIndex(TimemapLinkIndex):
-    """
-    Returns a memento timemap index linking to other timemaps of screenshots
-    archived for a site in our database.
-    """
-    pass
-
-
 class SiteTimemapLinkList(TimemapLinkList):
     """
     Returns a memento timemap of screenshots archived for a site in our
     database.
     """
-    limit = 10
+    paginate_by = 100
 
     def get_object(self, request, url):
         return get_object_or_404(Site, url__startswith=url)
