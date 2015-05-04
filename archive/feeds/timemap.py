@@ -1,7 +1,7 @@
 """
 Memento timemap syndication
 """
-from archive.models import Site
+from archive.models import Site, Screenshot
 from memento.timemap import TimemapLinkList
 from django.shortcuts import get_object_or_404
 
@@ -20,7 +20,7 @@ class SiteTimemapLinkList(TimemapLinkList):
         return obj.url
 
     def memento_list(self, obj):
-        return obj.screenshot_set.all()
+        return Screenshot.objects.filter(site=obj).only("id", "timestamp")
 
     def memento_datetime(self, item):
         return item.timestamp
