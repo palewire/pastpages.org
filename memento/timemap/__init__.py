@@ -133,13 +133,15 @@ your %s class.' % self.__class__.__name__)
             timemap_url=timemap_url,
         )
         paginator = self.get_paginator(self.queryset)
+        item_list = []
         for page in paginator.page_range:
             link = add_domain(
                 self.current_site.domain,
                 "%s?%s=%s" % (timemap_url, self.page_kwarg, page),
                 self.request.is_secure(),
             )
-            feed.add_item(link=link)
+            item_list.append(dict(link=link))
+        [feed.add_item(**d) for d in item_list]
         return feed
 
     def get_feed(self, obj):
