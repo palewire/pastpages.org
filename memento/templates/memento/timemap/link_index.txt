@@ -1,9 +1,9 @@
-<{{ original_url }}>;rel="original",
+{% load memento_tags %}<{{ original_url }}>;rel="original",
  <{{ timemap_url }}>
    ; rel="self";type="application/link-format"{% if minimum_datetime and maximum_datetime %}
-   ; from="{{ minimum_datetime|date:"r" }}"
-   ; until="{{ maximum_datetime|date:"r" }}"{% endif %},{% for item in items %}
+   ; from="{{ minimum_datetime|httpdate }}"
+   ; until="{{ maximum_datetime|httpdate }}"{% endif %},{% for item in items %}
  <{{ item.link }}>
    ; rel="timemap";type="application/link-format"{% if item.minimum_datetime and item.maximum_datetime %}
-   ; from="{{ item.minimum_datetime|date:"r" }}"
-   ; until="{{ item.maximum_datetime|date:"r" }}"{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
+   ; from="{{ item.minimum_datetime|httpdate }}"
+   ; until="{{ item.maximum_datetime|httpdate }}"{% endif %}{% if not forloop.last %},{% endif %}{% endfor %}
