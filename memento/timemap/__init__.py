@@ -94,7 +94,9 @@ your %s class.' % self.__class__.__name__)
             ),
         )
         if page_number:
-            self.queryset = self.get_page(page_number).object_list
+            page = self.get_page(page_number)
+            self.queryset = page.object_list
+        item_list = []
         for item in self.queryset:
             link = add_domain(
                 self.current_site.domain,
@@ -104,10 +106,19 @@ your %s class.' % self.__class__.__name__)
             item_datetime = self.__get_dynamic_attr('memento_datetime', item)
             if item_datetime and is_naive(item_datetime):
                 item_datetime = utc(item_datetime)
-            feed.add_item(
+            item_list.append(dict(
                 link=link,
                 datetime=item_datetime,
-            )
+            ))
+        if not page_number:
+            item_list[0]['first'] = True
+            item_list[-1]['last'] = True
+        else:
+            if page_number == 1:
+                item_list[0]['first'] = True
+            elif not page.has_next():
+                item_list[-1]['last'] = True
+        [feed.add_item(**d) for d in item_list]
         return feed
 
     def get_index_feed(self, obj):

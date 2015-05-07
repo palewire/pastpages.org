@@ -17,13 +17,15 @@ class TimemapLinkListGenerator(object):
         }
         self.items = []
 
-    def add_item(self, link, datetime):
+    def add_item(self, link, datetime, first=False, last=False):
         """
         Adds an item to the feed.
         """
         item = {
             'link': iri_to_uri(link),
             'datetime': datetime,
+            'first': first,
+            'last': last,
         }
         self.items.append(item)
 
