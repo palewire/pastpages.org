@@ -1,14 +1,30 @@
 import pytz
 import logging
 from itertools import groupby
-from django.http import Http404, HttpResponse
 from pytz import common_timezones
 from datetime import datetime, timedelta
 from taggit.models import Tag, TaggedItem
+from memento.timegate import TimeGateView
 from django.utils.timezone import localtime
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from archive.models import Update, Site, Screenshot, Champion
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import (
+    TemplateView,
+    ListView,
+    DetailView
+)
 logger = logging.getLogger(__name__)
+
+
+class ScreenshotTimeGate(TimeGateView):
+    """
+    A Memento TimeGate that parses a request from the headers
+    and redirects to the corresponding screenshot detail page.
+    """
+    model = Screenshot
+    url_field = 'site__url'
+    datetime_field = 'timestamp'
+    timemap_pattern_name = "timemap-url-link-feed"
 
 
 class Fail(TemplateView):

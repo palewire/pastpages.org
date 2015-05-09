@@ -65,10 +65,17 @@ urlpatterns = patterns('',
         feeds.TagFeed(),
         name="feeds-tags"
     ),
+
+    # Memento
     url(
         r'^timemap/link/(?P<url>.*)$',
         feeds.SiteTimemapLinkList(),
         name="timemap-url-link-feed"
+    ),
+    url(
+        r'^timegate/(?P<url>.*)$',
+        views.ScreenshotTimeGate.as_view(),
+        name="timegate-screenshot"
     ),
 
     # Monitoring and administration
