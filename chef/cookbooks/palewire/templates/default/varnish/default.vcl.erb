@@ -36,12 +36,17 @@ sub vcl_recv {
 
     # Use the backend we set up above to answer the request if it's not cached.
     set req.backend = apache;
-    
+
     # Don't cache admin pages
     if (req.url ~ "^/admin/") {
         return (pass);
     }
-    
+
+    # Don't cache timegate pages
+    if (req.url ~ "^/timegate/") {
+        return (pass);
+    }
+
     # Don't cache munin pages
     if (req.url ~ "^/munin/") {
         return (pass);
@@ -55,17 +60,17 @@ sub vcl_recv {
     if (req.url ~ "^/server-status") {
         return (pass);
     }
-    
+
     # First, check to see if this is a special PURGE request.
     # If it is, and the client isn't in our special access
     # control list above, send them a cheeky message.
-    
+
     if (req.request == "PURGE") {
         if (!client.ip ~ purge_prime) {
             error 405 "No purge for you. (" + client.ip + ")";
         }
     }
-    
+
     # You know, people really like to use jQuery.
     # The jQuery $.ajax() and similar functions will pull JSON from an API
     # behind your Varnish server. Sadly, browsers will cache the JSON
@@ -81,9 +86,9 @@ sub vcl_recv {
     #
     # By stripping this parameter out, we can serve a cached response for
     # the ever-changing URL since all but the &_= parameter stay identical.
- 
+
     set req.url = regsuball(req.url,"[?&]_=[^&]{1,25}","");
-    
+
     # Grace mode is magical. When you have a request for an object that is in
     # the cache but has expired, Grace mode will continue to serve the old
     # expired cache object for everyone except for the very first client
@@ -93,9 +98,9 @@ sub vcl_recv {
     # By setting grace to 5 minutes, we tell Varnish to continue to serve
     # an outdated object for up to 5 minutes past its expiration to cover
     # us while we fetch an updated response. Works great for slow pages.
-    
+
     set req.grace = 5m;
-    
+
     # Pass the request along to lookup to see if it's in the cache.
     return(lookup);
 }
@@ -113,12 +118,12 @@ sub vcl_miss {
 *
 */
 sub vcl_hit {
-    
+
     if (req.request == "PURGE") {
             purge;
             error 200 "Purged.";
     }
-    
+
     return(deliver);
 }
 /*
@@ -128,13 +133,13 @@ sub vcl_hit {
 *
 */
 sub vcl_fetch {
-    
+
     set beresp.ttl = <%= @varnish_ttl %>;
     set beresp.http.X-Varnish-TTL = "<%= @varnish_ttl %>";
-    
+
     # Indicate that this response is cacheable. This is important.
     set beresp.http.X-Cacheable = "YES";
-    
+
     # Some backends *cough* Django *cough* will assign a Vary header for
     # each User-Agent which visits the site. Varnish will store a separate
     # copy of the page in the cache for each instance of the Vary header --
