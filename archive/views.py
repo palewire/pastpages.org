@@ -21,7 +21,7 @@ class ScreenshotTimeGate(TimeGateView):
     A Memento TimeGate that parses a request from the headers
     and redirects to the corresponding screenshot detail page.
     """
-    model = Screenshot
+    queryset = Screenshot.objects.all().only("id")
     url_field = 'site__url'
     datetime_field = 'timestamp'
     timemap_pattern_name = "timemap-url-link-feed"
