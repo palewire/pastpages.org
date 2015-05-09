@@ -52,9 +52,13 @@ class TimeGateView(RedirectView):
 
     def get_most_recent_object(self, url):
         queryset = self.get_queryset()
-        return queryset.filter(**{
-            self.url_field: url,
-        }).order_by("-%s" % self.datetime_field)[0]
+        try:
+            return queryset.filter(**{
+                self.url_field: url,
+            }).order_by("-%s" % self.datetime_field)[0]
+        except IndexError:
+            raise Http404(_("No %(verbose_name)s found matching the query") %
+                          {'verbose_name': queryset.model._meta.verbose_name})
 
     def get_queryset(self):
         """
