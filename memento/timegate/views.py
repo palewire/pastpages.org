@@ -1,3 +1,4 @@
+import urllib
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, Http404
 from django.views.generic import RedirectView
@@ -130,8 +131,8 @@ class TimeGateView(RedirectView):
         if self.timemap_pattern_name:
             response['Link'] = """<%(url)s>; rel="original", \
 <%(timemap_url)s>; rel="timemap"; type="application/link-format\"""" % dict(
-                url=url,
-                timemap_url=self.get_timemap_url(request, url)
+                url=urllib.unquote(url),
+                timemap_url=urllib.unquote(self.get_timemap_url(request, url))
             )
-        response['Location'] = redirect_url
+        response['Location'] = urllib.unquote(redirect_url)
         return response
