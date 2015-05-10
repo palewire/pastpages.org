@@ -6,6 +6,7 @@ sys.path.append('/apps/pastpages.org/repo/')
 sys.path.append('/apps/pastpages.org/lib/python2.7/site-packages/')
 sys.path.append('/apps/pastpages.org/bin/')
 sys.path.append('/apps/pastpages.org/src/')
+sys.path.append('/apps/pastpages.org/src/django-memento')
 
 newrelic.agent.initialize('/apps/pastpages.org/repo/project/newrelic.ini')
 
