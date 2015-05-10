@@ -45,6 +45,7 @@ class TimeGateDetailView(DetailView):
             )
         return response
 
+
 class TimeGateView(RedirectView):
     """
     A Memento TimeGate that parses a request from the headers
