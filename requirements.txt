@@ -57,3 +57,4 @@ storytracker==0.0.6
 tldextract==1.4
 unicodecsv==0.9.4
 webkit2png==0.8.2
+-e git+https://github.com/pastpages/django-memento.git@HEAD#egg=django-memento
