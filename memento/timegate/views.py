@@ -38,9 +38,9 @@ class TimeGateDetailView(DetailView):
         if self.timemap_pattern_name:
             original_url = self.get_original_url(self.object)
             timemap_url = self.get_timemap_url(self.request, original_url)
-            response['Link'] = """<%(url)s>; rel="original", \
+            response['Link'] = """<%(original_url)s>; rel="original", \
 <%(timemap_url)s>; rel="timemap"; type="application/link-format\"""" % dict(
-                url=urllib.unquote(original_url),
+                original_url=urllib.unquote(original_url),
                 timemap_url=urllib.unquote(timemap_url)
             )
         return response
