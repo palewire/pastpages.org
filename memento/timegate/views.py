@@ -37,18 +37,32 @@ class TimeGateView(RedirectView):
 
     def get_object(self, url, dt):
         queryset = self.get_queryset()
+        queryset = queryset.filter(**{self.url_field: url})
 
-        # Next, try looking up by url
         try:
-            # Get the single item from the filtered queryset
-            obj = queryset.filter(**{
-                self.url_field: url,
-                "%s__lte" % self.datetime_field: dt,
-            })[0]
+            prev_obj = queryset.filter(
+                **{"%s__lte" % self.datetime_field: dt}
+            ).order_by("-%s" % self.datetime_field)[0]
         except IndexError:
             raise Http404(_("No %(verbose_name)s found matching the query") %
                           {'verbose_name': queryset.model._meta.verbose_name})
-        return obj
+
+        try:
+            next_obj = queryset.filter(
+                **{"%s__gte" % self.datetime_field: dt}
+            ).order_by("%s" % self.datetime_field)[0]
+        except IndexError:
+            next_obj = None
+
+        if not next_obj:
+            return prev_obj
+        else:
+            prev_delta = abs(dt - getattr(prev_obj, self.datetime_field))
+            next_delta = abs(dt - getattr(next_obj, self.datetime_field))
+            if prev_delta <= next_delta:
+                return prev_obj
+            else:
+                return next_obj
 
     def get_most_recent_object(self, url):
         queryset = self.get_queryset()
