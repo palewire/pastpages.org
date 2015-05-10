@@ -1,3 +1,6 @@
-from views import TimeGateView
+from views import TimeGateView, TimeGateDetailView
 
-__all__ = ("TimeGateView",)
+__all__ = (
+    "TimeGateView",
+    "TimeGateDetailView",
+)

@@ -4,8 +4,8 @@ from itertools import groupby
 from pytz import common_timezones
 from datetime import datetime, timedelta
 from taggit.models import Tag, TaggedItem
-from memento.timegate import TimeGateView
 from django.utils.timezone import localtime
+from memento.timegate import TimeGateView, TimeGateDetailView
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from archive.models import Update, Site, Screenshot, Champion
 from django.views.generic import (
@@ -97,7 +97,7 @@ class Index(TemplateView):
         }
 
 
-class ScreenshotDetail(DetailView):
+class ScreenshotDetail(TimeGateDetailView):
     """
     All about a particular screenshot. See the whole thing full size.
     """
@@ -105,6 +105,11 @@ class ScreenshotDetail(DetailView):
     queryset = Screenshot.objects.filter(
         site__status='active'
     ).select_related("update")
+    datetime_field = 'timestamp'
+    timemap_pattern_name = "timemap-url-link-feed"
+
+    def get_original_url(self, obj):
+        return obj.site.url
 
     def get_context_data(self, **kwargs):
         context = super(ScreenshotDetail, self).get_context_data(**kwargs)

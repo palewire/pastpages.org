@@ -1,14 +1,49 @@
 import urllib
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, Http404
-from django.views.generic import RedirectView
 from dateutil.parser import parse as dateparser
 from django.utils.cache import patch_vary_headers
 from django.utils.translation import ugettext as _
+from memento.templatetags.memento_tags import httpdate
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.syndication.views import add_domain
 from django.contrib.sites.models import get_current_site
+from django.views.generic import RedirectView, DetailView
 
+
+class TimeGateDetailView(DetailView):
+    datetime_field = 'datetime'
+
+    def get_timemap_url(self, request, url):
+        path = reverse(self.timemap_pattern_name, kwargs={'url': url})
+        current_site = get_current_site(request)
+        return add_domain(
+            current_site.domain,
+            path,
+            request.is_secure(),
+        )
+
+    def get_original_url(self, obj):
+        raise NotImplementedError("get_original_url method not implemented")
+
+    def get(self, request, *args, **kwargs):
+        response = super(TimeGateDetailView, self).get(
+            request,
+            *args,
+            **kwargs
+        )
+        dt = getattr(self.object, self.datetime_field)
+        response['Memento-Datetime'] = httpdate(dt)
+        patch_vary_headers(response, ["accept-datetime"])
+        if self.timemap_pattern_name:
+            original_url = self.get_original_url(self.object)
+            timemap_url = self.get_timemap_url(self.request, original_url)
+            response['Link'] = """<%(url)s>; rel="original", \
+<%(timemap_url)s>; rel="timemap"; type="application/link-format\"""" % dict(
+                url=urllib.unquote(original_url),
+                timemap_url=urllib.unquote(timemap_url)
+            )
+        return response
 
 class TimeGateView(RedirectView):
     """
