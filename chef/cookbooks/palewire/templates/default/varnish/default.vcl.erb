@@ -145,7 +145,11 @@ sub vcl_fetch {
     # copy of the page in the cache for each instance of the Vary header --
     # one for each User-Agent which visits the site. This is bad. So we're
     # going to strip away the Vary header.
-    unset beresp.http.Vary;
+    if (beresp.http.Vary ~ "accept\-datetime") {
+        set beresp.http.Vary = "accept-datetime";
+    } else {
+        unset beresp.http.Vary;
+    }
 
     # Now pass this backend response along to the cache to be stored and served.
     return(deliver);
