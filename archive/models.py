@@ -107,7 +107,11 @@ class Screenshot(models.Model):
     """
     site = models.ForeignKey(Site)
     update = models.ForeignKey(Update)
-    timestamp = models.DateTimeField(blank=True, null=True)
+    timestamp = models.DateTimeField(
+        blank=True,
+        null=True,
+        db_index=True
+    )
     image = ImageWithThumbsField(
         upload_to=get_image_path,
         blank=True,
