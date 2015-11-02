@@ -5,7 +5,7 @@ from pytz import common_timezones
 from datetime import datetime, timedelta
 from taggit.models import Tag, TaggedItem
 from django.utils.timezone import localtime
-from memento.timegate import TimeGateView, TimeGateDetailView
+from memento.timegate import TimeGateView, MementoDetailView
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from archive.models import Update, Site, Screenshot, Champion
 from django.views.generic import (
@@ -97,7 +97,7 @@ class Index(TemplateView):
         }
 
 
-class ScreenshotDetail(TimeGateDetailView):
+class ScreenshotDetail(MementoDetailView):
     """
     All about a particular screenshot. See the whole thing full size.
     """
