@@ -58,7 +58,7 @@ class SiteFeed(Feed):
     def items(self, obj):
         return Screenshot.objects.filter(
             site=obj,
-        ).defer(
+        ).exclude(timestamp=None).defer(
             "html",
             "has_html",
             "has_crop",
@@ -110,7 +110,7 @@ class TagFeed(Feed):
             site__in=site_list,
             has_crop=True,
             has_image=True,
-        )
+        ).exclude(timestamp=None)
 
     def item_title(self, item):
         return u'Screenshots of %s taken at %s' % (
