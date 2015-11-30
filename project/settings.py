@@ -20,12 +20,10 @@ INSTALLED_APPS = (
     'cumulus',
     'greeking',
     'robots',
-    'south',
     'taggit',
     'tastypie',
     'toolbox',
     'djcelery',
-    'djcelery.transport',
     'memento',
 )
 
@@ -35,17 +33,14 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
 # Celery
 import djcelery
 djcelery.setup_loader()
 BROKER_URL = 'django://'
 CELERY_SEND_TASK_ERROR_EMAILS = True
 CELERY_DEFAULT_RATE_LIMIT = 10
-SOUTH_MIGRATION_MODULES = {
-    'djcelery': 'toolbox.migrations.djcelery',
-    'transport': 'toolbox.migrations.transport',
-    'taggit': 'taggit.south_migrations',
-}
 
 # Localization
 ADMINS = (
