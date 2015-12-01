@@ -5,7 +5,7 @@ sys.path.append('/apps/pastpages.org/repo/')
 sys.path.append('/apps/pastpages.org/lib/python2.7/site-packages/')
 sys.path.append('/apps/pastpages.org/bin/')
 sys.path.append('/apps/pastpages.org/src/')
-sys.path.append('/apps/pastpages.org/src/django_memento_framework-master/')
+sys.path.append('/apps/pastpages.org/src/django-memento-framework-master/')
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'project.settings'
 os.environ["CELERY_LOADER"] = "django"
