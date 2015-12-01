@@ -17,6 +17,7 @@ class SiteTimemapLinkList(TimemapLinkList):
 
     def get_object(self, request, url):
         url = url.replace("http:/", "http://")
+        url = url.replace("http:///", "http://")
         logger.info(url)
         return get_object_or_404(Site, url__startswith=url)
 
