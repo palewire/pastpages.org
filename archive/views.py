@@ -107,6 +107,7 @@ class ScreenshotDetail(MementoDetailView):
     ).select_related("update")
     datetime_field = 'timestamp'
     timemap_pattern_name = "timemap-url-link-feed"
+    timegate_pattern_name = "timegate-screenshot"
 
     def get_original_url(self, obj):
         return obj.site.url
