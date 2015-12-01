@@ -160,7 +160,7 @@ LOGGING = {
             'propagate': True,
         },
         'archive': {
-            'handlers': ['console', 'logfile'],
+            'handlers': ['console', 'logfile', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': True,
         },
