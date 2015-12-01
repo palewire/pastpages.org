@@ -16,6 +16,7 @@ class SiteTimemapLinkList(TimemapLinkList):
     paginate_by = 1000
 
     def get_object(self, request, url):
+        url = url.replace("http:/", "http://")
         logger.info(url)
         return get_object_or_404(Site, url__startswith=url)
 
