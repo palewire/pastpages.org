@@ -15,8 +15,8 @@ class Command(BaseCommand):
         # Create a simulated web request
         factory = RequestFactory()
         request = factory.get(
-            "/timemap/link/http://www.cnn.com/?page=10",
-            page=10
+            "/timemap/link/http://www.cnn.com/?page=44",
+            page=44
         )
         # Pass the fake web request to the timemap view
         response = timemap(request, url="http://www.cnn.com/")
