@@ -58,7 +58,7 @@ class UpdateManager(models.Manager):
              SELECT id, start
              FROM archive_update
              ORDER BY start DESC
-             LIMIT 25
+             LIMIT 100
             ) as u
             INNER JOIN archive_screenshot as s
             ON u.id = s.update_id
