@@ -11,7 +11,8 @@ from toolbox.decorators import timeout
 from archive.models import Screenshot, Update, Site, ScreenshotLog
 
 # Image manipulation
-import Image
+from PIL import Image
+from django.core.files import File
 from toolbox.thumbs import prep_pil_for_db
 from django.core.files.base import ContentFile
 
@@ -113,7 +114,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     jpg_obj = ContentFile(data)
 
     # Remove the image from the local filesystem
-    os.remove(output_path)
+    # os.remove(output_path)
 
     # Create a screenshot object in the database
     ssht, created = Screenshot.objects.get_or_create(site=site, update=update)
@@ -122,6 +123,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     target = ssht.get_image_name()
     try:
         ssht.image.save(target, jpg_obj)
+        logger.debug("Saved as %s" % ssht)
     except Exception, e:
         logger.error("Image save failed.")
         logger.error(str(e))
@@ -154,12 +156,19 @@ def get_phantomjs_screenshot(site_id, update_id):
 
     # Prep for db
     crop_name = ssht.get_crop_name()
-    crop_data = prep_pil_for_db(crop, crop_name)
+    crop_path = os.path.join(
+        settings.REPO_DIR,
+        crop_name
+    )
+    crop.save(open(crop_path, 'w'), 'JPEG')
 
-    # Save to the database
+    crop_data = File(open(crop_path, 'r'))
+
+    # Save to the databaseo
     try:
         ssht.crop.save(crop_name, crop_data)
     except Exception, e:
+        raise e
         logger.error("Crop save failed.")
         logger.error(str(e))
         ScreenshotLog.objects.create(

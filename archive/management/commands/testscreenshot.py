@@ -14,8 +14,17 @@ class Command(BaseCommand):
             start=timezone.now(),
         )
         shit_list = [
-            'baltimore-sun',
+            'drudge-report',
         ]
         for site in Site.objects.filter(slug__in=shit_list):
             #get_phantomjs_screenshot.delay(site.id, update.id)
             get_phantomjs_screenshot(site.id, update.id)
+
+        # from PIL import Image
+        # from django.core.files import File
+        # from archive.models import Screenshot
+        #
+        # crop_path = "./crop.jpg"
+        # crop_data = File(open(crop_path, 'r'))
+        # ssht = Screenshot.objects.filter(site__slug='cnn').latest('timestamp')
+        # ssht.crop.save('crop.jpg', crop_data)

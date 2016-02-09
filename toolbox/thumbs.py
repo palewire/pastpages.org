@@ -42,7 +42,7 @@ def generate_thumb(img, thumb_size, format):
     format      format of the original image ('jpeg','gif','png',...)
                 (this format will be used for the generated thumbnail, too)
     """
-
+    img.open()
     img.seek(0) # see http://code.djangoproject.com/ticket/8222 for details
     image = Image.open(img)
 
@@ -82,6 +82,7 @@ def generate_thumb(img, thumb_size, format):
     else:
         image2.save(io, format)
     return ContentFile(io.getvalue())
+
 
 class ImageWithThumbsFieldFile(ImageFieldFile):
     """
@@ -133,6 +134,7 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
                     self.storage.delete(thumb_name)
                 except:
                     pass
+
 
 class ImageWithThumbsField(ImageField):
     attr_class = ImageWithThumbsFieldFile
