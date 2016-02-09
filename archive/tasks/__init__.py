@@ -114,7 +114,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     jpg_obj = ContentFile(data)
 
     # Remove the image from the local filesystem
-    # os.remove(output_path)
+    os.remove(output_path)
 
     # Create a screenshot object in the database
     ssht, created = Screenshot.objects.get_or_create(site=site, update=update)
@@ -161,7 +161,6 @@ def get_phantomjs_screenshot(site_id, update_id):
         crop_name
     )
     crop.save(open(crop_path, 'w'), 'JPEG')
-
     crop_data = File(open(crop_path, 'r'))
 
     # Save to the databaseo
@@ -178,7 +177,9 @@ def get_phantomjs_screenshot(site_id, update_id):
             message="Crop save failed: %s" % e
         )
         ssht.delete()
+        os.remove(crop_path)
         return False
+    os.remove(crop_path)
     ssht.has_crop = True
     ssht.save()
 
