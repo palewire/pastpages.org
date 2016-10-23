@@ -4,11 +4,13 @@ import random
 import string
 import signal
 import subprocess
+import savepagenow
+import webcitation
 from django.conf import settings
 from django.utils import timezone
 from celery.decorators import task
 from toolbox.decorators import timeout
-from archive.models import Screenshot, Update, Site, ScreenshotLog
+from archive.models import Screenshot, Update, Site, ScreenshotLog, Memento
 
 # Image manipulation
 from PIL import Image
@@ -189,6 +191,44 @@ def get_phantomjs_screenshot(site_id, update_id):
         ssht.html = site.url
         ssht.has_html = True
         ssht.save()
+
+    # Internet Archive mementos where turned on
+    if site.has_internetarchive_mementos:
+        logger.info("Adding archive.org memento for %s" % site.url)
+        try:
+            ia_memento, ia_created = savepagenow.capture_or_cache(
+                site.url,
+                user_agent="pastpages.org (ben.welsh@gmail.com)"
+            )
+            if ia_created:
+                memento = Memento.objects.create(
+                    site=site,
+                    update=update,
+                    archive='archive.org',
+                    url=ia_memento,
+                )
+            else:
+                logger.info("Internet Archive returned a cached memento")
+        except Exception:
+            logger.info("Adding Internet Archive memento failed")
+
+    # webcitation mementos where turned on
+    if site.has_webcitation_mementos:
+        logger.info("Adding webcitation.org memento for %s" % site.url)
+        try:
+            wc_memento = webcitation.capture(
+                site.url,
+                user_agent="pastpages.org (ben.welsh@gmail.com)"
+            )
+            memento = Memento.objects.create(
+                site=site,
+                update=update,
+                archive='webcitation.org',
+                url=wc_memento,
+            )
+        except Exception:
+            raise
+            logger.info("Adding webcitation memento failed")
 
     # Finish
     logger.debug("Finished %s" % site)

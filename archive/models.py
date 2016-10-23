@@ -43,9 +43,17 @@ class Site(models.Model):
         default='active',
         db_index=True,
     )
+    on_the_homepage = models.BooleanField(default=True)
+
+    # Local screenshots
     has_html_screenshots = models.BooleanField(default=False)
     y_offset = models.IntegerField(default=0, blank=True)
-    on_the_homepage = models.BooleanField(default=True)
+
+    # Third party mementos
+    has_internetarchive_mementos = models.BooleanField(default=False)
+    has_webcitation_mementos = models.BooleanField(default=False)
+
+    # Managers
     objects = managers.SiteManager()
     tags = TaggableManager(blank=True)
 
@@ -101,6 +109,40 @@ def get_screenshot_path(instance, type, filename):
     )
 
 
+
+class Memento(models.Model):
+    """
+    A snapshot of a web page stored by a third-party archive at our request.
+    """
+    # Basics
+    site = models.ForeignKey(Site)
+    update = models.ForeignKey(Update)
+    timestamp = models.DateTimeField(
+        db_index=True,
+        auto_now_add=True,
+    )
+    ARCHIVE_CHOICES = (
+        ('archive.org', 'archive.org'),
+        ('webcitation.org', 'webcitation.org'),
+    )
+    archive = models.CharField(
+        max_length=1000,
+        choices=ARCHIVE_CHOICES,
+        db_index=True,
+    )
+    url = models.URLField(blank=True)
+
+    class Meta:
+        ordering = ("-update__start", "site__sortable_name", "site__name")
+        unique_together = ("site", "update", "archive")
+        index_together = [
+            ["site", "archive",],
+        ]
+
+    def __unicode__(self):
+        return u'%s (%s) at %s' % (self.site, self.update.start, self.archive)
+
+
 class Screenshot(models.Model):
     """
     A snapshot of web page.
@@ -127,9 +169,10 @@ class Screenshot(models.Model):
     html = URLArchiveField(upload_to=get_html_path)
     has_html = models.BooleanField(default=False)
 
+
     class Meta:
         ordering = ("-update__start", "site__sortable_name", "site__name")
-        unique_together = ("site", "update")
+        unique_together = ("site", "update",)
         index_together = [
             ["site", "has_image", "has_crop"],
         ]

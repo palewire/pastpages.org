@@ -15,6 +15,8 @@ class Command(BaseCommand):
         )
         shit_list = [
             'drudge-report',
+            'cnn',
+            'new-york-times',
         ]
         for site in Site.objects.filter(slug__in=shit_list):
             #get_phantomjs_screenshot.delay(site.id, update.id)

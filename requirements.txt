@@ -1,3 +1,5 @@
+savepagenow==0.0.7
+webcitation==0.0.2
 amqp==1.4.7
 amqplib==0.6.1
 anyjson==0.3.3

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from archive.models import Site, Update, Screenshot, Champion, ScreenshotLog
+from archive.models import Site, Update, Screenshot, Champion, ScreenshotLog, Memento
 
 
 class SiteAdmin(admin.ModelAdmin):
@@ -45,8 +45,31 @@ class ScreenshotLogAdmin(admin.ModelAdmin):
     )
 
 
+class MementoAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "site",
+        "update",
+        "archive",
+    )
+    list_filter = ("archive",)
+    date_hierarchy = "timestamp"
+    search_fields = (
+        "site__name",
+        "archive"
+    )
+    readonly_fields = (
+        "site",
+        "update",
+        "timestamp",
+        "archive",
+        "url"
+    )
+
+
 admin.site.register(Site, SiteAdmin)
 admin.site.register(Update, UpdateAdmin)
 admin.site.register(Screenshot, ScreenshotAdmin)
 admin.site.register(Champion, ChampionAdmin)
 admin.site.register(ScreenshotLog, ScreenshotLogAdmin)
+admin.site.register(Memento, MementoAdmin)
