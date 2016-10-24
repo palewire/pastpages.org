@@ -50,8 +50,14 @@ class Site(models.Model):
     y_offset = models.IntegerField(default=0, blank=True)
 
     # Third party mementos
-    has_internetarchive_mementos = models.BooleanField(default=False)
-    has_webcitation_mementos = models.BooleanField(default=False)
+    has_internetarchive_mementos = models.BooleanField(
+        verbose_name='has Internet Archive mementos',
+        default=False
+    )
+    has_webcitation_mementos = models.BooleanField(
+        verbose_name="has webcitation.org mementos",
+        default=False
+    )
 
     # Managers
     objects = managers.SiteManager()
