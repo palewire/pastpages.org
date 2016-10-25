@@ -7,9 +7,17 @@ class SiteAdmin(admin.ModelAdmin):
         "name",
         "status",
         "has_html_screenshots",
-        "on_the_homepage"
+        "on_the_homepage",
+        "has_internetarchive_mementos",
+        "has_webcitation_mementos"
     )
-    list_filter = ("status", 'has_html_screenshots', 'on_the_homepage')
+    list_filter = (
+        "status",
+        'has_html_screenshots',
+        'has_internetarchive_mementos',
+        'has_webcitation_mementos',
+        'on_the_homepage',
+    )
     prepopulated_fields = {"slug": ("name",)}
 
 
