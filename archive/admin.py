@@ -9,12 +9,14 @@ class SiteAdmin(admin.ModelAdmin):
         "has_html_screenshots",
         "on_the_homepage",
         "has_internetarchive_mementos",
+        'has_archiveis_mementos',
         "has_webcitation_mementos"
     )
     list_filter = (
         "status",
         'has_html_screenshots',
         'has_internetarchive_mementos',
+        'has_archiveis_mementos',
         'has_webcitation_mementos',
         'on_the_homepage',
     )
