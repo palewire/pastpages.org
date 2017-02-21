@@ -54,6 +54,10 @@ class Site(models.Model):
         verbose_name='has Internet Archive mementos',
         default=False
     )
+    has_archiveis_mementos = models.BooleanField(
+        verbose_name='has archive.is mementos',
+        default=False
+    )
     has_webcitation_mementos = models.BooleanField(
         verbose_name="has webcitation.org mementos",
         default=False
