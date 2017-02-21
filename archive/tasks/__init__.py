@@ -217,16 +217,20 @@ def get_phantomjs_screenshot(site_id, update_id):
     if site.has_archiveis_mementos:
         logger.info("Adding archive.is memento for %s" % site.url)
         try:
-            is_memento= archiveis.capture(
+            is_memento = archiveis.capture(
                 site.url,
                 user_agent="pastpages.org (ben.welsh@gmail.com)"
             )
-            memento = Memento.objects.create(
-                site=site,
-                update=update,
-                archive='archive.is',
-                url=is_memento,
-            )
+            is_created = Memento.objects.filter(url=is_memento).count() == 0
+            if is_created:
+                memento = Memento.objects.create(
+                    site=site,
+                    update=update,
+                    archive='archive.is',
+                    url=is_memento,
+                )
+            else:
+                logger.info("archive.is returned a cached memento")
         except Exception:
             logger.info("Adding archive.is memento failed")
 
