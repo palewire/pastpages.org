@@ -133,6 +133,7 @@ class Memento(models.Model):
     )
     ARCHIVE_CHOICES = (
         ('archive.org', 'archive.org'),
+        ('archive.is', 'archive.is'),
         ('webcitation.org', 'webcitation.org'),
     )
     archive = models.CharField(

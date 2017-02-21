@@ -3,6 +3,7 @@ import os
 import random
 import string
 import signal
+import archiveis
 import subprocess
 import savepagenow
 import webcitation
@@ -212,6 +213,23 @@ def get_phantomjs_screenshot(site_id, update_id):
         except Exception:
             logger.info("Adding Internet Archive memento failed")
 
+    # Internet Archive mementos where turned on
+    if site.has_archiveis_mementos:
+        logger.info("Adding archive.is memento for %s" % site.url)
+        try:
+            is_memento= archiveis.capture(
+                site.url,
+                user_agent="pastpages.org (ben.welsh@gmail.com)"
+            )
+            memento = Memento.objects.create(
+                site=site,
+                update=update,
+                archive='archive.is',
+                url=is_memento,
+            )
+        except Exception:
+            logger.info("Adding archive.is memento failed")
+
     # webcitation mementos where turned on
     if site.has_webcitation_mementos:
         logger.info("Adding webcitation.org memento for %s" % site.url)
@@ -227,7 +245,6 @@ def get_phantomjs_screenshot(site_id, update_id):
                 url=wc_memento,
             )
         except Exception:
-            raise
             logger.info("Adding webcitation memento failed")
 
     # Finish
