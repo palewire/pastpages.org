@@ -1,4 +1,4 @@
-archiveis==0.0.3
+archiveis==0.0.4
 savepagenow==0.0.8
 webcitation==0.0.2
 amqp==1.4.7
