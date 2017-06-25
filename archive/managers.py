@@ -51,7 +51,7 @@ class UpdateManager(models.Manager):
         from archive.models import Site
         cursor = connection.cursor()
         sites = Site.objects.active().count()
-        cutoff = int(sites * 0.7)
+        cutoff = int(sites * 0.5)
         sql = """
             SELECT u.id, u.start, count(s.id)
             FROM (
