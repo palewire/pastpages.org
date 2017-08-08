@@ -62,3 +62,4 @@ tldextract==1.4
 unicodecsv==0.9.4
 webkit2png==0.8.2
 wheel==0.24.0
+internetarchive
