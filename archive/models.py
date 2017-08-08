@@ -1,8 +1,10 @@
 import os
 import logging
+import internetarchive
 from archive import managers
 from django.db import models
 from datetime import datetime
+from django.conf import settings
 from pytz import common_timezones
 from taggit.managers import TaggableManager
 from toolbox.thumbs import ImageWithThumbsField
@@ -206,8 +208,70 @@ class Screenshot(models.Model):
     def get_crop_name(self):
         return '%s-%s-%s-crop.jpg' % (self.site.slug, self.update.id, self.id)
 
-    def upload_to_ia(self):
-        from internetarchive import upload
+    #
+    # Internet Archive
+    #
+
+    @property
+    def ia_id(self):
+        return "pastpages-{}-{}-{}".format(self.site.slug, self.update_id, self.id)
+
+    def upload_ia_item(self, uid):
+        metadata = dict(
+            collection="pastpages",
+            title='{} at {}'.format(self.site.name, dateformat(self.timestamp, 'N j, Y, P')),
+            mediatype='image',
+            contributor="pastpages.org",
+            creator="pastpages.org",
+            publisher=self.site.name,
+            date=self.timestamp,
+            subject=["news", "homepages", "screenshot"],
+            pastpages_id=self.id,
+            pastpages_url=self.get_absolute_url(),
+            pastpages_timestamp=self.timestamp,
+            pastpages_site_id=self.site.id,
+            pastpages_site_slug=self.site.slug,
+            pastpages_update_id=self.update.id,
+        )
+        files = []
+        if self.has_image:
+            files.append(self.image.url)
+        if self.has_crop:
+            files.append(self.crop.url)
+        internetarchive.upload(
+            self.ia_id,
+            files=files,
+            metadata=metadata,
+            access_key=settings.IA_ACCESS_KEY_ID,
+            secret_key=settings.IA_SECRET_ACCESS_KEY,
+        )
+        return internetarchive.get_item(uid)
+
+    def get_ia_item(self):
+        config = dict(s3=dict(access=settings.IA_ACCESS_KEY_ID, secret=settings.IA_SECRET_ACCESS_KEY))
+        return internetarchive.get_item(self.ia_id, config=config)
+
+    def get_or_create_ia_item(self):
+        i = self.get_ia_item(self.ia_id)
+        if i.exists:
+            return i, False
+        else:
+            return self.upload_ia_item(uid), True
+
+    def sync_with_ia(self):
+        item, created = self.get_or_create_ia_item()
+        try:
+            image_url = list(i.get_files(formats="JPEG", glob_pattern="image"))[0].url
+            self.internetarchive_image_url = image_url
+        except IndexError:
+            pass
+        try:
+            crop_url = list(i.get_files(formats="JPEG", glob_pattern="crop"))[0].url
+            self.internetarchive_crop_url = crop_url
+        except IndexError:
+            pass
+        self.internetarchive_id = item.identifer
+        self.save()
 
     #
     # Citations
