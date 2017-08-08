@@ -179,7 +179,7 @@ class Screenshot(models.Model):
     has_crop = models.BooleanField(default=False, db_index=True)
     html = URLArchiveField(upload_to=get_html_path)
     has_html = models.BooleanField(default=False)
-
+    internetarchive_url = models.CharField(max_length=5000, blank=True)
 
     class Meta:
         ordering = ("-update__start", "site__sortable_name", "site__name")
@@ -187,6 +187,7 @@ class Screenshot(models.Model):
         index_together = [
             ["site", "has_image", "has_crop"],
         ]
+        get_latest_by = 'timestamp'
 
     def __unicode__(self):
         return u'%s (%s)' % (self.site, self.update.start)
@@ -200,6 +201,13 @@ class Screenshot(models.Model):
 
     def get_crop_name(self):
         return '%s-%s-%s-crop.jpg' % (self.site.slug, self.update.id, self.id)
+
+    def upload_to_ia(self):
+        from internetarchive import upload
+
+    #
+    # Citations
+    #
 
     def get_mla_citation(self):
         """
