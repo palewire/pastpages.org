@@ -179,6 +179,7 @@ class Screenshot(models.Model):
     has_crop = models.BooleanField(default=False, db_index=True)
     html = URLArchiveField(upload_to=get_html_path)
     has_html = models.BooleanField(default=False)
+    internetarchive_id = models.CharField(max_length=5000, blank=True)
     internetarchive_url = models.CharField(max_length=5000, blank=True)
 
     class Meta:
