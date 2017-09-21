@@ -217,6 +217,10 @@ class Screenshot(models.Model):
     def ia_id(self):
         return "pastpages-{}-{}-{}".format(self.site.slug, self.update_id, self.id)
 
+    @property
+    def ia_url(self):
+        return 'https://archive.org/details/{}'.format(self.ia_id)
+
     def save_image(self):
         name = os.path.basename(self.image.name)
         with open(name, 'wb') as f:
