@@ -13,5 +13,10 @@ class Command(BaseCommand):
         parser.add_argument('count', nargs=1, type=int, default=5)
 
     def handle(self, *args, **options):
-        obj_list = Screenshot.objects.filter(internetarchive_id='')[:options['count'][0]]
-        [obj.sync_with_ia() for obj in obj_list]
+        rackspace_list = Screenshot.objects.filter(internetarchive_id='')[:options['count'][0]]
+        [obj.sync_with_ia() for obj in rackspace_list]
+
+        no_url_list = Screenshot.objects.exclude(
+            internetarchive_id=''
+        ).filter(internetarchive_image_url='')[:options['count'][0]]
+        [obj.sync_with_ia() for obj in no_url_list]
