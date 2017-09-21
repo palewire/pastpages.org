@@ -35,7 +35,7 @@ ALLOWED_HOSTS = [
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-Celery
+# Celery
 import djcelery
 djcelery.setup_loader()
 BROKER_URL = 'django://'
