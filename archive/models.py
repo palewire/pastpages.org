@@ -231,6 +231,7 @@ class Screenshot(models.Model):
             pastpages_timestamp=self.timestamp,
             pastpages_site_id=self.site.id,
             pastpages_site_slug=self.site.slug,
+            pastpages_site_name=self.site.name,
             pastpages_update_id=self.update.id,
         )
         files = []
