@@ -30,13 +30,13 @@
                     {% if object.timezone %}
                     <img alt="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
                          title="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
-                         src="{% if latest_screenshot.internetarchive_image_url %}{{ latest_screenshot.internetarchive_image_url }}{% else %}{{ latest_screenshot.crop.image.url_449x3000 }}{% endif %}"
+                         src="{% if latest_screenshot.internetarchive_image_url %}{{ latest_screenshot.internetarchive_image_url }}{% else %}{{ latest_screenshot.image.url_449x3000 }}{% endif %}"
                          itemprop="contentURL">
                     <span itemprop="datePublished" content="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"c" }}"></span>
                     {% else %}
                     <img alt="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
                          title="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
-                         src="{% if latest_screenshot.internetarchive_image_url %}{{ latest_screenshot.internetarchive_image_url }}{% else %}{{ latest_screenshot.crop.image.url_449x3000 }}{% endif %}"
+                         src="{% if latest_screenshot.internetarchive_image_url %}{{ latest_screenshot.internetarchive_image_url }}{% else %}{{ latest_screenshot.image.url_449x3000 }}{% endif %}"
                          itemprop="contentURL">
                     <span itemprop="datePublished" content="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"c" }}"></span>
                     {% endif %}
