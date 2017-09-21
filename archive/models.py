@@ -253,7 +253,7 @@ class Screenshot(models.Model):
             files.append(saved_image)
         if self.has_crop:
             saved_crop = self.save_crop()
-            files.append(save_crop)
+            files.append(saved_crop)
         internetarchive.upload(
             self.ia_id,
             files,
@@ -287,12 +287,12 @@ class Screenshot(models.Model):
         logger.debug("Syncing IA item for {}".format(self.ia_id))
         item, created = self.get_or_create_ia_item()
         try:
-            image_url = list(item.get_files(formats="JPEG", glob_pattern="image"))[0].url
+            image_url = [x for x in list(item.get_files(formats="JPEG")) if 'image' in x.name][0].url
             self.internetarchive_image_url = image_url
         except IndexError:
             self.internetarchive_image_url = ''
         try:
-            crop_url = list(item.get_files(formats="JPEG", glob_pattern="crop"))[0].url
+            crop_url = [x for x in list(item.get_files(formats="JPEG")) if 'crop' in x.name][0].url
             self.internetarchive_crop_url = crop_url
         except IndexError:
             self.internetarchive_crop_url = ''
