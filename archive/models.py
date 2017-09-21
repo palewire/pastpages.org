@@ -292,13 +292,17 @@ class Screenshot(models.Model):
         item, created = self.get_or_create_ia_item()
         try:
             image_url = [x for x in list(item.get_files(formats="JPEG")) if 'image' in x.name][0].url
+            logger.debug("Setting internetarchive_image_url as {}".format(image_url))
             self.internetarchive_image_url = image_url
         except IndexError:
+            logger.debug("Setting internetarchive_image_url as ''")
             self.internetarchive_image_url = ''
         try:
             crop_url = [x for x in list(item.get_files(formats="JPEG")) if 'crop' in x.name][0].url
+            logger.debug("Setting internetarchive_crop_url as {}".format(crop_url))
             self.internetarchive_crop_url = crop_url
         except IndexError:
+            logger.debug("Setting internetarchive_crop_url as ''")
             self.internetarchive_crop_url = ''
         self.internetarchive_id = item.identifier
         self.save()
