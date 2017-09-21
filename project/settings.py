@@ -35,12 +35,12 @@ ALLOWED_HOSTS = [
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-# Celery
-# import djcelery
-# djcelery.setup_loader()
-# BROKER_URL = 'django://'
-# CELERY_SEND_TASK_ERROR_EMAILS = True
-# CELERY_DEFAULT_RATE_LIMIT = 10
+Celery
+import djcelery
+djcelery.setup_loader()
+BROKER_URL = 'django://'
+CELERY_SEND_TASK_ERROR_EMAILS = True
+CELERY_DEFAULT_RATE_LIMIT = 10
 
 # Localization
 ADMINS = (
