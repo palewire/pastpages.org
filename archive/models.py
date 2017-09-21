@@ -1,4 +1,5 @@
 import os
+import time
 import logging
 import internetarchive
 from archive import managers
@@ -7,6 +8,7 @@ from datetime import datetime
 from django.conf import settings
 from pytz import common_timezones
 from taggit.managers import TaggableManager
+from django.core.files.base import ContentFile
 from toolbox.thumbs import ImageWithThumbsField
 from urlarchivefield.fields import URLArchiveField
 from django.template.defaultfilters import date as dateformat
@@ -216,7 +218,24 @@ class Screenshot(models.Model):
     def ia_id(self):
         return "pastpages-{}-{}-{}".format(self.site.slug, self.update_id, self.id)
 
-    def upload_ia_item(self, uid):
+    @property
+    def ia_url(self):
+        return 'https://archive.org/details/{}'.format(self.ia_id)
+
+    def save_image(self):
+        name = os.path.basename(self.image.name)
+        with open(name, 'wb') as f:
+            f.write(self.image.file.file.read())
+        return name
+
+    def save_crop(self):
+        name = os.path.basename(self.crop.name)
+        with open(name, 'wb') as f:
+            f.write(self.crop.file.file.read())
+        return name
+
+    def upload_ia_item(self):
+        logger.debug("Uploading IA item for {}".format(self.ia_id))
         metadata = dict(
             collection="pastpages",
             title='{} at {}'.format(self.site.name, dateformat(self.timestamp, 'N j, Y, P')),
@@ -224,11 +243,11 @@ class Screenshot(models.Model):
             contributor="pastpages.org",
             creator="pastpages.org",
             publisher=self.site.name,
-            date=self.timestamp,
+            date=str(self.timestamp),
             subject=["news", "homepages", "screenshot"],
             pastpages_id=self.id,
             pastpages_url=self.get_absolute_url(),
-            pastpages_timestamp=self.timestamp,
+            pastpages_timestamp=str(self.timestamp),
             pastpages_site_id=self.site.id,
             pastpages_site_slug=self.site.slug,
             pastpages_site_name=self.site.name,
@@ -236,42 +255,58 @@ class Screenshot(models.Model):
         )
         files = []
         if self.has_image:
-            files.append(self.image.url)
+            saved_image = self.save_image()
+            files.append(saved_image)
         if self.has_crop:
-            files.append(self.crop.url)
+            saved_crop = self.save_crop()
+            files.append(saved_crop)
         internetarchive.upload(
             self.ia_id,
-            files=files,
+            files,
             metadata=metadata,
             access_key=settings.IA_ACCESS_KEY_ID,
             secret_key=settings.IA_SECRET_ACCESS_KEY,
+            checksum=False,
+            verbose=True
         )
-        return internetarchive.get_item(uid)
+        if self.has_image:
+            os.remove(saved_image)
+        if self.has_crop:
+            os.remove(saved_crop)
+        return internetarchive.get_item(self.ia_id)
 
     def get_ia_item(self):
+        logger.debug("Getting IA item for {}".format(self.ia_id))
         config = dict(s3=dict(access=settings.IA_ACCESS_KEY_ID, secret=settings.IA_SECRET_ACCESS_KEY))
         return internetarchive.get_item(self.ia_id, config=config)
 
     def get_or_create_ia_item(self):
-        i = self.get_ia_item(self.ia_id)
+        i = self.get_ia_item()
         if i.exists:
+            logger.debug("IA item for {} exists".format(self.ia_id))
             return i, False
         else:
-            return self.upload_ia_item(uid), True
+            logger.debug("IA item for {} does not exist".format(self.ia_id))
+            return self.upload_ia_item(), True
 
     def sync_with_ia(self):
+        logger.debug("Syncing IA item for {}".format(self.ia_id))
         item, created = self.get_or_create_ia_item()
         try:
-            image_url = list(i.get_files(formats="JPEG", glob_pattern="image"))[0].url
+            image_url = [x for x in list(item.get_files(formats="JPEG")) if 'image' in x.name][0].url
+            logger.debug("Setting internetarchive_image_url as {}".format(image_url))
             self.internetarchive_image_url = image_url
         except IndexError:
-            pass
+            logger.debug("Setting internetarchive_image_url as ''")
+            self.internetarchive_image_url = ''
         try:
-            crop_url = list(i.get_files(formats="JPEG", glob_pattern="crop"))[0].url
+            crop_url = [x for x in list(item.get_files(formats="JPEG")) if 'crop' in x.name][0].url
+            logger.debug("Setting internetarchive_crop_url as {}".format(crop_url))
             self.internetarchive_crop_url = crop_url
         except IndexError:
-            pass
-        self.internetarchive_id = item.identifer
+            logger.debug("Setting internetarchive_crop_url as ''")
+            self.internetarchive_crop_url = ''
+        self.internetarchive_id = item.identifier
         self.save()
 
     #

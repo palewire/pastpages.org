@@ -10,8 +10,6 @@ class Command(BaseCommand):
     help = 'Test uploading a screenshot to the Internet Archive'
 
     def handle(self, *args, **options):
-        uid = 'drudge-report-45135-3477691-foobar'
-        i, c = self.get_or_create_ia_item(uid)
-        print i, c
-        print i.metadata
-        print list(i.get_files(formats="JPEG"))[0].url
+        obj = Screenshot.objects.get(id=3512123)
+        # print obj.crop.read()
+        obj.sync_with_ia()

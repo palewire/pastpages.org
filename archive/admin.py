@@ -30,7 +30,14 @@ class UpdateAdmin(admin.ModelAdmin):
 
 class ScreenshotAdmin(admin.ModelAdmin):
     list_display = ("site", "update",)
-    readonly_fields = ('site', 'update', 'timestamp')
+    readonly_fields = (
+        'site',
+        'update',
+        'timestamp',
+        'internetarchive_id',
+        'internetarchive_crop_url',
+        'internetarchive_image_url'
+    )
 
 
 class ChampionAdmin(admin.ModelAdmin):

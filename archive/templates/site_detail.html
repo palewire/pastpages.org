@@ -30,13 +30,13 @@
                     {% if object.timezone %}
                     <img alt="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
                          title="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
-                         src="{{ latest_screenshot.image.url_449x3000 }}"
+                         src="{% if latest_screenshot.internetarchive_image_url %}{{ latest_screenshot.internetarchive_image_url }}{% else %}{{ latest_screenshot.image.url_449x3000 }}{% endif %}"
                          itemprop="contentURL">
                     <span itemprop="datePublished" content="{{ latest_screenshot.timestamp|timezone:object.timezone|date:"c" }}"></span>
                     {% else %}
                     <img alt="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
                          title="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"l N j, Y, P e" }}"
-                         src="{{ latest_screenshot.image.url_449x3000 }}"
+                         src="{% if latest_screenshot.internetarchive_image_url %}{{ latest_screenshot.internetarchive_image_url }}{% else %}{{ latest_screenshot.image.url_449x3000 }}{% endif %}"
                          itemprop="contentURL">
                     <span itemprop="datePublished" content="{{ latest_screenshot.timestamp|timezone:"UTC"|date:"c" }}"></span>
                     {% endif %}
@@ -57,7 +57,7 @@
                                  {{ latest_screenshot.timestamp|timezone:"UTC"|date:"P" }} UTC)
                             {% endif %}
                         </h4>
-                        <span itemprop="image" content="{{ latest_screenshot.crop.url_300x251 }}"></span>
+                        <span itemprop="image" content="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}}{{ obj.crop.url_300x251 }}{% endif %}"></span>
                         <h4>
                             Archived since {{ min_date }}&nbsp;&nbsp;
                             <form name="input" id="sitedatepicker" class="datepicker">
@@ -106,9 +106,9 @@
                                 <img {% if forloop.parentloop.parentloop.counter > 2 %}
                                      class="lazy"
                                      src="{{ STATIC_URL }}blank_300x251.jpg"
-                                     data-original="{{ obj.crop.url_300x251 }}"
+                                     data-original="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}{{ obj.crop.url_300x251 }}{% endif %}"
                                      {% else %}
-                                     src="{{ obj.crop.url_300x251 }}"
+                                     src="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}{{ obj.crop.url_300x251 }}{% endif %}"
                                      {% endif %}
                                     {% if object.timezone %}
                                          alt="{{ obj.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
@@ -122,12 +122,12 @@
                                 {% if object.timezone %}
                                 <img alt="{{ obj.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
                                      title="{{ obj.timestamp|timezone:object.timezone|date:"l N j, Y, P e" }}"
-                                     src="{{ obj.crop.url_300x251 }}">
+                                     src="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}{{ obj.crop.url_300x251 }}{% endif %}">
                                 </noscript>
                                 {% else %}
                                 <img alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
                                      title="{{ obj.timestamp|date:"l N j, Y, P e" }}"
-                                     src="{{ obj.crop.url_300x251 }}">
+                                     src="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}{{ obj.crop.url_300x251 }}{% endif %}">
                                 </noscript>
                                 {% endif %}
                                 {% endif %}

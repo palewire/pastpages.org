@@ -20,8 +20,8 @@ class Command(BaseCommand):
     args = '<date YYYY-MM-DD>'
     help = 'Load a database snapshot from our nightly archive. Pulls latest by default. Specify date for an older one.'
     option_list = BaseCommand.option_list + custom_options
-    
-    def handle(self, *args, **options): 
+
+    def handle(self, *args, **options):
         # If the user provides a date, try to use that
         if args:
             try:
@@ -31,14 +31,14 @@ class Command(BaseCommand):
         # Otherwise just use the today minus one day
         else:
             dt = datetime.now().date() - timedelta(days=1)
-        
+
         # Download the snapshot
         filename = self.download(dt)
-        
+
         # Load the snapshot into the database
-        target = options.get('name') or "pastpages_%s" % dt.strftime("%Y-%m-%d")
-        self.load(target, filename)
-    
+        # target = options.get('name') or "pastpages_%s" % dt.strftime("%Y-%m-%d")
+        # self.load(target, filename)
+
     def load(self, target, source):
         """
         Load a database snapshot into our postgres installation.
@@ -58,21 +58,21 @@ class Command(BaseCommand):
         os.system("sudo -u %s pg_restore -Fc -d %s ./%s" % (user, target, source))
         # Delete the snapshot
         os.system("rm ./%s" % source)
-    
+
     def download(self, dt):
         """
         Download a database snapshot.
         """
         # Craft up what the beginning of the snapshot should be
         prefix = 'postgres_pastpages_%s' % dt.strftime('%Y-%m-%d')
-        
+
         # Log into our bucket
         conn = cloudfiles.get_connection(
             settings.CUMULUS['USERNAME'],
             settings.CUMULUS['API_KEY']
         )
         bucket = conn.get_container("pastpages.backups")
-        
+
         # Loop through all of the objects and look for a match
         for obj in bucket.get_objects():
             if obj.name.startswith(prefix):
@@ -81,5 +81,3 @@ class Command(BaseCommand):
                 obj.save_to_filename(obj.name)
                 return obj.name
         raise CommandError("The date you provided could not be found in the archive.")
-
-
