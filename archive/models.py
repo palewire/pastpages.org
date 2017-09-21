@@ -291,10 +291,6 @@ class Screenshot(models.Model):
     def sync_with_ia(self):
         logger.debug("Syncing IA item for {}".format(self.ia_id))
         item, created = self.get_or_create_ia_item()
-        # If it's a new item, sleep five seconds to give the image URLs time to show up
-        if created:
-            logger.debug("Sleeping five seconds")
-            time.sleep(5)
         try:
             image_url = [x for x in list(item.get_files(formats="JPEG")) if 'image' in x.name][0].url
             logger.debug("Setting internetarchive_image_url as {}".format(image_url))
