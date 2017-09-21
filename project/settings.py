@@ -23,7 +23,7 @@ INSTALLED_APPS = (
     'taggit',
     'tastypie',
     'toolbox',
-    # 'djcelery',
+    'djcelery',
     'memento',
 )
 
