@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from archive.tasks import get_phantomjs_screenshot
-from archive.models import Site, Update
+from archive.models import Site, Update, Screenshot
 from django.utils import timezone
 import logging
 logger = logging.getLogger(__name__)
