@@ -3,11 +3,33 @@ from datetime import timedelta
 from django.utils import timezone
 
 
+class ScreenshotManager(models.Manager):
+
+    def rackspace(self):
+        # 3,485,058
+        return self.filter(has_image=True)
+
+    def ia(self):
+        return self.exclude(internetarchive_id='')
+
+    def rackspace_and_ia(self):
+        return self.exclude(internetarchive_id='').filter(has_image=True)
+
+    def rackspace_not_ia(self):
+        return self.filter(internetarchive_id='').filter(has_image=True)
+
+    def ia_not_rackspace(self):
+        return self.exclude(internetarchive_id='').filter(has_image=False)
+
+    def ia_but_no_url(self):
+        return self.exclude(internetarchive_id='').filter(internetarchive_image_url='')
+
+
 class SiteManager(models.Manager):
-    
+
     def active(self):
         return self.filter(status='active')
-    
+
     def stats(self):
         from django.db import connection
         cursor = connection.cursor()
@@ -45,7 +67,7 @@ class SiteManager(models.Manager):
 
 
 class UpdateManager(models.Manager):
-    
+
     def live(self):
         from django.db import connection
         from archive.models import Site
@@ -86,7 +108,7 @@ class UpdateManager(models.Manager):
                 update.start,
                 COUNT(ssht.id)
             FROM archive_update as update
-            INNER JOIN archive_screenshot as ssht 
+            INNER JOIN archive_screenshot as ssht
             ON update.id = ssht.update_id
             GROUP BY 1, 2
             ORDER BY 2 DESC

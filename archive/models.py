@@ -189,6 +189,9 @@ class Screenshot(models.Model):
     internetarchive_image_url = models.CharField(max_length=5000, blank=True)
     internetarchive_crop_url = models.CharField(max_length=5000, blank=True)
 
+    # Managers
+    objects = managers.ScreenshotManager()
+
     class Meta:
         ordering = ("-update__start", "site__sortable_name", "site__name")
         unique_together = ("site", "update",)
