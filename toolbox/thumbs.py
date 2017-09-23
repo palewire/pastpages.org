@@ -3,12 +3,14 @@
 django-thumbs by Antonio Melé
 http://django.es
 """
+import logging
 from PIL import Image
 import cStringIO, StringIO
 from django.db.models import ImageField
 from django.core.files.base import ContentFile
 from django.db.models.fields.files import ImageFieldFile
 from django.core.files.uploadedfile import InMemoryUploadedFile
+logger = logging.getLogger(__name__)
 
 
 def prep_pil_for_db(pil_obj, filename):
@@ -124,12 +126,14 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
 
     def delete(self, save=True):
         name=self.name
+        logger.debug("Running file delete")
         super(ImageWithThumbsFieldFile, self).delete(save)
         if self.sizes:
             for size in self.sizes:
                 (w,h) = size
                 split = name.rsplit('.',1)
                 thumb_name = '%s.%sx%s.%s' % (split[0],w,h,split[1])
+                logger.debug("Running thumb delete {}".format(thumb_name))
                 try:
                     self.storage.delete(thumb_name)
                 except:
