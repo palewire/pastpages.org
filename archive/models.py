@@ -256,6 +256,9 @@ class Screenshot(models.Model):
 
     def upload_ia_item(self):
         logger.debug("Uploading IA item for {}".format(self.ia_id))
+        if not self.has_image and not self.has_crop:
+            logger.debug("No images to upload")
+            return None
         files = []
         if self.has_image:
             saved_image = self.save_image()
