@@ -169,6 +169,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'toolbox': {
+            'handlers': ['console', 'logfile'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         'django.security.DisallowedHost': {
             'handlers': ['null'],
             'propagate': False,
