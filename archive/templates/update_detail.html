@@ -9,7 +9,7 @@
           content="An archive of news homepages." />
     <meta property="og:title" content="{{ object.start|date:"N j, Y, P" }}"/>
     <meta property="og:url" content="http://{{ site }}{{ object.get_absolute_url }}"/>
-    <meta property="og:image" content="{{ screenshot_groups.0.0.crop.url_300x251 }}"/>
+    <meta property="og:image" content="{{ screenshot_groups.0.0.internetarchive_crop_url }}"/>
     <link rel="canonical" href="http://{{ site }}{{ object.get_absolute_url }}"/>
 {% endblock %}
 
@@ -29,13 +29,13 @@
                 <a href="{{ obj.get_absolute_url }}">
                     <img {% if forloop.parentloop.counter > 4 %}
                          class="lazy" src="{{ STATIC_URL }}blank_300x251.jpg"
-                         data-original="{{ obj.crop.url_300x251 }}"
+                         data-original="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}}{{ obj.crop.url_300x251 }}{% endif %}"
                          {% else %}
-                         src="{{ obj.crop.url_300x251 }}"
+                         src="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}}{{ obj.crop.url_300x251 }}{% endif %}"
                          {% endif %}
                          alt="{{ obj.site }}">
                     {% if forloop.parentloop.counter > 12 %}
-                    <noscript><img src="{{ obj.crop.url_300x251 }}" alt="{{ obj.site }}"></noscript>
+                    <noscript><img src="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}}{{ obj.crop.url_300x251 }}{% endif %}" alt="{{ obj.site }}"></noscript>
                     {% endif %}
                 </a>
                 <a style="display:block;" href="{{ obj.site.get_absolute_url }}">{{ obj.site }}</a>
