@@ -36,7 +36,10 @@ class ScreenshotAdmin(admin.ModelAdmin):
         'timestamp',
         'internetarchive_id',
         'internetarchive_crop_url',
-        'internetarchive_image_url'
+        'internetarchive_image_url',
+        'has_image',
+        'has_crop',
+        'has_html'
     )
 
 
