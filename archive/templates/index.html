@@ -28,13 +28,13 @@
                 <a href="{{ obj.site.get_absolute_url }}">
                     <img {% if forloop.parentloop.counter > 4 %}
                          class="lazy" src="{{ STATIC_URL }}blank_300x251.jpg"
-                         data-original="{{ obj.crop.url_300x251 }}"
+                         data-original="{{ obj.internetarchive_crop_url }}"
                          {% else %}
-                         src="{{ obj.crop.url_300x251 }}"
+                         src="{{ obj.internetarchive_crop_url }}"
                          {% endif %}
                          alt="{{ obj.site }}">
                     {% if forloop.parentloop.counter > 12 %}
-                    <noscript><img src="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}}{{ obj.crop.url_300x251 }}{% endif %}" alt="{{ obj.site }}"></noscript>
+                    <noscript><img src="{{ obj.internetarchive_crop_url }}" alt="{{ obj.site }}"></noscript>
                     {% endif %}
                 </a>
                 <a style="display:block;" href="{{ obj.site.get_absolute_url }}">{{ obj.site }}</a>
