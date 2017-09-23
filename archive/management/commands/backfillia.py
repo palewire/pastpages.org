@@ -13,8 +13,13 @@ class Command(BaseCommand):
         parser.add_argument('count', nargs=1, type=int)
 
     def handle(self, *args, **options):
+        # Query screenshots that are on Rackspace but not IA.
         rackspace_list = Screenshot.objects.rackspace_not_ia()[:options['count'][0]]
+
+        # Loop through the list
         for obj in rackspace_list:
+
+            # Back up the Rackspace images on Internet Archive
             obj.sync_with_ia()
 
             logger.debug("Deleting Rackspace images for {}".format(obj))
