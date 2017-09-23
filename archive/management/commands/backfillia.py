@@ -1,7 +1,6 @@
 import logging
-from django.conf import settings
 from archive.models import Screenshot
-from internetarchive import upload, get_item, get_files
+from archive.tasks import backfill_to_internet_archive
 from django.core.management.base import BaseCommand
 logger = logging.getLogger(__name__)
 
@@ -18,19 +17,5 @@ class Command(BaseCommand):
 
         # Loop through the list
         for obj in rackspace_list:
-
-            # Back up the Rackspace images on Internet Archive
-            obj.sync_with_ia()
-
-            logger.debug("Deleting Rackspace images for {}".format(obj))
-            if obj.has_image:
-                logger.debug("Deleting {}".format(obj.image))
-                obj.image.delete()
-                obj.has_image = False
-            if obj.has_crop:
-                logger.debug("Deleting {}".format(obj.crop))
-                obj.crop.delete()
-                obj.has_crop = False
-
-            logger.debug("Resaving {}".format(obj))
-            obj.save()
+            # Fire up the task to backfill
+            backfill_to_internet_archive(obj.id)

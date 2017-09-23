@@ -50,6 +50,29 @@ def run_phantom_js(params):
 
 
 @task()
+def backfill_to_internet_archive(screenshot_id):
+    # Get the object
+    obj = Screenshot.objects.get(id=screenshot_id)
+
+    # Back up the Rackspace images on Internet Archive
+    obj.sync_with_ia()
+
+    # Delete the Rackspace images
+    logger.debug("Deleting Rackspace images for {}".format(obj))
+    if obj.has_image:
+        logger.debug("Deleting {}".format(obj.image))
+        obj.image.delete()
+        obj.has_image = False
+    if obj.has_crop:
+        logger.debug("Deleting {}".format(obj.crop))
+        obj.crop.delete()
+        obj.has_crop = False
+
+    logger.debug("Resaving {}".format(obj))
+    obj.save()
+
+
+@task()
 def get_phantomjs_screenshot(site_id, update_id):
     """
     Fetch and save a screenshot using PhantomJS.
