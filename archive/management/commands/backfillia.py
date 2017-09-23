@@ -1,4 +1,4 @@
-    import logging
+import logging
 from django.conf import settings
 from archive.models import Screenshot
 from internetarchive import upload, get_item, get_files
