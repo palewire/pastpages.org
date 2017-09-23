@@ -21,9 +21,6 @@ class ScreenshotManager(models.Manager):
     def ia_not_rackspace(self):
         return self.exclude(internetarchive_id='').filter(has_image=False)
 
-    def ia_but_no_url(self):
-        return self.exclude(internetarchive_id='').filter(internetarchive_image_url='')
-
 
 class SiteManager(models.Manager):
 

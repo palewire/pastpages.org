@@ -15,11 +15,3 @@ class Command(BaseCommand):
         )
         for site in Site.objects.active():
             get_phantomjs_screenshot.delay(site.id, update.id)
-
-        no_url_list = Screenshot.objects.filter(
-            update=update,
-            internetarchive_image_url=''
-        ).exclude(
-            internetarchive_id=''
-        )
-        [obj.sync_with_ia() for obj in no_url_list]

@@ -3,6 +3,7 @@
 {% load admin_urls %}
 
 {% block after_related_objects %}
+{% if original.image %}
 <table>
     <thead>
         <tr>
@@ -31,6 +32,8 @@
         </td>
     </tr>
 </table>
+{% endif %}
+{% if image.crop %}
 <table>
     <thead>
         <tr>
@@ -59,6 +62,7 @@
         </td>
     </tr>
 </table>
+{% endif %}
 {% if original.has_html %}
 <table>
     <caption>HTML</caption>

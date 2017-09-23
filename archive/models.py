@@ -186,8 +186,6 @@ class Screenshot(models.Model):
 
     # Internet Archive assets
     internetarchive_id = models.CharField(max_length=5000, blank=True)
-    internetarchive_image_url = models.CharField(max_length=5000, blank=True)
-    internetarchive_crop_url = models.CharField(max_length=5000, blank=True)
 
     # Managers
     objects = managers.ScreenshotManager()
@@ -224,6 +222,24 @@ class Screenshot(models.Model):
     @property
     def ia_url(self):
         return 'https://archive.org/details/{}'.format(self.ia_id)
+
+    @property
+    def internetarchive_image_url(self):
+        if not self.internetarchive_id:
+            return None
+        return 'https://archive.org/download/{}/{}'.format(
+            self.internetarchive_id,
+            self.get_image_name()
+        )
+
+    @property
+    def internetarchive_crop_url(self):
+        if not self.internetarchive_id:
+            return None
+        return 'https://archive.org/download/{}/{}'.format(
+            self.internetarchive_id,
+            self.get_crop_name()
+        )
 
     def save_image(self):
         name = os.path.basename(self.image.name)
@@ -301,20 +317,6 @@ class Screenshot(models.Model):
     def sync_with_ia(self):
         logger.debug("Syncing IA item for {}".format(self.ia_id))
         item, created = self.get_or_create_ia_item()
-        try:
-            image_url = [x for x in list(item.get_files(formats="JPEG")) if 'image' in x.name][0].url
-            logger.debug("Setting internetarchive_image_url as {}".format(image_url))
-            self.internetarchive_image_url = image_url
-        except IndexError:
-            logger.debug("Setting internetarchive_image_url as ''")
-            self.internetarchive_image_url = ''
-        try:
-            crop_url = [x for x in list(item.get_files(formats="JPEG")) if 'crop' in x.name][0].url
-            logger.debug("Setting internetarchive_crop_url as {}".format(crop_url))
-            self.internetarchive_crop_url = crop_url
-        except IndexError:
-            logger.debug("Setting internetarchive_crop_url as ''")
-            self.internetarchive_crop_url = ''
         self.internetarchive_id = item.identifier
         self.save()
 

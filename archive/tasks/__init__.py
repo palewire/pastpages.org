@@ -175,20 +175,7 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Create screenshot object with Internet Archive link
     ssht.internetarchive_id = item.identifier
     logger.debug("Setting internetarchive_id as {}".format(item.identifier))
-    try:
-        image_url = [x for x in list(item.get_files(formats="JPEG")) if 'image' in x.name][0].url
-        logger.debug("Setting internetarchive_image_url as {}".format(image_url))
-        ssht.internetarchive_image_url = image_url
-    except IndexError:
-        logger.debug("Setting internetarchive_image_url as ''")
-        ssht.internetarchive_image_url = ''
-    try:
-        crop_url = [x for x in list(item.get_files(formats="JPEG")) if 'crop' in x.name][0].url
-        logger.debug("Setting internetarchive_crop_url as {}".format(crop_url))
-        ssht.internetarchive_crop_url = crop_url
-    except IndexError:
-        logger.debug("Setting internetarchive_crop_url as ''")
-        ssht.internetarchive_crop_url = ''
+
     # Save again
     ssht.save()
 
