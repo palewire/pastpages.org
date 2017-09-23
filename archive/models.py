@@ -234,9 +234,9 @@ class Screenshot(models.Model):
             f.write(self.crop.file.file.read())
         return name
 
-    def upload_ia_item(self):
-        logger.debug("Uploading IA item for {}".format(self.ia_id))
-        metadata = dict(
+    @property
+    def ia_metadata(self):
+        return dict(
             collection="pastpages",
             title='{} at {}'.format(self.site.name, dateformat(self.timestamp, 'N j, Y, P')),
             mediatype='image',
@@ -253,6 +253,9 @@ class Screenshot(models.Model):
             pastpages_site_name=self.site.name,
             pastpages_update_id=self.update.id,
         )
+
+    def upload_ia_item(self):
+        logger.debug("Uploading IA item for {}".format(self.ia_id))
         files = []
         if self.has_image:
             saved_image = self.save_image()
@@ -263,7 +266,7 @@ class Screenshot(models.Model):
         internetarchive.upload(
             self.ia_id,
             files,
-            metadata=metadata,
+            metadata=self.ia_metadata,
             access_key=settings.IA_ACCESS_KEY_ID,
             secret_key=settings.IA_SECRET_ACCESS_KEY,
             checksum=False,

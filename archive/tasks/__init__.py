@@ -3,10 +3,12 @@ import os
 import random
 import string
 import signal
+import shutil
 import archiveis
 import subprocess
 import savepagenow
 import webcitation
+import internetarchive
 from django.conf import settings
 from django.utils import timezone
 from celery.decorators import task
@@ -116,35 +118,15 @@ def get_phantomjs_screenshot(site_id, update_id):
     # Convert the data to a Django object
     jpg_obj = ContentFile(data)
 
-    # Remove the image from the local filesystem
-    os.remove(output_path)
-
-    # Create a screenshot object in the database
+    # Create a screenshot object
+    logger.debug("Creating Screenshot object for {}-{}".format(site, update))
     ssht, created = Screenshot.objects.get_or_create(site=site, update=update)
-
-    # Save the image data to the object
-    target = ssht.get_image_name()
-    try:
-        ssht.image.save(target, jpg_obj)
-        logger.debug("Saved as %s" % ssht)
-    except Exception, e:
-        logger.error("Image save failed.")
-        logger.error(str(e))
-        ScreenshotLog.objects.create(
-            update=update,
-            site=site,
-            message_type="error",
-            message="Image save failed: %s" % e
-        )
-        ssht.delete()
-        return False
-    ssht.has_image = True
     ssht.timestamp = timestamp
-    ssht.save()
 
-    # Reopen image as PIL object
+    # Open up the image
     jpg_obj.seek(0)
     image = Image.open(jpg_obj)
+    width = image.width
 
     # Crop it to 1000px tall, starting from the top
     crop = image.crop(
@@ -152,46 +134,66 @@ def get_phantomjs_screenshot(site_id, update_id):
             0,
             # Unless we provide an offset to scroll down before cropping
             getattr(ssht.site, "y_offset", 0),
-            ssht.image.width,
+            width,
             1000
         )
     )
 
-    # Prep for db
-    crop_name = ssht.get_crop_name()
-    crop_path = os.path.join(
-        settings.REPO_DIR,
-        crop_name
-    )
-    crop.save(open(crop_path, 'w'), 'JPEG')
-    crop_data = File(open(crop_path, 'r'))
+    # Move the original file to Internet Archive namespace
+    shutil.copy(output_path, ssht.get_image_name())
 
-    # Save to the databaseo
+    # Save crop to Internet Archive namespace
+    crop.save(open(ssht.get_crop_name(), 'w'))
+
+    # Upload both images to Internet Archive
+    files = [ssht.get_image_name(), ssht.get_crop_name()]
     try:
-        ssht.crop.save(crop_name, crop_data)
+        logger.debug("Uploading to internetarchive as {}".format(ssht.ia_id))
+        internetarchive.upload(
+            ssht.ia_id,
+            files,
+            metadata=ssht.ia_metadata,
+            access_key=settings.IA_ACCESS_KEY_ID,
+            secret_key=settings.IA_SECRET_ACCESS_KEY,
+            checksum=False,
+            verbose=True
+        )
     except Exception, e:
-        raise e
-        logger.error("Crop save failed.")
-        logger.error(str(e))
+        logger.error("internetarchive error: %s" % e)
         ScreenshotLog.objects.create(
             update=update,
             site=site,
             message_type="error",
-            message="Crop save failed: %s" % e
+            message="internetarchive error: %s" % e
         )
         ssht.delete()
-        os.remove(crop_path)
         return False
-    os.remove(crop_path)
-    ssht.has_crop = True
+
+    # Retreive item from IA
+    item = ssht.get_ia_item()
+
+    # Create screenshot object with Internet Archive link
+    ssht.internetarchive_id = item.identifier
+    logger.debug("Setting internetarchive_id as {}".format(item.identifier))
+    try:
+        image_url = [x for x in list(item.get_files(formats="JPEG")) if 'image' in x.name][0].url
+        logger.debug("Setting internetarchive_image_url as {}".format(image_url))
+        ssht.internetarchive_image_url = image_url
+    except IndexError:
+        logger.debug("Setting internetarchive_image_url as ''")
+        ssht.internetarchive_image_url = ''
+    try:
+        crop_url = [x for x in list(item.get_files(formats="JPEG")) if 'crop' in x.name][0].url
+        logger.debug("Setting internetarchive_crop_url as {}".format(crop_url))
+        ssht.internetarchive_crop_url = crop_url
+    except IndexError:
+        logger.debug("Setting internetarchive_crop_url as ''")
+        ssht.internetarchive_crop_url = ''
+    # Save again
     ssht.save()
 
-    # HTML screenshoting where it is turned on
-    if site.has_html_screenshots:
-        logger.info("Logging HTML for %s" % site.url)
-        ssht.html = site.url
-        ssht.has_html = True
-        ssht.save()
+    # Remove images from the local filesystem
+    [os.remove(f) for f in files]
 
     # Internet Archive mementos where turned on
     if site.has_internetarchive_mementos:
@@ -213,7 +215,7 @@ def get_phantomjs_screenshot(site_id, update_id):
         except Exception:
             logger.info("Adding Internet Archive memento failed")
 
-    # Internet Archive mementos where turned on
+    # Archive.is mementos where turned on
     if site.has_archiveis_mementos:
         logger.info("Adding archive.is memento for %s" % site.url)
         try:
