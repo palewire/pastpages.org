@@ -18,4 +18,4 @@ class Command(BaseCommand):
         # Loop through the list
         for obj in rackspace_list:
             # Fire up the task to backfill
-            backfill_to_internet_archive.delay(obj.id)
+            backfill_to_internet_archive(obj.id)
