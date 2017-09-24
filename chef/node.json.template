@@ -2,7 +2,7 @@
     "run_list": [
         "palewire::default",
         "palewire::python",
-        "palewire::postgresql",
+        "palewire::postgres",
         "palewire::app"
     ],
 
@@ -13,6 +13,8 @@
         "unzip",
         "libfreetype6-dev",
         "libjpeg-dev",
+        "libxml2-dev",
+        "libxslt-dev"
     ],
 
     "users": {
@@ -35,14 +37,14 @@
         "python-dev",
         "libpq-dev",
         "python-virtualenv",
+        "python-lxml"
     ],
     "pip_python_packages": {},
 
     "app_name": "pastpages.org",
     "app_user": "palewire",
     "app_group": "palewire",
-    "app_password": "",
     "app_repo": "git@github.com:pastpages/pastpages.org.git",
-    "app_branch": "backfill-server",
+    "app_branch": "backfill-server"
 
 }
