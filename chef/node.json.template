@@ -1,14 +1,8 @@
 {
-    "run_list": [ 
+    "run_list": [
         "palewire::default",
-        "palewire::python",
         "palewire::postgresql",
-        "palewire::app",
-        "palewire::memcached",
-        "palewire::apache",
-        "palewire::varnish",
-        "palewire::cron",
-        "palewire::munin"
+        "palewire::app"
     ],
 
     "base_packages": [
@@ -18,99 +12,36 @@
         "unzip",
         "libfreetype6-dev",
         "libjpeg-dev",
-        "flashplugin-installer",
-        "libxml2-dev",
-        "libxslt-dev",
-        "s3cmd",
-        "xfonts-intl-chinese", 
-        "xfonts-100dpi",
-        "xfonts-75dpi",
-        "xfonts-scalable",
-        "xfonts-cyrillic",
-        "xfonts-intl-asian",
-        "xfonts-intl-chinese-big",
-        "xfonts-intl-european",
-        "xfonts-intl-japanese",
-        "xfonts-intl-japanese-big",
-        "xfonts-intl-phonetic",
-        "gsfonts-x11",
-        "ttf-arphic-ukai",
-        "ttf-arphic-uming",
-        "ttf-arphic-gbsn00lp",
-        "ttf-arphic-bkai00mp",
-        "ttf-arphic-bsmi00lp", 
-        "ttf-arphic-gkai00mp",
-        "xfonts-intl-chinese",
-        "xfonts-base",
-        "unifont",
-        "ttf-umefont",
-        "fonts-horai-umefont",
-        "xfonts-efont-unicode",
-        "xfonts-efont-unicode-ib",
-        "xfonts-intl-european",
-        "ttf-nanum"
     ],
-    
+
     "users": {
         "palewire": {
           "id": 1001,
           "full_name": "palewire"
         }
     },
-    
+
     "groups": {
         "palewire": {
           "gid": 201,
           "members": ["palewire"]
         }
     },
-    
+
     "ubuntu_python_packages": [
         "python-setuptools",
         "python-pip",
         "python-dev",
         "libpq-dev",
         "python-virtualenv",
-        "python-imaging",
-        "python-lxml",
-        "python-cloudfiles"
     ],
     "pip_python_packages": {},
-
-    "db_user": "",
-    "db_name": "",
-    "db_password": "",
-
-    "rackspace_user": "",
-    "rackspace_apikey": "",
-    "rackspace_container": "",
 
     "app_name": "pastpages.org",
     "app_user": "palewire",
     "app_group": "palewire",
     "app_password": "",
     "app_repo": "git@github.com:pastpages/pastpages.org.git",
-    "app_branch": "master",
+    "app_branch": "backfill-server",
 
-    "apache_port": "8008",
-    "apache_server_name": "www.pastpages.org",
-
-    "varnish_whitelist": [
-        ""
-    ],
-    "varnish_ttl": "10m",
-
-    "munin_name": "pastpages-bradlee",
-
-    "crons": {
-        "updatearchive": {
-            "minute": "0",
-            "command": "/apps/pastpages.org/bin/python /apps/pastpages.org/repo/manage.py updatearchive > /dev/null 2>&1"
-        },
-        "backuppostgres": {
-            "minute": "30",
-            "hour": "1",
-            "command": "/apps/pastpages.org/bin/python /apps/pastpages.org/repo/toolbox/backups/postgres.py"
-        }
-    }
 }

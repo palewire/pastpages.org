@@ -16,7 +16,7 @@ script "Add to hosts file" do
   user "root"
   group "root"
   code <<-EOH
-    echo '127.0.0.1    pastpages-bradlee' >> /etc/hosts
+    echo '127.0.0.1    pastpages-carroll' >> /etc/hosts
   EOH
 end
 
@@ -31,10 +31,10 @@ end
 # and mint a bash_profile
 node[:users].each_pair do |username, info|
     group username do
-       gid info[:id] 
+       gid info[:id]
     end
 
-    user username do 
+    user username do
         comment info[:full_name]
         uid info[:id]
         gid info[:id]
