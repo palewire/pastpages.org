@@ -11,7 +11,7 @@ import webcitation
 import internetarchive
 from django.conf import settings
 from django.utils import timezone
-from celery.decorators import task
+# from celery.decorators import task
 from toolbox.decorators import timeout
 from archive.models import Screenshot, Update, Site, ScreenshotLog, Memento
 
@@ -35,7 +35,7 @@ def get_random_string(length=6):
     )
 
 
-@task()
+# @task()
 def backfill_to_internet_archive(screenshot_id):
     # Get the object
     obj = Screenshot.objects.get(id=screenshot_id)
