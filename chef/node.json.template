@@ -1,6 +1,7 @@
 {
     "run_list": [
         "palewire::default",
+        "palewire::python",
         "palewire::postgresql",
         "palewire::app"
     ],

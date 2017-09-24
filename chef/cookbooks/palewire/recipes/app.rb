@@ -32,14 +32,3 @@ script "Install Requirements" do
   group node[:apps_group]
   code "/apps/#{node[:app_name]}/bin/pip install -r /apps/#{node[:app_name]}/repo/requirements.txt"
 end
-
-# Create the database user
-script "Create database user" do
-  interpreter "bash"
-  user "postgres"
-  code <<-EOH
-     psql -c "CREATE USER #{node[:db_user]} WITH INHERIT SUPERUSER CREATEDB PASSWORD '#{node[:db_password]}'";
-  EOH
-  ignore_failure true
-end
-
