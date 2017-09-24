@@ -39,7 +39,7 @@ node[:users].each_pair do |username, info|
         uid info[:id]
         gid info[:id]
         shell info[:disabled] ? "/sbin/nologin" : "/bin/bash"
-        supports :manage_home => true
+        manage_home true
         home "/home/#{username}"
     end
 
