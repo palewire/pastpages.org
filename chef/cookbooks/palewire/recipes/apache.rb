@@ -44,7 +44,7 @@ template "/etc/apache2/sites-enabled/#{node[:app_name]}" do
 end
 
 cookbook_file "/etc/apache2/apache2.conf" do
-  source "apache/apache2.conf" 
+  source "apache/apache2.conf"
   mode 0640
   owner "root"
   group "root"
@@ -54,7 +54,6 @@ end
 bash "Remove default apache config" do
   user "root"
   group "root"
-  code "rm /etc/apache2/sites-enabled/000-default"
+  code "rm /etc/apache2/sites-enabled/000-default.conf"
   ignore_failure true
 end
-
