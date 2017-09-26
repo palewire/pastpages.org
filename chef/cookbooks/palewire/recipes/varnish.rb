@@ -16,6 +16,8 @@ template "/etc/varnish/default.vcl" do
   variables({
      :apache_port => node[:apache_port],
      :varnish_whitelist => node[:varnish_whitelist],
+     :varnish_banned_ips => node[:varnish_banned_ips],
+     :varnish_no_cache_urls => node[:varnish_no_cache_urls],
      :varnish_ttl => node[:varnish_ttl]
   })
 end

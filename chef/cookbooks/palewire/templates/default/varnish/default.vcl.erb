@@ -1,165 +1,128 @@
-/*
-*
-* First, set up a backend to answer the request if there's not a cache hit.
-*
-*/
+# Newly updated for Varnish 4
+vcl 4.0;
+
 import std;
+import directors;
 
-backend apache {
-
+backend default {
     # Set a host.
     .host = "127.0.0.1";
-
     # Set a port. 80 is normal Web traffic.
     .port = "<%= @apache_port %>";
 }
-/*
-*
-* Next, let's prepare a feature where we can purge or prime URLs.
-* We don't want just anyone to do this. So we'll limit this special
-* request type to only people on the local network.
-*
-*/
-acl purge_prime {
+
+# Whitelist to allow cache purge requests
+acl purge_ok {
     "127.0.0.1";
+    "localhost";
+    "::1";
     <% @varnish_whitelist.each do |item| -%>
     "<%= item %>";
     <% end -%>
 }
 
-/*
-*
-* Next, configure the "receive" subroutine.
-*
-*/
+acl banned_ips {
+    "5.61.38.11";
+    <% @varnish_banned_ips.each do |item| -%>
+    "<%= item %>";
+    <% end -%>
+}
+
+# Which URL components are used to look up a match
+# and return a cached page.
+sub vcl_hash {
+    # Build a typical hash
+    hash_data(req.url);
+    if (req.http.host) {
+        hash_data(req.http.host);
+    } else {
+        hash_data(server.ip);
+    }
+    # Pass hash out
+    return(lookup);
+}
+
+# Taken from: https://www.varnish-software.com/blog/grace-varnish-4-stale-while-revalidate-semantics-varnish
+sub vcl_hit {
+    if (obj.ttl >= 0s) {
+        # normal hit
+        return (deliver);
+    }
+    # We have no fresh fish. Lets look at the stale ones.
+    if (std.healthy(req.backend_hint)) {
+        # Backend is healthy. Limit age to 10s.
+        if (obj.ttl + 10s > 0s) {
+            set req.http.grace = "normal(limited)";
+            return (deliver);
+        } else {
+        # No candidate for grace. Fetch a fresh object.
+            return(fetch);
+        }
+    } else {
+        # backend is sick - use full grace
+        if (obj.ttl + obj.grace > 0s) {
+            set req.http.grace = "full";
+            return (deliver);
+        } else {
+            # no graced object.
+            return (fetch);
+        }
+    }
+    return (fetch);
+}
+
 sub vcl_recv {
-
-    # Use the backend we set up above to answer the request if it's not cached.
-    set req.backend = apache;
-
-    # Don't cache admin pages
-    if (req.url ~ "^/admin/") {
-        return (pass);
+    if (client.ip ~ banned_ips) {
+        return(synth(403, "Forbidden."));
     }
 
-    # Don't cache timegate pages
-    if (req.url ~ "^/timegate/") {
-        return (pass);
-    }
+    set req.backend_hint = default;
+    set req.http.grace = "none";
 
-    # Don't cache munin pages
-    if (req.url ~ "^/munin/") {
-        return (pass);
-    }
-
-    # Don't cache review page
-    if (req.url ~ "^/review/") {
-        return (pass);
-    }
-
-    if (req.url ~ "^/server-status") {
-        return (pass);
-    }
-
-    # First, check to see if this is a special PURGE request.
-    # If it is, and the client isn't in our special access
-    # control list above, send them a cheeky message.
-
-    if (req.request == "PURGE") {
-        if (!client.ip ~ purge_prime) {
-            error 405 "No purge for you. (" + client.ip + ")";
+    if (req.restarts == 0) {
+        if (req.http.x-forwarded-for) {
+            set req.http.X-Forwarded-For =
+                req.http.X-Forwarded-For + ", " + client.ip;
+        } else {
+            set req.http.X-Forwarded-For = client.ip;
         }
     }
 
-    # You know, people really like to use jQuery.
-    # The jQuery $.ajax() and similar functions will pull JSON from an API
-    # behind your Varnish server. Sadly, browsers will cache the JSON
-    # response basically forever unless you use the cache: false declaration.
-    #
-    # In practice, this just appends a new URL parameter to the request, like
-    # &_=1234567890, but it changes with each request. This sucks for caching.
-    #
-    # This function performs a regex substitution. The regex here matches
-    # URL parameters that start with ? or &, follow with _= and then
-    # contain up to 25 other characters EXCEPT for an ampersand.
-    # An ampersand means that we're starting a second URL parameter.
-    #
-    # By stripping this parameter out, we can serve a cached response for
-    # the ever-changing URL since all but the &_= parameter stay identical.
-
-    set req.url = regsuball(req.url,"[?&]_=[^&]{1,25}","");
-
-    # Grace mode is magical. When you have a request for an object that is in
-    # the cache but has expired, Grace mode will continue to serve the old
-    # expired cache object for everyone except for the very first client
-    # to ask for it. Once the updated response is available for that first
-    # client, all of the other clients will then get the updated response.
-    #
-    # By setting grace to 5 minutes, we tell Varnish to continue to serve
-    # an outdated object for up to 5 minutes past its expiration to cover
-    # us while we fetch an updated response. Works great for slow pages.
-
-    set req.grace = 5m;
-
-    # Pass the request along to lookup to see if it's in the cache.
-    return(lookup);
-}
-/*
-*
-* Next, let's set up the subroutine to deal with cache misses.
-*
-*/
-sub vcl_miss {
-    return(fetch);
-}
-/*
-*
-* Now, let's set up a subroutine to deal with cache hits.
-*
-*/
-sub vcl_hit {
-
-    if (req.request == "PURGE") {
-            purge;
-            error 200 "Purged.";
+    # If it's not GET or HEAD let it go
+    if (req.method != "GET" && req.method != "HEAD") {
+        return (pass);
     }
 
-    return(deliver);
-}
-/*
-*
-* This is the subroutine which will fetch a response from the backend.
-* It's pretty fancy because this is where the basic logic for caching is set.
-*
-*/
-sub vcl_fetch {
-
-    set beresp.ttl = <%= @varnish_ttl %>;
-    set beresp.http.X-Varnish-TTL = "<%= @varnish_ttl %>";
-
-    # Indicate that this response is cacheable. This is important.
-    set beresp.http.X-Cacheable = "YES";
-
-    # Some backends *cough* Django *cough* will assign a Vary header for
-    # each User-Agent which visits the site. Varnish will store a separate
-    # copy of the page in the cache for each instance of the Vary header --
-    # one for each User-Agent which visits the site. This is bad. So we're
-    # going to strip away the Vary header.
-    if (beresp.http.Vary ~ "accept\-datetime") {
-        set beresp.http.Vary = "accept-datetime";
-    } else {
-        unset beresp.http.Vary;
+    # Don't cache these pages
+    if (req.url ~ "^/admin/" ||
+        <% @varnish_no_cache_urls.each do |item| -%>
+        req.url ~ "<%= item %>" ||
+        <% end -%>
+        req.url ~ "^/munin/" ||
+        req.url ~ "^/server-status") {
+        return(pass);
     }
 
-    # Now pass this backend response along to the cache to be stored and served.
-    return(deliver);
+    if (req.url ~ "\.(ico)$") {
+        return(synth(750, "Moved Temporarily"));
+    }
+
+    # Allow purges
+    if (req.method == "PURGE") {
+        if (client.ip ~ purge_ok) {
+            return(purge);
+        } else {
+            return(synth(403, "Access denied."));
+        }
+    }
+
+    # Normalize the query arguments
+    set req.url = std.querysort(req.url);
+    return (hash);
 }
-/*
-*
-* Finally, let's set up a subroutine which will deliver a response to the client.
-*
-*/
+
 sub vcl_deliver {
+    set resp.http.grace = req.http.grace;
     if (obj.hits > 0) {
         set resp.http.X-Varnish-Cache = "HIT";
     }
@@ -167,4 +130,17 @@ sub vcl_deliver {
         set resp.http.X-Varnish-Cache = "MISS";
     }
     return(deliver);
+}
+
+sub vcl_backend_response {
+    # For grace mode. This is how long Varnish will keep objects in its cache
+    # after their TTL has expired.
+    set beresp.grace = 1h;
+
+    # Get the response. Set the cache lifetime.
+    set beresp.ttl = <%= @varnish_ttl %>;
+    set beresp.http.X-Varnish-TTL = "<%= @varnish_ttl %>";
+
+    unset beresp.http.Vary;
+    return (deliver);
 }
