@@ -23,7 +23,6 @@ INSTALLED_APPS = (
     'taggit',
     'tastypie',
     'toolbox',
-    #'djcelery',
     'memento',
 )
 
@@ -34,27 +33,6 @@ ALLOWED_HOSTS = [
 ]
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
-# Celery
-# import djcelery
-# djcelery.setup_loader()
-# BROKER_URL = 'django://'
-# CELERY_SEND_TASK_ERROR_EMAILS = True
-# CELERY_DEFAULT_RATE_LIMIT = 10
-AWS_ACCESS_KEY_ID = ''
-AWS_SECRET_ACCESS_KEY = ''
-
-BROKER_URL = 'sqs://{0}:{1}@'.format(
-    urllib.quote(AWS_ACCESS_KEY_ID, safe=''),
-    urllib.quote(AWS_SECRET_ACCESS_KEY, safe='')
-)
-BROKER_TRANSPORT_OPTIONS = {
-    'region': 'us-east-1',
-    'polling_interval': 3,
-    'visibility_timeout': 60,
-    'queue_name_prefix': 'pastpages-',
-}
-CELERY_SEND_TASK_ERROR_EMAILS = True
 
 # Localization
 ADMINS = (
