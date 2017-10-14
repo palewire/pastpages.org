@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Query screenshots that are on Rackspace but not IA.
-        rackspace_list = Screenshot.objects.rackspace_not_ia()[:options['count'][0]]
+        rackspace_list = Screenshot.objects.rackspace_not_ia().order_by("?")[:options['count'][0]]
 
         # Loop through the list
         for obj in rackspace_list:
