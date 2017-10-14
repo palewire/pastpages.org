@@ -27,12 +27,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-@task(name="sum_two_numbers")
+@task()
 def add(x, y):
+    logger.debug("{} + {} = {}".format(x, y, x + y))
     return x + y
 
 
-# @task()
+@task()
 def backfill_to_internet_archive(screenshot_id):
     # Get the object
     obj = Screenshot.objects.get(id=screenshot_id)
