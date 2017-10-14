@@ -257,7 +257,7 @@ class Screenshot(models.Model):
     def ia_metadata(self):
         return dict(
             collection="pastpages",
-            title='{} at {}'.format(self.site.name, dateformat(self.timestamp, 'N j, Y, P')),
+            title='{} at {}'.format(self.site.name, dateformat(self.timestamp, 'N j, Y, P e')),
             mediatype='image',
             contributor="pastpages.org",
             creator="pastpages.org",
