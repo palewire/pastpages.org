@@ -1,4 +1,4 @@
-# Misc.
+from __future__ import absolute_import, unicode_literals
 import os
 import random
 import string
@@ -9,9 +9,10 @@ import subprocess
 import savepagenow
 import webcitation
 import internetarchive
+from celery import shared_task
+from celery.decorators import task
 from django.conf import settings
 from django.utils import timezone
-# from celery.decorators import task
 from toolbox.decorators import timeout
 from archive.models import Screenshot, Update, Site, ScreenshotLog, Memento
 
@@ -26,13 +27,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def get_random_string(length=6):
-    """
-    Generate a random string of letters and numbers
-    """
-    return ''.join(
-        random.choice(string.letters + string.digits) for i in xrange(length)
-    )
+@task(name="sum_two_numbers")
+def add(x, y):
+    return x + y
 
 
 # @task()
