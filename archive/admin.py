@@ -29,7 +29,9 @@ class UpdateAdmin(admin.ModelAdmin):
 
 
 class ScreenshotAdmin(admin.ModelAdmin):
-    list_display = ("site", "update",)
+    date_hierarchy = 'timestamp'
+    list_display = ("site", "update", "has_image", "has_crop", "internetarchive_id")
+    list_filter = ("has_image", "has_crop", "internetarchive_id")
     readonly_fields = (
         'site',
         'update',
