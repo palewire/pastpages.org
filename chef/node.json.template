@@ -39,7 +39,9 @@
         "python-dev",
         "libpq-dev",
         "python-virtualenv",
-        "python-lxml"
+        "python-lxml",
+        "curl",
+        "libcurl4-openssl-dev"
     ],
     "pip_python_packages": {},
 
