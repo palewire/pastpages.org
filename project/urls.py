@@ -37,26 +37,27 @@ urlpatterns = [
         name='contact'),
 
     # Pages for machines
-    url(
-        r'^sitemap\.xml$',
-        sitemap_views.index,
-        {'sitemaps': sitemaps.SITEMAPS}
-    ),
+    url(r'^sitemap\.xml$', sitemap_views.index, {'sitemaps': sitemaps.SITEMAPS}),
     url(
         r'^sitemap-(?P<section>.+)\.xml$',
         sitemap_views.sitemap,
-        {'sitemaps': sitemaps.SITEMAPS}
+        {'sitemaps': sitemaps.SITEMAPS},
+        name='django.contrib.sitemaps.views.sitemap'
     ),
+
     url('^favicon.ico$', RedirectView.as_view(
         url='%sfavicon.ico' % settings.STATIC_URL
         )),
+
     url(r'^robots\.txt', include('robots.urls')),
+
     url(r'^api/', include('api.urls')),
     url(
         r'^api/docs/',
         TemplateView.as_view(template_name='api_docs.html'),
         name='api-docs'
     ),
+
     url(r'^feeds/$', views.FeedList.as_view(), name='feeds-list'),
     url(r'^feeds/updates/$', feeds.RecentUpdates(), name="feeds-updates"),
     url(
