@@ -49,7 +49,7 @@
 {% block body-bottom %}
     <script type="text/javascript">
         var data = [{% for obj in update_list %}
-            { 
+            {
                 id: {{ obj.id }},
                 day: "{{ obj.start|date:'M d' }}",
                 hour: "{{ obj.start|date:'gA' }}",
@@ -162,7 +162,42 @@
 
 <div class="row">
     <div class="twelvecol last">
-        <p>Archiving {{ site_list|length }} sites each hour as far back as {{ min_date.date }} for a total of {{ screenshot_total|intcomma }} screenshots.</p>
+        <p>Archiving {{ site_count }} sites each hour as far back as {{ min_date.date }} for a total of {{ screenshot_total|intcomma }} screenshots.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="twelvecol last">
+        <table class="stacked-responsive">
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Rackspace</td>
+                    <td>{{ rackspace|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Internet Archive</td>
+                    <td>{{ ia|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Both</td>
+                    <td>{{ rackspace_and_ia|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Only Rackspace</td>
+                    <td>{{ rackspace_not_ia|intcomma }}</td>
+                </tr>
+                <tr>
+                    <td>Only Internet Archive</td>
+                    <td>{{ ia_not_rackspace|intcomma }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 

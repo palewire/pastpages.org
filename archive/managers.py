@@ -6,7 +6,6 @@ from django.utils import timezone
 class ScreenshotManager(models.Manager):
 
     def rackspace(self):
-        # 3,485,058
         return self.filter(has_image=True)
 
     def ia(self):

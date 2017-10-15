@@ -42,9 +42,15 @@ class Status(TemplateView):
         update_list = Update.objects.stats(limit=101)
         update_list.reverse()
         context = {
+            'site_count': Site.objects.count(),
             'site_list': site_list,
             'min_date': min([d['first_screenshot'] for d in site_list]),
             'screenshot_total': Screenshot.objects.count(),
+            'rackspace': Screenshot.objects.rackspace().count(),
+            'ia': Screenshot.objects.ia().count(),
+            'rackspace_and_ia': Screenshot.objects.rackspace_and_ia().count(),
+            'rackspace_not_ia': Screenshot.objects.rackspace_not_ia().count(),
+            'ia_not_rackspace': Screenshot.objects.ia_not_rackspace().count(),
             'update_list': update_list,
         }
         return context
