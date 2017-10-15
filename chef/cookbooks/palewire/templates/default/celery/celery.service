@@ -4,10 +4,10 @@ After=network.target
 
 [Service]
 Type=forking
-User=palewire
-Group=palewire
+User=<%= @app_user %>
+Group=<%= @app_group %>
 EnvironmentFile=/etc/conf.d/celery
-WorkingDirectory=/apps/pastpages.org/repo/
+WorkingDirectory=/apps/<%= @app_name %>/repo/
 ExecStart=/bin/sh -c '${CELERY_BIN} multi start ${CELERYD_NODES} \
   -A ${CELERY_APP} --pidfile=${CELERYD_PID_FILE} \
   --logfile=${CELERYD_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL} ${CELERYD_OPTS}'

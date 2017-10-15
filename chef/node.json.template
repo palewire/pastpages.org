@@ -2,8 +2,10 @@
     "run_list": [
         "palewire::default",
         "palewire::python",
-        "palewire::postgres",
-        "palewire::app"
+        "palewire::postgresql",
+        "palewire::redis",
+        "palewire::app",
+        "palewire::celery"
     ],
 
     "base_packages": [

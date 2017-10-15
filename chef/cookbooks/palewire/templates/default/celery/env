@@ -1,11 +1,9 @@
 # Name of nodes to start
 # here we have a single node
 CELERYD_NODES="w1"
-# or we could have three nodes:
-#CELERYD_NODES="w1 w2 w3"
 
 # Absolute or relative path to the 'celery' command:
-CELERY_BIN="/apps/pastpages.org/bin/celery"
+CELERY_BIN="/apps/<%= @app_name %>/bin/celery"
 
 # App instance to use
 # comment out this line if you don't use an app
@@ -25,5 +23,3 @@ CELERYD_OPTS="--time-limit=300 --concurrency=8"
 CELERYD_PID_FILE="/var/run/celery/%n.pid"
 CELERYD_LOG_FILE="/var/log/celery/%n%I.log"
 CELERYD_LOG_LEVEL="INFO"
-
-# /bin/sh -c /apps/pastpages.org/bin/celery multi start w1 -A project --pidfile=/var/run/celery/%n.pid --logfile=/var/log/celery/%n%I.log --loglevel=INFO --time-limit=300 --concurrency=8
