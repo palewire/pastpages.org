@@ -1,13 +1,14 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.conf import settings
 from django.contrib import admin
 from archive import views, sitemaps, feeds
 from django.views.static import serve as static_serve
+from django.contrib.sitemaps import views as sitemap_views
 from django.views.generic import TemplateView, RedirectView
 from django.contrib.admin.views.decorators import staff_member_required
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
 
 #    url(r'^(.*)$', views.Fail.as_view(),
 #        name='archive-fail'),
@@ -36,17 +37,20 @@ urlpatterns = patterns('',
         name='contact'),
 
     # Pages for machines
-    url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.index',
-        {'sitemaps': sitemaps.SITEMAPS}),
     url(
-        r'^sitemap-(?P<section>.+)\.xml$',
-        'django.contrib.sitemaps.views.sitemap',
+        r'^sitemap\.xml$',
+        sitemap_views.index,
         {'sitemaps': sitemaps.SITEMAPS}
     ),
-    ('^favicon.ico$', RedirectView.as_view(
+    url(
+        r'^sitemap-(?P<section>.+)\.xml$',
+        sitemap_views.sitemap,
+        {'sitemaps': sitemaps.SITEMAPS}
+    ),
+    url('^favicon.ico$', RedirectView.as_view(
         url='%sfavicon.ico' % settings.STATIC_URL
         )),
-    url(r'^robots\.txt$', include('robots.urls')),
+    url(r'^robots\.txt', include('robots.urls')),
     url(r'^api/', include('api.urls')),
     url(
         r'^api/docs/',
@@ -79,18 +83,15 @@ urlpatterns = patterns('',
     ),
 
     # Monitoring and administration
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^status/$', views.Status.as_view(), name='status'),
-    url(r'^munin/(?P<path>.*)$', staff_member_required(static_serve), {
-        'document_root': settings.MUNIN_ROOT,
-    })
-)
+]
 
 # Pages for developers
 if settings.DEBUG:
-    urlpatterns += patterns('',
+    urlpatterns += [
         url(r'^static/(?P<path>.*)$', static_serve, {
             'document_root': settings.STATIC_ROOT,
             'show_indexes': True,
         }),
-   )
+   ]

@@ -23,8 +23,8 @@ INSTALLED_APPS = (
     'taggit',
     'tastypie',
     'toolbox',
-    #'djcelery',
     'memento',
+    'django_celery_results',
 )
 
 ALLOWED_HOSTS = [
@@ -34,13 +34,6 @@ ALLOWED_HOSTS = [
 ]
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
-# Celery
-# import djcelery
-# djcelery.setup_loader()
-# BROKER_URL = 'django://'
-# CELERY_SEND_TASK_ERROR_EMAILS = True
-# CELERY_DEFAULT_RATE_LIMIT = 10
 
 # Localization
 ADMINS = (
@@ -65,49 +58,44 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
-TEMPLATE_DIRS = (
-    os.path.join(SETTINGS_DIR, 'templates'),
-)
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
+                "django.contrib.messages.context_processors.messages",
+                "toolbox.context_processors.site",
+            ],
+        },
+    },
+]
+
 MUNIN_ROOT = '/var/cache/munin/www/'
 
 # Request handling
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'toolbox.middleware.domains.DomainRedirectMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 WSGI_APPLICATION = 'project.wsgi.application'
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "toolbox.context_processors.site",
-)
-
-from django.core.exceptions import SuspiciousOperation
-
-def skip_suspicious_operations(record):
-  if record.exc_info:
-    exc_value = record.exc_info[1]
-    if isinstance(exc_value, SuspiciousOperation):
-      return False
-  return True
 
 # Extras
 SITE_ID = 1
 ROOT_URLCONF = 'project.urls'
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -115,20 +103,12 @@ LOGGING = {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
         },
-        'skip_suspicious_operations': {
-            '()': 'django.utils.log.CallbackFilter',
-            'callback': skip_suspicious_operations,
-         },
     },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false', 'skip_suspicious_operations'],
+            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        },
-        'null': {
-            'level':'DEBUG',
-            'class':'django.utils.log.NullHandler',
         },
         'console':{
             'level':'DEBUG',
@@ -174,10 +154,6 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'django.security.DisallowedHost': {
-            'handlers': ['null'],
-            'propagate': False,
-        },
     }
 }
 
@@ -187,35 +163,15 @@ CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 CACHE_MIDDLEWARE_KEY_PREFIX  = ''
 DJANGO_MEMCACHED_REQUIRE_STAFF = True
 
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_RESULT_BACKEND = 'django-db'
+
 try:
     from settings_dev import *
 except ImportError:
     from settings_prod import *
-TEMPLATE_DEBUG = DEBUG
-
-# if DEBUG_TOOLBAR:
-#     # Debugging toolbar middleware
-#     MIDDLEWARE_CLASSES += (
-#         'debug_toolbar.middleware.DebugToolbarMiddleware',
-#     )
-#     # JavaScript panels for the deveopment debugging toolbar
-#     DEBUG_TOOLBAR_PANELS = (
-#         'debug_toolbar.panels.versions.VersionsPanel',
-#         'debug_toolbar.panels.timer.TimerPanel',
-#         'debug_toolbar.panels.settings.SettingsPanel',
-#         'debug_toolbar.panels.headers.HeadersPanel',
-#         'debug_toolbar.panels.request.RequestPanel',
-#         'debug_toolbar.panels.profiling.ProfilingPanel',
-#         'debug_toolbar.panels.sql.SQLPanel',
-#         'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-#         'debug_toolbar.panels.templates.TemplatesPanel',
-#         'debug_toolbar.panels.cache.CachePanel',
-#         'debug_toolbar.panels.signals.SignalsPanel',
-#         'debug_toolbar.panels.logging.LoggingPanel',
-#         'debug_toolbar.panels.redirects.RedirectsPanel',
-#     )
-#     # Debug toolbar app
-#     INSTALLED_APPS += ('debug_toolbar',)
-#     CONFIG_DEFAULTS = {
-#         'INTERCEPT_REDIRECTS': False,
-#     }
