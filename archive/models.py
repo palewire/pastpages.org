@@ -239,6 +239,10 @@ class Screenshot(models.Model):
         return 'https://archive.org/details/{}'.format(self.ia_id)
 
     @property
+    def ia_batch_url(self):
+        return 'https://archive.org/details/{}'.format(self.ia_batch_id)
+
+    @property
     def internetarchive_image_url(self):
         if not self.internetarchive_id:
             return None
