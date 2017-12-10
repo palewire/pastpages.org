@@ -186,6 +186,7 @@ class Screenshot(models.Model):
 
     # Internet Archive assets
     internetarchive_id = models.CharField(max_length=5000, blank=True)
+    internetarchive_batch_id = models.CharField(max_length=5000, blank=True)
 
     # Managers
     objects = managers.ScreenshotManager()
@@ -217,7 +218,21 @@ class Screenshot(models.Model):
 
     @property
     def ia_id(self):
+        """
+        The unique ID of the object in Internet Archive where this screenshot is stored.
+        """
         return "pastpages-{}-{}-{}".format(self.site.slug, self.update_id, self.id)
+
+    @property
+    def ia_batch_id(self):
+        """
+        The unique ID of the batch in Internet Archive where this screenshot is stored.
+        """
+        return "pastpages-{}-{}-{}".format(
+            self.site.slug,
+            self.timestamp.strftime("%Y"),
+            self.timestamp.strftime("%m")
+        )
 
     @property
     def ia_url(self):
