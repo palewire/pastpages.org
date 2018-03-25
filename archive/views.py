@@ -169,7 +169,7 @@ class SiteDetail(DetailView):
     All about a particular site.
     """
     template_name = 'site_detail.html'
-    queryset = Site.objects.active()
+    queryset = Site.objects.all()
 
     def convert_timezone(self, dt, tz):
         if not tz:
