@@ -36,7 +36,10 @@ def backfill_to_internet_archive_batch(obj_id, batch_id):
     """
     obj = Screenshot.objects.get(id=obj_id)
     logger.debug("Backfilling {}".format(obj))
-    obj.upload_screenshot_to_ia_batch(batch_id)
+    try:
+        obj.upload_screenshot_to_ia_batch(batch_id)
+    except Exception as e:
+        logger.error(e)
 
     obj.internetarchive_batch_id = batch_id
     obj.internetarchive_image_url = 'https://archive.org/download/{}/{}'.format(
