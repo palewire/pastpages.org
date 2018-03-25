@@ -51,7 +51,7 @@ def backfill_to_internet_archive_batch(obj_id, batch_id):
         obj.internetarchive_batch_id,
         obj.ia_screenshot_meta_name
     )
-    # obj.save()
+    obj.save()
 
     logger.debug("Debugging the result")
     logger.debug(obj.ia_batch_url)
