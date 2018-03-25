@@ -111,9 +111,7 @@ class ScreenshotDetail(MementoDetailView):
     All about a particular screenshot. See the whole thing full size.
     """
     template_name = 'screenshot_detail.html'
-    queryset = Screenshot.objects.filter(
-        site__status='active'
-    ).select_related("update")
+    queryset = Screenshot.objects.select_related("update")
     datetime_field = 'timestamp'
     timemap_pattern_name = "timemap-url-link-feed"
     timegate_pattern_name = "timegate-screenshot"
