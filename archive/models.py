@@ -1,5 +1,6 @@
 import os
 import time
+import json
 import logging
 import internetarchive
 from archive import managers
@@ -184,9 +185,14 @@ class Screenshot(models.Model):
     html = URLArchiveField(upload_to=get_html_path)
     has_html = models.BooleanField(default=False)
 
-    # Internet Archive assets
+    # Internet Archive standalone assets
     internetarchive_id = models.CharField(max_length=5000, blank=True)
+
+    # Internet Archive batch assets
     internetarchive_batch_id = models.CharField(max_length=5000, blank=True)
+    internetarchive_image_url = models.CharField(max_length=5000, blank=True)
+    internetarchive_crop_url = models.CharField(max_length=5000, blank=True)
+    internetarchive_meta_url = models.CharField(max_length=5000, blank=True)
 
     # Managers
     objects = managers.ScreenshotManager()
@@ -207,21 +213,21 @@ class Screenshot(models.Model):
         return ("archive-screenshot-detail", [self.id])
 
     def get_image_name(self):
+        """
+        The name to give a new image as we save it to a file.
+        """
         return '%s-%s-%s-image.jpg' % (self.site.slug, self.update.id, self.id)
 
     def get_crop_name(self):
+        """
+        The name to give a new crop as we save it to a file.
+        """
         return '%s-%s-%s-crop.jpg' % (self.site.slug, self.update.id, self.id)
 
-    #
-    # Internet Archive
-    #
 
-    @property
-    def ia_id(self):
-        """
-        The unique ID of the object in Internet Archive where this screenshot is stored.
-        """
-        return "pastpages-{}-{}-{}".format(self.site.slug, self.update_id, self.id)
+    #
+    # Internet Archive batch
+    #
 
     @property
     def ia_batch_id(self):
@@ -235,45 +241,73 @@ class Screenshot(models.Model):
         )
 
     @property
-    def ia_url(self):
-        return 'https://archive.org/details/{}'.format(self.ia_id)
-
-    @property
     def ia_batch_url(self):
         return 'https://archive.org/details/{}'.format(self.ia_batch_id)
 
     @property
-    def internetarchive_image_url(self):
-        if not self.internetarchive_id:
-            return None
-        return 'https://archive.org/download/{}/{}'.format(
-            self.internetarchive_id,
-            self.get_image_name()
+    def ia_batch_metadata(self):
+        return dict(
+            collection="test_collection",
+            title='{} homepages in {}'.format(self.site.name, dateformat(self.timestamp, 'F Y')),
+            mediatype='image',
+            contributor="pastpages.org",
+            creator="pastpages.org",
+            publisher=self.site.name,
+            date=dateformat(self.timestamp, "Y-m"),
+            subject=["news", "homepages", "screenshot"],
+            pastpages_site_id=self.site.id,
+            pastpages_site_slug=self.site.slug,
+            pastpages_site_name=self.site.name,
+            pastpages_batch_year=self.timestamp.year,
+            pastpages_batch_month=self.timestamp.month,
         )
 
-    @property
-    def internetarchive_crop_url(self):
-        if not self.internetarchive_id:
-            return None
-        return 'https://archive.org/download/{}/{}'.format(
-            self.internetarchive_id,
-            self.get_crop_name()
+    def get_or_create_ia_batch(self):
+        batch = self.get_ia_batch()
+        if batch.exists:
+            logger.debug("IA batch for {} exists".format(self.ia_batch_id))
+            return batch, False
+        else:
+            logger.debug("IA batch for {} does not exist".format(self.ia_batch_id))
+            return self.create_ia_batch(), True
+
+    def get_ia_batch(self):
+        logger.debug("Getting IA batch for {}".format(self.ia_batch_id))
+        config = dict(s3=dict(access=settings.IA_ACCESS_KEY_ID, secret=settings.IA_SECRET_ACCESS_KEY))
+        return internetarchive.get_item(self.ia_batch_id, config=config)
+
+    def create_ia_batch(self):
+        logger.debug("Creating IA batch for {}".format(self.ia_batch_id))
+        internetarchive.upload(
+            self.ia_batch_id,
+            [self.create_ia_batch_readme(),],
+            metadata=self.ia_batch_metadata,
+            access_key=settings.IA_ACCESS_KEY_ID,
+            secret_key=settings.IA_SECRET_ACCESS_KEY,
+            checksum=False,
+            verbose=True
         )
-
-    def save_image(self):
-        name = os.path.basename(self.image.name)
-        with open(name, 'wb') as f:
-            f.write(self.image.file.file.read())
-        return name
-
-    def save_crop(self):
-        name = os.path.basename(self.crop.name)
-        with open(name, 'wb') as f:
-            f.write(self.crop.file.file.read())
-        return name
+        os.remove(self.ia_batch_readme_name)
+        return internetarchive.get_item(self.ia_batch_id)
 
     @property
-    def ia_metadata(self):
+    def ia_batch_readme_name(self):
+        return "{}_meta.txt".format(self.ia_batch_id)
+
+    def create_ia_batch_readme(self):
+        """
+        Returns a README file to be uploaded with the batch item to Internet Archive.
+        """
+        with open(self.ia_batch_readme_name, 'wb') as f:
+            txt = '# Screenshots of the {} homepage in {}'.format(
+                self.site.name,
+                dateformat(self.timestamp, 'F Y')
+            )
+            f.write(txt)
+        return self.ia_batch_readme_name
+
+    @property
+    def ia_screenshot_metadata(self):
         return dict(
             collection="pastpages",
             title='{} at {}'.format(self.site.name, dateformat(self.timestamp, 'N j, Y, P e')),
@@ -292,52 +326,56 @@ class Screenshot(models.Model):
             pastpages_update_id=self.update.id,
         )
 
-    def upload_ia_item(self):
-        logger.debug("Uploading IA item for {}".format(self.ia_id))
+    @property
+    def ia_screenshot_meta_name(self):
+        return '%s-%s-%s-meta.json' % (self.site.slug, self.update.id, self.id)
+
+    def create_ia_screenshot_meta_name(self):
+        """
+        Returns a README file to be uploaded with the batch item to Internet Archive.
+        """
+        with open(self.ia_screenshot_meta_name, 'wb') as f:
+            f.write(json.dumps(self.ia_screenshot_metadata, indent=4))
+        return self.ia_screenshot_meta_name
+
+    def upload_screenshot_to_ia_batch(self, batch_id):
+        logger.debug("Uploading IA item for batch {}".format(batch_id))
         if not self.has_image and not self.has_crop:
             logger.debug("No images to upload")
             return None
-        files = []
+
+        # Write out the metadata file
+        files = [self.create_ia_screenshot_meta_name(),]
+
+        # Write out the images
         if self.has_image:
-            saved_image = self.save_image()
+            saved_image = os.path.basename(self.image.name)
+            with open(saved_image, 'wb') as f:
+                f.write(self.image.file.file.read())
             files.append(saved_image)
         if self.has_crop:
-            saved_crop = self.save_crop()
+            saved_crop = os.path.basename(self.crop.name)
+            with open(saved_crop, 'wb') as f:
+                f.write(self.crop.file.file.read())
             files.append(saved_crop)
+
+        # Upload everything to IA
         internetarchive.upload(
-            self.ia_id,
+            batch_id,
             files,
-            metadata=self.ia_metadata,
             access_key=settings.IA_ACCESS_KEY_ID,
             secret_key=settings.IA_SECRET_ACCESS_KEY,
             checksum=False,
             verbose=True
         )
+
+        # Delete all the files we've written out
+        os.remove(self.ia_screenshot_meta_name)
         if self.has_image:
             os.remove(saved_image)
         if self.has_crop:
             os.remove(saved_crop)
-        return internetarchive.get_item(self.ia_id)
 
-    def get_ia_item(self):
-        logger.debug("Getting IA item for {}".format(self.ia_id))
-        config = dict(s3=dict(access=settings.IA_ACCESS_KEY_ID, secret=settings.IA_SECRET_ACCESS_KEY))
-        return internetarchive.get_item(self.ia_id, config=config)
-
-    def get_or_create_ia_item(self):
-        i = self.get_ia_item()
-        if i.exists:
-            logger.debug("IA item for {} exists".format(self.ia_id))
-            return i, False
-        else:
-            logger.debug("IA item for {} does not exist".format(self.ia_id))
-            return self.upload_ia_item(), True
-
-    def sync_with_ia(self):
-        logger.debug("Syncing IA item for {}".format(self.ia_id))
-        item, created = self.get_or_create_ia_item()
-        self.internetarchive_id = item.identifier
-        self.save()
 
     #
     # Citations

@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import timedelta
 from django.utils import timezone
+from django.db.models import Q
 
 
 class ScreenshotManager(models.Manager):
@@ -16,7 +17,9 @@ class ScreenshotManager(models.Manager):
         return self.exclude(internetarchive_id='').filter(has_image=True)
 
     def rackspace_not_ia(self):
-        return self.filter(internetarchive_id='').filter(has_image=True)
+        return self.filter(
+            Q(internetarchive_id='') & Q(internetarchive_batch_id='')
+        ).filter(has_image=True)
 
     def ia_not_rackspace(self):
         return self.exclude(internetarchive_id='').filter(has_image=False)
