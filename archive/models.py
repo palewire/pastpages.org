@@ -206,7 +206,7 @@ class Screenshot(models.Model):
         get_latest_by = 'timestamp'
 
     def __unicode__(self):
-        return u'%s (%s)' % (self.site, self.update.start)
+        return u'%s (%s)' % (self.site, self.timestamp)
 
     @models.permalink
     def get_absolute_url(self):
@@ -339,7 +339,7 @@ class Screenshot(models.Model):
         return self.ia_screenshot_meta_name
 
     def upload_screenshot_to_ia_batch(self, batch_id):
-        logger.debug("Uploading IA item for batch {}".format(batch_id))
+        logger.debug("Uploading IA item {} to batch {}".format(self, batch_id))
         if not self.has_image and not self.has_crop:
             logger.debug("No images to upload")
             return None
