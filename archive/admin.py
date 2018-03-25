@@ -30,14 +30,17 @@ class UpdateAdmin(admin.ModelAdmin):
 
 class ScreenshotAdmin(admin.ModelAdmin):
     list_display = ("site", "update",)
+    search_fields = ("internetarchive_batch_id",)
     readonly_fields = (
         'site',
         'update',
         'timestamp',
         'internetarchive_id',
         #'ia_url',
+        'internetarchive_batch_id',
         'internetarchive_crop_url',
         'internetarchive_image_url',
+        'internetarchive_meta_url',
         'has_image',
         'has_crop',
         'has_html',
