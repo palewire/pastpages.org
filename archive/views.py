@@ -304,7 +304,7 @@ class AdvancedSearch(TemplateView):
         context = super(AdvancedSearch, self).get_context_data(**kwargs)
 
         # Pull the data for the form fields
-        site_list = Site.objects.active()
+        site_list = Site.objects.all()
         context['site_list'] = site_list
         tag_list = Tag.objects.all().order_by("name")
         context['tag_list'] = tag_list
@@ -318,15 +318,6 @@ class AdvancedSearch(TemplateView):
         # If not just drop out now
         if not is_search:
             return context
-
-#        # Check if this page has already been cached
-#        ckey = 'advsearch:%s' % (
-#            urllib.urlencode(dict(self.request.GET))
-#        )
-#        ckey = sha1(ckey).hexdigest()
-#        cdata = cache.get(ckey)
-#        if cdata:
-#            return cdata
 
         # Examine the valid keys and see what's been submitted
         site = self.request.GET.get('site', None)
