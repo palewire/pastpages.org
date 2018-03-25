@@ -247,7 +247,7 @@ class Screenshot(models.Model):
     @property
     def ia_batch_metadata(self):
         return dict(
-            collection="test_collection",
+            collection="pastpages",
             title='{} homepages in {}'.format(self.site.name, dateformat(self.timestamp, 'F Y')),
             mediatype='image',
             contributor="pastpages.org",
