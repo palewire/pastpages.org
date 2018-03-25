@@ -33,5 +33,5 @@ class Command(BaseCommand):
         )
         logger.debug("{} found".format(len(obj_list)))
 
-        for obj in obj_list[:5]:
+        for obj in obj_list:
             backfill_to_internet_archive_batch.delay(obj.id, batch.identifier)
