@@ -5,42 +5,81 @@
     {{ block.super }}
     <meta property="og:description"
           content="The news homepage archive"/>
-    <meta property="og:title" content="Latest homepages"/>
+    <meta property="og:title" content="PastPages"/>
     <meta property="og:url" content="http://{{ site }}"/>
-    <meta property="og:image" content=""/>
     <link rel="canonical" href="http://{{ site }}/"/>
 {% endblock %}
 
+{% block extra-css %}
+<style type="text/css">
+h1 {
+    margin: 5px 0 20px 0;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #e5e5e5;
+    font-size: 50px;
+}
+article p {
+    font-size: 18px;
+    line-height: 29px;
+    margin-bottom: 20px;
+    text-align: left;
+    font-family: Tahoma, Geneva, sans-serif;
+}
+article a {
+    color: black;
+    text-decoration: none;
+    border-bottom: 2px solid #e5e5e5;
+}
+article a:visited {
+    color: black;
+    text-decoration: none;
+    border-bottom: 2px solid #e5e5e5;
+}
+article a:hover {
+    color: #ddd;
+}
+strong {
+    font-weight: 550;
+}
+</style>
+{% endblock %}
+
+{% block toolbar %}{% endblock %}
+{% block headline %}{% endblock %}
+{% block footer %}{% endblock %}
+
 {% block body %}
-    <div class="container">
-        <div class="row datestamp">
-            <div class="twelvecol last">
-                <p>Updated {{ update.start|naturaltime }}</p>
-            </div>
+    <div class="row">
+        <div class="threecol"></div>
+        <div class="sixcol">
+            <h1>PastPages</h1>
         </div>
+        <div class="twocol last"></div>
     </div>
 
-    <div class="container">
-        {% for row in object_list %}
-        <div class="row screenshots">
-            {% for obj in row %}
-            <div class="threecol {% if forloop.last %}last{% endif %}">
-                <a href="{{ obj.site.get_absolute_url }}">
-                    <img {% if forloop.parentloop.counter > 4 %}
-                         class="lazy" src="{{ STATIC_URL }}blank_300x251.jpg"
-                         data-original="{{ obj.internetarchive_crop_url }}"
-                         {% else %}
-                         src="{{ obj.internetarchive_crop_url }}"
-                         {% endif %}
-                         alt="{{ obj.site }}">
-                    {% if forloop.parentloop.counter > 12 %}
-                    <noscript><img src="{{ obj.internetarchive_crop_url }}" alt="{{ obj.site }}"></noscript>
-                    {% endif %}
-                </a>
-                <a style="display:block;" href="{{ obj.site.get_absolute_url }}">{{ obj.site }}</a>
-            </div>
-            {% endfor %}
+    <div class="row">
+        <div class="threecol"></div>
+        <div class="wall sixcol">
+            <p>Welcome to PastPages, an open-source effort to archive digital news.</p>
+
+            <p>The group is organized by <a href="http://palewi.re/who-is-ben-welsh/">Ben Welsh</a>, a journalist and computer programmer based in Los Angeles. Its work includes:</p>
+
+            <p>
+                •  <a href="http://www.pastpages.org/advanced-search/"><strong>The News Homepage Archive</strong></a>, a collection of
+                3.5 million screenshots preserved from 2012 to 2018. It is currently being moved to a permanent collection at the <a href="https://archive.org/details/pastpages?sort=-publicdate">Internet Archive</a>. Collection has ceased but the database remains searchable <a href="http://www.pastpages.org/advanced-search/">on this site</a>.
+            </p>
+
+            <p>• <a href="http://savemy.news"><strong>Save My News</strong></a>, a personalized clipping service that empowers journalists to preserve their work in multiple Internet archives. Hundreds of journalists have used it to save thousands of stories.</p>
+
+            <p>• A series of open-source archiving tools supported by the Reynolds Journalism Institute at the University of Missouri. They include <a href="http://storytracker.pastpages.org/en/latest/"><strong>Storytracker</strong></a>, <a href="http://pastpages.github.io/wordpress-memento-plugin/"><strong>Memento for Wordpress</strong></a> and <a href="http://django-memento-framework.readthedocs.io/en/latest/"><strong>Memento for Django</strong></a>.</p>
+
+            <p>• Python programming APIs that allow programmers to more easily archive sites at the <a href="https://github.com/pastpages/savepagenow"><strong>Internet Archive</strong></a>, <a href="https://github.com/pastpages/archive.is"><strong>archiveis</strong></a> and <a href="https://github.com/pastpages/webcitation"><strong>Webcitation</strong></a>.
+            </p>
+
+            <p>PastPages' work has inspired a successful <a href="https://web.archive.org/web/20180325233631/https://www.kickstarter.com/projects/651552740/keep-pastpages-alive?ref=live">Kickstarter</a> campaign, won an innovation award from the <a href="https://web.archive.org/web/20180325233541/https://blogs.loc.gov/thesignal/2015/10/announcing-the-2015-innovation-award-winners/">Library of Congress</a> and earned praise from <a href="https://web.archive.org/web/20180325233030/http://www.niemanlab.org/2017/11/here-are-three-tools-that-help-digital-journalists-save-their-work-in-case-a-site-shuts-down/">Nieman</a> <a href="https://web.archive.org/web/20180326000801/http://www.niemanlab.org/2014/11/storytracker-is-a-new-tool-to-track-how-news-homepages-change/">Journalism Lab</a>, <a href="https://web.archive.org/web/20180326000737/https://blogs.wsj.com/digits/2012/05/08/la-times-developer-begins-archiving-newspaper-websites/">The Wall Street Journal</a>, <a href="https://web.archive.org/web/20180326001100/https://www.journalism.co.uk/news/kickstarter-news-site-front-page-archive-ben-walsh/s2/a549412/">Journalism.co.uk</a> and <a href="https://web.archive.org/web/20180325233203/https://www.poynter.org/news/after-watching-gothamist-and-dnainfo-disappear-journalist-built-tool-help-others-save-their">The Poynter Institute</a>.
+            </p>
+
         </div>
-        {% endfor %}
+        <div class="twocol last"></div>
     </div>
 {% endblock %}

@@ -89,22 +89,6 @@ class Index(TemplateView):
     """
     template_name = 'index.html'
 
-    def get_context_data(self, **kwargs):
-        update = Update.objects.live()
-        if not update:
-            raise Http404
-        object_list = update.screenshot_set.exclude(
-            internetarchive_id=''
-        ).filter(
-            site__on_the_homepage=True
-        )
-        object_list = object_list.select_related("site")
-        object_list = group_objects_by_number(object_list, 4)
-        return {
-            'update': update,
-            'object_list': object_list,
-        }
-
 
 class ScreenshotDetail(MementoDetailView):
     """
