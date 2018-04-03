@@ -66,16 +66,16 @@ def backfill_to_internet_archive_batch(obj_id, batch_id):
     print("Sleeping")
     time.sleep(1)
 
-    # # Delete the Rackspace images
-    # logger.debug("Deleting Rackspace images for {}".format(obj))
-    # if obj.has_image:
-    #     logger.debug("Deleting {}".format(obj.image))
-    #     obj.image.delete()
-    #     obj.has_image = False
-    # if obj.has_crop:
-    #     logger.debug("Deleting {}".format(obj.crop))
-    #     obj.crop.delete()
-    #     obj.has_crop = False
-    #
-    # logger.debug("Resaving {}".format(obj))
-    # obj.save()
+    # Delete the Rackspace images
+    logger.debug("Deleting Rackspace images for {}".format(obj))
+    if obj.has_image:
+        logger.debug("Deleting {}".format(obj.image))
+        obj.image.delete()
+        obj.has_image = False
+    if obj.has_crop:
+        logger.debug("Deleting {}".format(obj.crop))
+        obj.crop.delete()
+        obj.has_crop = False
+
+    logger.debug("Resaving {}".format(obj))
+    obj.save()
