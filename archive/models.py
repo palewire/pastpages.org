@@ -6,6 +6,7 @@ from archive import managers
 from django.db import models
 from datetime import datetime
 from django.conf import settings
+from django.utils import timezone
 from pytz import common_timezones
 from taggit.managers import TaggableManager
 from django.core.files.base import ContentFile
@@ -206,14 +207,14 @@ class Screenshot(models.Model):
         return ("archive-screenshot-detail", [self.id])
 
     def get_image_name(self):
-        if self.timestamp < datetime(2013, 7, 22):
+        if self.timestamp < timezone.get_current_timezone().localize(timezone.datetime(2013, 7, 22)):
             ext = 'png'
         else:
             ext = 'jpg'
         return '%s-%s-%s-image.%s' % (self.site.slug, self.update.id, self.id, ext)
 
     def get_crop_name(self):
-        if self.timestamp < datetime(2013, 7, 22):
+        if self.timestamp < timezone.get_current_timezone().localize(timezone.datetime(2013, 7, 22))s:
             ext = 'png'
         else:
             ext = 'jpg'
