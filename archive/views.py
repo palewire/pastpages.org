@@ -200,8 +200,14 @@ class SiteDetail(DetailView):
                 o.timestamp for o in screenshot_list if o.timestamp
             ])
             # ... and convert them to their timezone
-            min_date = self.convert_timezone(min_timestamp, tz).date()
-            max_date = self.convert_timezone(max_timestamp, tz).date()
+            if min_timestamp:
+                min_date = self.convert_timezone(min_timestamp, tz).date()
+            else:
+                min_date = None
+            if max_timestamp:
+                max_date = self.convert_timezone(max_timestamp, tz).date()
+            else:
+                max_date = None
         except IndexError:
             latest_screenshot = None
             screenshot_groups = []
