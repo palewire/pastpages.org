@@ -188,6 +188,12 @@ class Screenshot(models.Model):
     # Internet Archive assets
     internetarchive_id = models.CharField(max_length=5000, blank=True)
 
+    # Internet Archive batch assets
+    internetarchive_batch_id = models.CharField(max_length=5000, blank=True)
+    internetarchive_image_url = models.CharField(max_length=5000, blank=True)
+    internetarchive_crop_url = models.CharField(max_length=5000, blank=True)
+    internetarchive_meta_url = models.CharField(max_length=5000, blank=True)
+
     # Managers
     objects = managers.ScreenshotManager()
 
@@ -233,7 +239,9 @@ class Screenshot(models.Model):
         return 'https://archive.org/details/{}'.format(self.ia_id)
 
     @property
-    def internetarchive_image_url(self):
+    def get_internetarchive_image_url(self):
+        if self.internetarchive_image_url:
+            return self.internetarchive_image_url
         if not self.internetarchive_id:
             return None
         return 'https://archive.org/download/{}/{}'.format(
@@ -242,7 +250,9 @@ class Screenshot(models.Model):
         )
 
     @property
-    def internetarchive_crop_url(self):
+    def get_internetarchive_crop_url(self):
+        if self.internetarchive_crop_url:
+            return self.internetarchive_crop_url
         if not self.internetarchive_id:
             return None
         return 'https://archive.org/download/{}/{}'.format(

@@ -85,7 +85,7 @@
             <div class="twelvecol last">
                 <img title="{{ object.site }} at {{ object.timestamp|date:"l N j, Y, P e" }}"
                      alt="{{ object.site }} at {{ object.timestamp|date:"l N j, Y, P e" }}"
-                     src="{% if object.internetarchive_image_url %}{{ object.internetarchive_image_url }}{% else %}{{ object.image.url }}{% endif %}">
+                     src="{% if object.get_internetarchive_image_url %}{{ object.get_internetarchive_image_url }}{% else %}{{ object.image.url }}{% endif %}">
             </div>
         </div>
     </div>

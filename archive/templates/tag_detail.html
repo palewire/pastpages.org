@@ -41,7 +41,7 @@
             {% for obj in row %}
             <div class="threecol {% if forloop.last %}last{% endif %}">
                 <a href="{{ obj.site.get_absolute_url }}">
-                    <img src="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}}{{ obj.crop.url_300x251 }}{% endif %}">
+                    <img src="{% if obj.get_internetarchive_crop_url %}{{ obj.get_internetarchive_crop_url }}{% else %}}{{ obj.crop.url_300x251 }}{% endif %}">
                 </a>
                 <a style="display:block;" href="{{ obj.site.get_absolute_url }}">{{ obj.site }}</a>
             </div>
