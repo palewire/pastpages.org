@@ -214,7 +214,7 @@ class Screenshot(models.Model):
         return '%s-%s-%s-image.%s' % (self.site.slug, self.update.id, self.id, ext)
 
     def get_crop_name(self):
-        if self.timestamp < timezone.get_current_timezone().localize(timezone.datetime(2013, 7, 22))s:
+        if self.timestamp < timezone.get_current_timezone().localize(timezone.datetime(2013, 7, 22)):
             ext = 'png'
         else:
             ext = 'jpg'
