@@ -17,17 +17,17 @@
         {% endblock %}
 
         {% block extra-meta %}{% endblock %}
-        
+
         <!--[if lte IE 9]><link rel="stylesheet" href="{{ STATIC_URL }}css/ie.css" type="text/css" media="screen" /><![endif]-->
         <link rel="stylesheet" href="{{ STATIC_URL }}css/styles-1.1.3.css" type="text/css" media="screen" />
         <link type="text/css" href="{{ STATIC_URL }}css/jquery-ui/jquery-ui-1.8.14.custom.css" rel="stylesheet" />
         {% block extra-css %}{% endblock %}
-        
+
         <script type="text/javascript" src="{{ STATIC_URL }}js/css3-mediaqueries.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.14.custom.min.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.lazyload.min.js?v=3"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script> 
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
         {% block extra-js %}{% endblock %}
 
         {% block extra-rss %}
@@ -39,7 +39,7 @@
         {% endblock %}
 
         {% block extra-head %}{% endblock %}
-        
+
         <script type="text/javascript">
           var _gaq = _gaq || [];
           _gaq.push(['_setAccount', 'UA-30952190-1']);
@@ -156,14 +156,6 @@
                   $("img.lazy").lazyload();
               });
         </script>
-        <div id="footer" class="container">
-            <div class="row">
-                <div class="twelvecol">
-                    Updated hourly.
-                    <a href="{% url 'about' %}">Read all about it</a>.
-                </div>
-            </div>
-        </div>
         {% endblock %}
         <script type="text/javascript">
           var _sf_async_config = { uid: 13068, domain: 'pastpages.org' };
