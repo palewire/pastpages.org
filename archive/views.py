@@ -156,6 +156,8 @@ class SiteDetail(DetailView):
     queryset = Site.objects.all()
 
     def convert_timezone(self, dt, tz):
+        if not dt:
+            return None
         if not tz:
             return localtime(dt)
         else:
