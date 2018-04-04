@@ -206,7 +206,11 @@ class Screenshot(models.Model):
         return ("archive-screenshot-detail", [self.id])
 
     def get_image_name(self):
-        return '%s-%s-%s-image.jpg' % (self.site.slug, self.update.id, self.id)
+        if self.timestamp < datetime(2013, 7, 22):
+            ext = 'png'
+        else:
+            ext = 'jpg'
+        return '%s-%s-%s-image.%s' % (self.site.slug, self.update.id, self.id, ext)
 
     def get_crop_name(self):
         return '%s-%s-%s-crop.jpg' % (self.site.slug, self.update.id, self.id)
