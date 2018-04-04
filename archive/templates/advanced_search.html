@@ -104,7 +104,7 @@
                                      src="{{ STATIC_URL }}blank_300x251.jpg"
                                      data-original="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}{{ obj.crop.url_300x251 }}{% endif %}"
                                      {% else %}
-                                     src="{{ obj.crop.url_300x251 }}"
+                                     src="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}{{ obj.crop.url_300x251 }}{% endif %}"
                                      {% endif %}
                                      alt="{{ obj.timestamp|timezone:timezone|date:"l N j, Y, P e" }}"
                                      title="{{ obj.timestamp|timezone:timezone|date:"l N j, Y, P e" }}">
