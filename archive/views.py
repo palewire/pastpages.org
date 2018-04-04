@@ -167,7 +167,7 @@ class SiteDetail(DetailView):
         # Pull all the live screenshots for this site
         qs = Screenshot.objects.filter(
             site=self.object,
-        ).defer(
+        ).exclude(timestamp=None).defer(
             "html",
             "has_html",
             "has_crop",
