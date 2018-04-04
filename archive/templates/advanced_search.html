@@ -102,7 +102,7 @@
                                 <img {% if forloop.parentloop.parentloop.counter > 2 %}
                                      class="lazy"
                                      src="{{ STATIC_URL }}blank_300x251.jpg"
-                                     data-original="{{ obj.crop.url_300x251 }}"
+                                     data-original="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}{{ obj.crop.url_300x251 }}{% endif %}"
                                      {% else %}
                                      src="{{ obj.crop.url_300x251 }}"
                                      {% endif %}
@@ -112,7 +112,7 @@
                                 <noscript>
                                 <img alt="{{ obj.timestamp|date:"l N j, Y, P e" }}"
                                      title="{{ obj.timestamp|date:"l N j, Y, P e" }}"
-                                     src="{{ obj.crop.url_300x251 }}">
+                                     src="{% if obj.internetarchive_crop_url %}{{ obj.internetarchive_crop_url }}{% else %}{{ obj.crop.url_300x251 }}{% endif %}">
                                 </noscript>
                                 {% endif %}
                             </a>
