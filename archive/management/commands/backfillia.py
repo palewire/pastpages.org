@@ -11,16 +11,12 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     help = 'Testing a backload of screenshot to the Internet Archive'
 
-    def add_arguments(self, parser):
-        parser.add_argument('slug', nargs=1, type=str)
-
     def handle(self, *args, **options):
-        slug = options.pop("slug")[0]
         # Query screenshots that are on Rackspace but not IA.
-        print("Querying a random record from {}".format(slug))
-        seed = Screenshot.objects.filter(
+        seed_qs = Screenshot.objects.filter(
             Q(internetarchive_id='') & Q(internetarchive_batch_id='')
-        ).filter(has_image=True).filter(site__slug=slug).order_by("?")[0]
+        ).filter(has_image=True)
+        seed = seed_qs.order_by("?")[0]
 
         logger.debug("Getting batch for {}".format(seed))
         batch, created = seed.get_or_create_ia_batch()
