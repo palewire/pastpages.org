@@ -35,6 +35,12 @@ def backfill_to_internet_archive_batch(obj_id, batch_id):
     from the same site and month as a batch item in the Internet Archive.
     """
     obj = Screenshot.objects.get(id=obj_id)
+
+    # Make sure this has some actual images
+    if not obj.has_image and not obj.has_crop:
+        logger.debug("No images to upload")
+        return
+
     logger.debug("Backfilling {}".format(obj))
     try:
         obj.upload_screenshot_to_ia_batch(batch_id)
