@@ -70,7 +70,7 @@ def backfill_to_internet_archive_batch(obj_id, batch_id):
     logger.debug(obj.internetarchive_meta_url)
 
     print("Sleeping")
-    time.sleep(1)
+    time.sleep(3)
 
     # Delete the Rackspace images
     logger.debug("Deleting Rackspace images for {}".format(obj))
