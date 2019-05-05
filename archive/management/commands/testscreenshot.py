@@ -14,8 +14,8 @@ class Command(BaseCommand):
             start=timezone.now(),
         )
         shit_list = [
-            'drudge-report',
-            #'cnn',
+            #'drudge-report',
+            'cnn',
             #'new-york-times',
         ]
         for site in Site.objects.filter(slug__in=shit_list):
