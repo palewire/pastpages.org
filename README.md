@@ -1,4 +1,4 @@
-pastpages.org was a news homepage archived created by Ben Welsh in 2012.
+pastpages.org was a news homepage archive created by [Ben Welsh](https://palewi.re/who-is-ben-welsh/) in 2012.
 
 Funded by a [successful Kickstarter campaign](https://web.archive.org/web/20180325233631/https://www.kickstarter.com/projects/651552740/keep-pastpages-alive?ref=live), it preserved roughly 3.5 million screenshots from 2012 to 2018.
 
